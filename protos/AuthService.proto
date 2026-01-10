@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package com.mpl.services.auth;
+option java_multiple_files = true;
+
+// Common //
+message AuthServiceError {
+    enum Reason {
+        NONE                       = 0;
+        UNKNOWN                    = 1;
+        BAD_REQUEST                = 2;
+        INTERNAL_ERROR             = 3;
+        INVALID_USER_ID            = 4;
+    }
+    Reason reason  = 1;
+    string message = 2;
+}
+
+// Messages //
+message AuthenticationRequest {
+    string requestId = 1;
+    string authToken = 2;
+}
+message AuthenticationResponse {
+    AuthServiceError error = 1;
+    bool isAuthentic       = 2;
+    uint32 userId          = 3;
+    string mobileNumber    = 4;
+    string countryCode     = 5;
+}
+
+// Services //
+service AuthService {
+    rpc authenticate(AuthenticationRequest) returns(AuthenticationResponse);
+    
+}

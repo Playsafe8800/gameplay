@@ -1,0 +1,51 @@
+@Library('mpl-library')_ 
+import com.mpl.*
+
+def utils = new BuildUtils()
+def releaseUtils = new ReleaseUtils()
+
+pipeline
+{
+    agent {
+        label 'slave'
+    }
+    tools {
+        nodejs "nodejs"
+    }
+
+    parameters {
+        string(name: 'RELEASE_BRANCH', description: 'Enter the release branch name. Release branch name shoud start with release/')
+    }
+
+    environment {
+        REPOSITORY = "rummy-multi-table-node"
+        GIT_SERVICE_ACCOUNT = credentials("${BuildConstants.GIT_SERVICE_ACCOUNT_ID}")
+    }
+    
+    stages {        
+        stage('Init') {
+            steps {
+                script{
+                    currentBuild.displayName = "${REPOSITORY}-${RELEASE_BRANCH}"
+                    utils.checkOut("${RELEASE_BRANCH}","${REPOSITORY}","${GIT_SERVICE_ACCOUNT_USR}")
+                }
+            }
+        }
+        stage('Validate') {
+            steps {
+                script{
+                    env.VERSION = releaseUtils.validateNodeRelease("${RELEASE_BRANCH}")
+                    echo "${VERSION}"
+                }
+            }
+        }
+        stage ('Prepare & Perform Release') {
+            steps {
+                script {
+                    releaseUtils.launchRelease("${REPOSITORY}","${RELEASE_BRANCH}","${VERSION}","${GIT_SERVICE_ACCOUNT_USR}", "${GIT_SERVICE_ACCOUNT_PSW}")
+                }
+            }
+        }
+    }
+}
+

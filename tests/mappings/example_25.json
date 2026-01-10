@@ -1,0 +1,23 @@
+{
+  "request": {
+    "url": "/AuthService/authenticate",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "authToken": "auth-card-game-server-v2-test"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "error": null,
+      "isAuthentic": true,
+      "userId": 833745,
+      "mobileNumber": "+916377700238",
+      "countryCode": "IN"
+    }
+  }
+}

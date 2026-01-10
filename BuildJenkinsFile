@@ -1,0 +1,95 @@
+@Library('mpl-library') _
+import com.mpl.*
+bitbucketUtils = new BitbucketUtils()
+slackUtils = new SlackUtils()
+utils = new BuildUtils()
+dockerUtils = new DockerUtils()
+String ref = ''
+String repoName = ''
+String fullCommitID = ''
+String slackIDToBeTagged = ''
+boolean prTrigger = true
+pipeline {
+    agent {
+        label 'node-service'
+    }
+    environment {
+        DANGER_BITBUCKETCLOUD_OAUTH_SECRET = credentials("DANGER_BITBUCKETCLOUD_OAUTH_SECRET")
+        DANGER_BITBUCKETCLOUD_OAUTH_KEY = credentials("DANGER_BITBUCKETCLOUD_OAUTH_KEY")
+        GIT_SERVICE_ACCOUNT = credentials("${BuildConstants.GIT_SERVICE_ACCOUNT_ID}")
+        CODACY_API_TOKEN = credentials("CODACY_API_TOKEN")
+        CODACY_ORGANIZATION_PROVIDER = "bb"
+        CODACY_USERNAME = "mpl-gaming"
+        ghprbPullId = "${BITBUCKET_PULL_REQUEST_ID}"
+        DANGER_BITBUCKETCLOUD_UUID = credentials("DANGER_BITBUCKETCLOUD_UUID")
+        DANGER_BITBUCKETCLOUD_USERNAME = credentials("DANGER_BITBUCKETCLOUD_USERNAME")
+        DANGER_BITBUCKETCLOUD_PASSWORD = credentials("DANGER_BITBUCKETCLOUD_PASSWORD")
+    }
+    tools {
+        nodejs 'component-tests-nodejs'
+        jdk "JDK_11"
+    }
+    stages {
+        stage('Checkout repo') {
+            steps {
+                script {
+                    //download and install codacy-cli
+                    bitbucketUtils.setUp(DANGER_BITBUCKETCLOUD_OAUTH_KEY, DANGER_BITBUCKETCLOUD_OAUTH_SECRET)
+                    pipelineSource = utils.createJobCauseDetailsMap()
+                    slackIDToBeTagged = slackUtils.formatEmailToSlackMarkdown(pipelineSource)
+                    dir('service') {
+                        cleanWs()
+                        try {
+                            bitbucketWebHookPayloadJSON = readJSON text: BITBUCKET_PAYLOAD
+                            if (BITBUCKET_X_EVENT == 'pullrequest:created' || BITBUCKET_X_EVENT == 'pullrequest:updated') {
+                                ref = BITBUCKET_SOURCE_BRANCH
+                                repoName = bitbucketWebHookPayloadJSON.repository.name
+                            }
+                        } catch (MissingPropertyException mpe) {
+                            ref = params.REF_NAME
+                            repoName = params.REPO_NAME
+                            prTrigger = false
+                        }
+                        utils.checkoutRepo(ref:ref, refType:'branch', repository:repoName, user:GIT_SERVICE_ACCOUNT_USR, mapLocalBranch:true, shallowClone:true)
+                        fullCommitID = utils.getLatestCommitHash(true)
+                        //bitbucketUtils.pushJenkinsBuildStatusToCommit(repoName, fullCommitID, BuildConstants.JOB_IN_PROGRESS)
+                    }
+                }
+            }
+        }
+        stage('Build'){
+            steps{
+                script{
+                    dir ('service') {
+                         configFileProvider([configFile(fileId: "86241df0-d372-4230-9997-0ea22320ad3a", variable: 'NPMRC')]) {
+                             sh "cat ${NPMRC} >> npmrc"
+                         }
+                        sh "cat npmrc"
+                        sh "npm install --save --registry=https://https://registry.npmjs.org"
+                    }
+                }
+            }
+        }
+        stage('Unit Tests') {
+            steps {
+                script {
+                    dir ('service') {   
+                        sh "npm run coverage || true"
+                    }
+                }
+            }
+        }
+        stage('Publish Code Coverage Reports') {
+            steps {
+                script {
+                    dir ('service') {
+                        sh "ls -lah coverage"
+                        sh 'curl -Ls https://coverage.codacy.com/get.sh get.sh -O get.sh'
+                        sh 'chmod +x get.sh'
+                        sh "./get.sh report -r coverage/lcov.info --commit-uuid ${fullCommitID} --project-name ${repoName}"
+                    }
+                }
+            }
+        }
+    }
+}

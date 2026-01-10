@@ -1,0 +1,1721 @@
+syntax = "proto3";
+import "google/protobuf/struct.proto";
+
+package com.mpl.services.card.games.grpc;
+
+option java_multiple_files = true;
+
+import "UserDataService.proto";
+
+enum PlayerType{
+    STARTER = 0;
+    CHALLENGER = 1;
+}
+
+enum RummyType{
+    POINTS = 0;
+    POOL = 1;
+    DEALS = 2;
+}
+
+// enum FinishType{
+//     LEVEL_FORCE_END=0;
+//     ROUND_TIMER_FORCE_END=1;
+//     NORMAL=2;
+// }
+
+// enum UserStatus{
+//     WAITING_FOR_NEXT_LEVEL=0;
+//     EXITED_TOURNAMENT=1;
+//     LIVE=2;
+//     TOURNAMENT_FINISHED=3;
+//     SINGLE_PLAYER_WON_TOURNAMENT=4;
+// }
+
+// enum LevelStatus{
+//     NA=0;
+//     CANCELLED=1;
+// }
+
+message CardGamesError {
+    enum Reason {
+        NONE = 0;
+        UNKNOWN = 1;
+        BAD_REQUEST = 2;
+        INTERNAL_ERROR = 3;
+        EXTERNAL_ERROR = 4;
+        INSUFFICIENT_FUNDS = 5;
+        LOBBY_ENDED = 6;
+        VIOLATED_THE_FRAUD_RULES =7;
+        UNAUTHORIZED = 8;
+        DUPLICATE = 9;
+        APP_LEVEL_USER_BLOCKED = 10;
+        COLLUSION_DETECTED = 11;
+        LOBBY_NOT_FOUND = 12;
+        USER_DATA_NOT_FOUND = 13;
+        USER_NOT_ELIGIBLE = 14;
+        RUMMY_WALLET_NOT_FOUND = 15;
+        USER_EXITED_RUMMY_TOURNAMENT = 16;
+        FRAUD_DETECTED = 17;
+        SEGMENT_BLOCKED_USER = 18;
+        DOWN_TIME = 19;
+        MULTITABLE_NOT_ALLOWED_TO_JOIN_LOBBY = 20;
+        INACTIVE_LOBBY = 21;
+        MULTI_ACCOUNT_FRAUD_DETECTED =23;
+    }
+    Reason reason = 1;
+    string message = 2;
+    repeated int32 segmentBlockedUsers = 3;
+}
+
+message Wallet{
+    string totalCashBalance = 1;
+    string ticketBalance = 2;
+    string bonusBalance = 3;
+    string depositBalance = 4;
+    string winningsBalance = 5;
+}
+
+message MoneyDTO{
+    string amount = 1;
+    string currencyId = 2;
+}
+
+message MoneyDetail{
+    enum CurrencyId {
+        INR = 0;
+        USD = 1;
+    }
+    string amount = 1;
+    CurrencyId currencyId = 2;
+
+}
+
+message LobbyPlayerData {
+    string battleId = 1;
+    int32 userId = 2;
+    int32 score = 3;
+    string scoreData = 4;
+    string status = 5;
+    bool matched = 6;
+    int32 rank = 7;
+    MoneyDTO cashWinnings = 8;
+    int32 tokenWinnings = 9;
+    bool canPlayAgain = 10;
+    bool followingOpponent = 11;
+    double cashWinningsDecimal = 12;
+    string nextLobbySuggestedConfig = 13;
+    LobbyDetails nextSuggestedLobby = 14;
+    double decimalScore = 15;
+    string extraInfo = 16;
+    MoneyDTO entryFee =17;
+    string entryCurrency =18;
+    string rewards = 19;
+    bool isTicketUsed = 20;
+    double ticketContribution = 21;
+    string sessionId = 22;
+    Wallet wallet = 23;
+    int32 lobbyId = 24;
+    int32 gameId = 25;
+    string playState = 26;
+    string battleState = 27;
+    string createdOn = 28;
+    string modifiedOn = 29;
+    bool hasRummyWalletBalance = 30;
+    PointRummyAutoDebit pointRummyAutoDebit = 31;
+    string appType = 32;
+    MoneyDetail pointRummyWallet = 33;
+    double amountWinningInLatestBattle = 34;
+
+}
+
+message LobbyDetails {
+    int32 id = 1;
+    string name = 2;
+    string description = 3;
+    int32 configId = 4;
+    string startTime = 5;
+    string activeEndTime = 6;
+    string endTime = 7;
+    int32 gameId = 8;
+    string gameConfig = 9;
+    string currencyType = 10;
+    MoneyDTO entryFee = 11;
+    string rewards = 12;
+    string lobbyStatus = 13;
+    bool active = 14;
+    string extraInfo = 15;
+    string createdOn = 16;
+    string modifiedOn = 17;
+    int32 registeredUsers = 18;
+    int32 activeUsers = 19;
+    string chatChannel = 20;
+    int32 minPlayers = 22;
+    int32 maxPlayers = 23;
+    bool userRegistered = 24;
+    string gameConfigName = 25;
+    string gameName = 26;
+    string style = 27;
+    Rewards specialRewards = 28;
+    bool battlePlayAgainDisabled = 29;
+    string imageUrl = 30;
+    bool applyBonusLimit = 31;
+    MoneyDTO bonusLimit = 32;
+    repeated TopRank topRanks = 33;
+    string gameIcon = 34;
+    UpsellOffer upsellOffer = 35;
+    bool dropAndSwitchEnabled = 36;
+}
+
+message UpsellReward {
+    string gamesText = 1;
+    string rewardText = 2 ;
+    bool claimed = 3;
+}
+
+message UpsellOffer {
+    string header = 1;
+    string offerText = 2;
+    string endTime = 3;
+    string badgeText = 4;
+    repeated UpsellReward rewards = 5;
+    string progressText = 6;
+    bool visible = 7;
+    string imageUrl = 8;
+    string extraInfo = 9;
+    int32 entryFee = 10;
+}
+
+message TopRank {
+    int32 userId = 1;
+    string name = 2;
+    int32 rank = 3;
+    int32 score = 4;
+    string avatar = 5;
+    string tier = 6;
+    bool isPro = 7;
+    string location = 8;
+    string acr = 9;
+    string state = 10;
+    uint64 lastOnline = 11;
+    com.mpl.services.userdata.grpc.BasicProfile profile = 12;
+}
+
+message DynamicWinning{
+    int32 playerCount =1;
+    MoneyDTO cashWinning = 2;
+    repeated double rankWinning = 3;
+}
+
+message RankRange {
+    int32 start = 1;
+    int32 end = 2;
+    MoneyDTO cash = 3;
+    int32 tokens = 4;
+    string extReward = 5;
+    repeated DynamicWinning dynamicWinnings = 6;
+}
+
+message Rewards {
+    MoneyDTO totalCash = 1;
+    int32 totalTokens = 2;
+    repeated RankRange rankRanges = 3;
+    int32 maxRanks = 4;
+    int32 id = 5;
+    string name = 6;
+}
+
+
+message CreateBattlePlayer {
+    string requestId = 1;
+    int32 userId = 2;
+    bool success = 3;
+    MoneyDTO deficit = 4;
+    MoneyDTO cashDeduction = 5;
+    MoneyDTO bonusDeduction = 6;
+    int32 tokenDeduction = 7;
+    MoneyDTO winningDeduction = 8;
+    MoneyDTO depositDeduction = 9;
+    PlayerType playerType = 10;
+    string sessionId = 11;
+    MoneyDTO ticketDeduction = 12;
+    Wallet wallet = 13;
+}
+
+message CollusionInfo{
+    bool collusionDetected = 1;
+    repeated uint32 colludedUsers = 2;
+}
+
+message FraudInfo{
+    bool fraudDetected = 1;
+    map<int32,string> userIdToFraudReasons = 8;
+}
+
+message BattleHistoryDetails {
+    enum UserBattleState {
+        WAITING = 0;
+        FINISHED = 1;
+        CANCELLED = 2;
+    }
+    UserBattleState userBattleState = 1;
+    int32 gameId = 3;
+    string gameName = 4;
+    string gameImageUrl = 5;
+    string battleId = 6;
+    int32 lobbyId = 7;
+    string lobbyName = 8;
+    repeated BattlePlayerDetails battlePlayers = 9;
+    string battleStartTime = 10;
+    string battleType = 11;
+    string gameType = 12;
+    string gameFormat = 13;
+    string entryFee = 14;
+    int32 maxPoints = 15;
+    string currencyCode = 16;
+    int32 totalRounds = 17;
+}
+
+message BattlePlayerDetails {
+    enum WinningState {
+        WINNER = 0;
+        LOSER = 1;
+        TIED = 2;
+        PENDING = 3;
+        REFUNDED = 4;
+    }
+
+    int32 userId = 1;
+    string userName = 2;
+    string userImageUrl = 3;
+    bool isPro = 4;
+    string tier = 5;
+    int32 rank = 6;
+    string cashWinnings = 7;
+    int32 tokenWinnings = 8;
+    string entryFee = 9;
+    string entryCurrency = 10;
+    WinningState winningState = 11;
+    int32 score = 12;
+    int32 videoCount = 13;
+    double cashWinningsDecimal = 14;
+    double decimalScore = 15;
+    string extraInfo = 16;
+    string rewards = 17;
+    string displayName = 18;
+}
+
+message GetActiveBattlesRequest {
+    string requestId = 1;
+    int32 userId = 2;
+    int32 gameId = 3;
+    int32 lobbyId = 4;
+    string battleId = 5;
+}
+
+message GetActiveBattleResponse {
+    string requestId = 1;
+    CardGamesError error = 2;
+    repeated BattleHistoryDetails activeBattles = 3;
+    bool isSuccess = 4;
+}
+
+message CreateBattleRequest {
+    string requestId = 1;
+    int32 lobbyId = 2;
+    string battleId = 3;
+    repeated int32 userIds = 4;
+    int32 gameId = 5;
+    string roundId = 6;
+    map<int32,string> userSessionIds = 7;
+}
+
+message CreateBattleResponse {
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool success = 3;
+    repeated CreateBattlePlayer battlePlayers = 4;
+    string currency = 5;
+    MoneyDTO amount = 6;
+    MoneyDTO allowedBonusAmount = 7;
+    FraudInfo fraudInfo = 8;
+}
+
+message CreatePointsRummyBattleRequest {
+    string requestId = 1;
+    int32 lobbyId = 2;
+    string battleId = 3;
+    map<int32,string> userSessionIds = 4;
+    int32 gameId = 5;
+    string roundId = 6;
+}
+
+message CreatePointsRummyBattleResponse {
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool success = 3;
+    repeated CreateBattlePlayer battlePlayers = 4;
+    string currency = 5;
+    MoneyDTO amount = 6;
+    MoneyDTO allowedBonusAmount = 7;
+    FraudInfo fraudInfo = 8;
+}
+
+message JoinLobbyRequest {
+    string requestId = 1;
+    int32 lobbyId = 2;
+    int32 userId = 3;
+    string appType = 4;
+    string appVersion = 5;
+    int32 reactVersion = 6;
+    bool rejoin =7;
+    bool isPractice = 8;
+    string ticketCode = 9;
+    string ticketValue = 10;
+    bool isPartPay = 11;
+    string apkType = 12;
+    MoneyDTO amountToBeDeducted = 13;
+    int32 gameId = 14;
+}
+
+message ReJoinLobbyRequest {
+    string requestId = 1;
+    int32 lobbyId = 2;
+    int32 userId = 3;
+    int32 reactVersion = 4;
+    int32 gameId = 5;
+}
+
+message ReJoinLobbyResponse {
+    string requestId = 1;
+    CardGamesError error = 2;
+    int32 userId = 3;
+    bool canJoin = 4;
+    string gameConfig = 5;
+    bool success = 6;
+}
+
+message JoinLobbyResponse {
+    string requestId = 1;
+    CardGamesError error = 2;
+    int32 userId = 3;
+    MoneyDTO deficit = 4;
+    bool canJoin = 5;
+    string message = 6;
+    string gameConfig = 7;
+    bool success = 8;
+}
+
+message FinishPointsRummyBattleRequest{
+    string requestId = 1;
+    string roundId = 2;
+    string battleId = 3;
+    int32 lobbyId = 4;
+    map<int32,string> userSessionIds = 5;
+    bool skipDSEventPublish = 6;
+}
+
+message FinishPointsRummyBattleResponse{
+    string requestId = 1;
+    bool isSuccess = 2;
+    string battleStatus = 3;
+    CardGamesError error = 4;
+    bool battlePlayAgainDisabled = 5;
+    repeated LobbyPlayerData playersData = 6;
+    CollusionInfo collusionInfo = 7;
+    FraudInfo fraudInfo = 8;
+}
+
+message UpdateBattleScoreRequest {
+    string requestId = 1;
+    string battleId = 2;
+    int32 userId = 3;
+    int32 score = 4;
+    string scoreData = 5;
+    bool isFirstScore = 6;
+    string partnerKey = 7;
+    double decimalScore = 8;
+    int32 lobbyId = 9;
+    string sessionId = 10;
+    string roundId = 11;
+}
+
+message UpdateBattleScoreResponse {
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool isSuccess = 3;
+    bool matched = 4;
+    bool resultsDeclared = 5;
+    bool winner = 6;
+    MoneyDTO amount = 7;
+    string currencyType = 8;
+    int32 rank = 9;
+    LobbyPlayerData playerData = 10;
+    PlayerType playerType = 11;
+}
+
+message FinishRummyBattleWithMultipleRoundsRequest{
+    string requestId = 1;
+    string roundId = 2;
+    string battleId = 3;
+    int32 lobbyId = 4;
+    repeated UpdateBattleScoreRequest score = 5;
+    bool isFinalRound = 6;
+    RummyType rummyType = 7;
+    bool skipDSEventPublish = 8;
+}
+
+message FinishRummyBattleWithMultipleRoundsResponse{
+    string requestId = 1;
+    bool isSuccess = 2;
+    string battleStatus = 3;
+    CardGamesError error = 4;
+    bool battlePlayAgainDisabled = 5;
+    repeated LobbyPlayerData playersData = 6;
+    CollusionInfo collusionInfo = 7;
+    bool isFinalRound = 8;
+    FraudInfo fraudInfo = 9;
+
+}
+
+enum ReasonType{
+    DATA_CORRUPTION = 0;
+    INTERNAL_ERROR = 1;
+    SCHEDULER_BASED_CANCEL = 2;
+    FRAUD_DETECTION = 3;
+    COLLUSION_DETECTED = 4;
+}
+
+message CancellationDetails{
+    string source = 1;
+    string reason = 2;
+    ReasonType reasonType = 3;
+}
+
+message CancelBattleRequest {
+    string requestId = 1;
+    string battleId = 2;
+    int32 lobbyId = 3;
+    string roundId = 4;
+    CancellationDetails cancellationDetails = 5;
+}
+
+message CancelBattleResponse {
+    string requestId = 1;
+    bool isSuccess = 2;
+    CardGamesError error = 3;
+    repeated LobbyPlayerData playerData = 4;
+    string battleStatus = 5;
+    string sessionId = 6;
+}
+
+message CreateLobbyPlayerTableRequest{
+    string requestId = 1;
+    int32 lobbyId = 2;
+    int32 gameId = 3;
+}
+
+message CreateLobbyPlayerTableResponse{
+    string requestId = 1;
+    bool isSuccess = 2;
+    CardGamesError error = 3;
+}
+
+
+message AuthenticationRequest {
+    string requestId = 1;
+    string authToken = 2;
+    int32 lobbyId =3;
+    string sessionId = 4;
+    ActiveTableDetails activeTableDetails = 5;
+}
+
+// Add error validation and pass to game server-P0
+message AuthenticationResponse {
+    CardGamesError error = 1;
+    bool isAuthentic = 2;
+    uint32 userId = 3;
+    bool canPlayAgain = 4;
+    string requestId = 5;
+    bool isSuccess = 6;
+    Wallet wallet = 7;
+    bool hasRummyWalletBalance = 8;
+    string authFailureReason = 9;
+    string cardGameWalletSessionId = 10;
+}
+
+message AddCashToRummyWalletRequest{
+    string requestId = 1;
+    int32 userId = 2;
+    string sessionId = 3;
+    MoneyDetail amount = 4;
+    int32 lobbyId = 6;
+}
+
+message AddCashToRummyWalletResponse{
+    string requestId = 1;
+    int32 userId = 2;
+    string sessionId = 3;
+    Wallet wallet = 4;
+    bool isSuccess = 5;
+    CardGamesError error = 6;
+}
+
+message GetUserBalanceRequest{
+    int32 userId = 1;
+    int32 lobbyId = 2;
+    string sessionId = 3;
+}
+
+message GetUserBalanceResponse{
+    CardGamesError error =1;
+    uint32 userId = 2;
+    double depositBalance = 3;
+    double bonusBalance = 4;
+    double withDrawableBalance = 5;
+    double minWindow = 6;  ///for point rummy
+    double maxWindow = 7;
+    uint32 gridSize = 8;
+    bool canPlayAgain = 9;
+    bool isSuccess = 10;
+}
+
+message RejoinBattleRequest{
+    string requestId = 1;
+    string battleId = 2;
+    int32 userId = 3;
+    int32 lobbyId = 4;
+    string sessionId = 5;
+}
+
+message RejoinBattleResponse{
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool isSuccess = 3;
+    LobbyPlayerData playerData = 4;
+}
+
+message FinishSessionRequest{
+    string requestId = 1;
+    string sessionId = 2;
+    int32 userId = 3;
+    int32 lobbyId = 4;
+}
+
+message FinishSessionResponse{
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool isSuccess = 3;
+}
+
+
+message GetUserRummyWalletRequest{
+    string requestId = 1;
+    string sessionId = 2;
+    int32 userId = 3;
+    int32 lobbyId = 4;
+}
+
+message GetUserRummyWalletResponse{
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool isSuccess = 3;
+    Wallet wallet = 4;
+}
+
+message GetPlayerCGLobbyHistoryRequest {
+    string requestId = 1;
+    int32 userId = 2;
+    int32 start = 3;
+    int32 count = 4;
+    int64 startTimeStamp = 5;
+    int64 endTimeStamp = 6;
+    string battleId = 7;
+    int32 gameId = 8;
+}
+
+message GetPlayerCGLobbyHistoryResponse {
+    string requestId = 1;
+    bool isSuccess = 2;
+    CardGamesError error = 3;
+    repeated LobbyPlayerData battles = 4;
+}
+
+message GetActiveUsersRequest{
+    string requestId = 1;
+    int32 gameId = 2;
+    int32 lobbyId = 3;
+}
+
+message GetActiveUsersResponse{
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool isSuccess = 3;
+    int32 activeUsersCount = 4;
+}
+
+// Start of models for all new card games - GIN/SPADES/CLUB9
+
+
+message ActiveTableDetails{
+    bool activeTablePresent = 1;
+    string activeTableId = 2;
+}
+
+message AccountTransactionDetails{
+    MoneyDetail deficit = 1;
+    MoneyDetail totalCashDeduction = 2;
+    MoneyDetail bonusDeduction = 3;
+    MoneyDetail winningDeduction = 4;
+    MoneyDetail depositDeduction = 5;
+    MoneyDetail ticketDeduction = 6;
+}
+
+message CreateGameTablePlayerData {
+    int32 userId = 1;
+    bool success = 2;
+    AccountTransactionDetails accountTransactionDetails = 3;
+    bool eligibleForDropAndSwitch = 4;
+}
+
+message UserScoreData{
+    int32 userId = 1;
+    double gameScore =2;
+
+}
+
+message TableUserData {
+    string tableId = 1;
+    string roundId = 2;
+    int32 userId = 3;
+    double gameScore = 4;
+    int32 rank = 5;
+    string playerState = 6;
+    string tableState = 7;
+    bool userEligibleForNextTable = 8;
+    MoneyDetail cashWinnings = 9;
+}
+
+message AuthenticateCardGameServerRequest {
+    string authToken = 1;
+    int32 lobbyId = 2;
+    string requestId = 3;
+}
+
+message AuthenticateCardGameServerResponse {
+    bool success = 1;
+    bool isAuthentic = 2;
+    int32 userId = 3;
+    CardGamesError error = 4;
+    string requestId = 5;
+
+}
+
+message CheckCardGamePlayerEligibilityRequest{
+    int32 userId = 1;
+    int32 lobbyId = 2;
+    ActiveTableDetails activeTableDetails = 3;
+    string requestId = 4;
+
+}
+
+message CheckCardGamePlayerEligibilityResponse{
+    bool success = 1;
+    bool playerEligible = 2;
+    CardGamesError error = 3;
+    string requestId = 4;
+    bool eligibleForDropAndSwitch = 5;
+}
+
+message CreateCardGameTableRequest {
+    int32 lobbyId = 1;
+    int32 gameId = 2;
+    string gameTableId = 3;
+    map<int32,string> userIdToSessionIds = 4;
+    string requestId = 5;
+}
+
+message CreateCardGameTableResponse {
+    CardGamesError error = 1;
+    bool success = 2;
+    repeated CreateGameTablePlayerData players = 3;
+    string tableId = 4;
+    string requestId = 5;
+    FraudInfo fraudInfo = 6;
+}
+
+message UpdateCardGameTableRequest {
+    int32 lobbyId = 1;
+    string tableId = 2;
+    string roundId = 3;
+    repeated UserScoreData userScoreData = 4;
+    string requestId = 5;
+    string scoreData = 6;
+    bool skipDSEventPublish = 7;
+}
+
+message UpdateCardGameTableResponse {
+    CardGamesError error = 1;
+    bool success = 2;
+    repeated TableUserData userData = 3;
+    string requestId = 4;
+}
+
+message FinishCardGameTableRequest{
+    int32 lobbyId = 1;
+    string roundId = 2;
+    string tableId = 3;
+    repeated UserScoreData userScoreData = 4;
+    string requestId = 5;
+    string scoreData = 6;
+    bool skipDSEventPublish = 7;
+}
+
+message FinishCardGameTableResponse{
+    bool success = 1;
+    repeated TableUserData userData = 2;
+    CardGamesError error = 3;
+    string requestId = 4;
+    FraudInfo fraudInfo = 5;
+}
+
+// message AuthenticateForRTRequest{
+//     string requestId = 1;
+//     int32 userId = 2;
+//     int32 tournamentId = 3;
+// }
+
+// message LevelDetails{
+//     int32 id = 1;
+//     int32 gameId = 2;
+//     string state = 3;
+//     int32 winnersPerMatch = 4;
+//     int32 perRoundTime = 5;
+//     int32 perLevelTime = 6;
+//     int32 tournamentId = 7;
+//     int32 serialNumber = 8;
+//     string startTime = 9;
+//     string endTime = 10;
+// }
+
+// message RTPlayerData{
+//     com.mpl.services.userdata.grpc.BasicProfile profileDetails = 1;
+//     int32 score = 2;
+//     int32 userId = 3;
+//     int32 tournamentId = 4;
+//     int32 levelId = 5;
+//     string tableId =6;
+//     int32 rank = 7;
+//     bool eligibleForNextRound = 8;
+//     MoneyDTO reward = 9;
+// }
+
+// message TableDetails{
+//     string tableId = 1;
+//     int32 tournamentId = 2;
+//     int32 levelId = 3;
+//     repeated RTPlayerData playersData = 4;
+//     string startTime = 5;
+//     string endTime = 6;
+//     string tournamentStartTime = 7;
+//     int32 totalLevels = 8;
+// }
+
+// message AuthenticateForRTResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+//     TableDetails tableDetails = 4;
+//     LevelDetails currLevelDetails = 5;
+//     LevelDetails nextLevelDetails = 6;
+//     bool isBye =7;
+//     UserStatus status = 8;
+//     LevelStatus previousLevelsStatus = 9;
+// }
+
+// message CreateRummyTournamentRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 gameId = 3;
+// }
+
+// message CreateRummyTournamentResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+// }
+
+// message RegisterForRummyTournamentRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 gameId = 3;
+//     int32 userId = 4;
+// }
+
+// message RegisterForRummyTournamentResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+// }
+
+// message DeregisterForRummyTournamentRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 gameId = 3;
+//     int32 userId = 4;
+// }
+
+// message DeregisterForRummyTournamentResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+// }
+
+// message FinishRummyTournamentRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 gameId = 3;
+// }
+
+// message FinishRummyTournamentResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+// }
+
+// message CancelRummyTournamentRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 gameId = 3;
+// }
+
+// message CancelRummyTournamentResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+// }
+
+// message FinishBattleForRTRequest {
+//     string requestId = 1;
+//     string roundId = 2;
+//     string battleId = 3;
+//     int32 tournamentId = 4;
+//     repeated UpdateBattleScoreRequest score = 5;
+//     bool isFinalRound = 6;
+//     RummyType rummyType = 7;
+//     int32 levelId = 8;
+//     FinishType finishType = 9;
+//     FraudInfo fraudInfo = 10;
+// }
+
+// message FinishBattleForRTResponse{
+//     string requestId = 1;
+//     bool isSuccess = 2;
+//     string battleStatus = 3;
+//     CardGamesError error = 4;
+//     bool battlePlayAgainDisabled = 5;
+//     repeated RTPlayerData playersData = 6;
+//     CollusionInfo collusionInfo = 7;
+//     bool isFinalRound = 8;
+// }
+
+// message FinishLevelForRTRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 gameId = 3;
+//     int32 levelId = 4;
+//     int32 tableId = 5;
+// }
+
+// message FinishLevelForRTResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+// }
+
+// message DropUserInTableForRTRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 gameId = 3;
+//     int32 levelId = 4;
+//     int32 tableId = 5;
+// }
+
+// message DropUserInTableForRTResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+// }
+
+// message TestScheduleRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     string startTime = 3;
+//     int32 levelId = 4;
+//     bool isFirst = 5;
+// }
+
+// message TestScheduleResponse{
+//     string requestId = 1;
+//     CardGamesError error = 2;
+//     bool isSuccess = 3;
+// }
+
+message GetActiveUserTournamentRequest{
+    string requestId = 1;
+    int32 userId = 2;
+    int32 gameId = 3;
+}
+
+message RejoinTournamentPlayerData{
+    repeated com.mpl.services.userdata.grpc.BasicProfile profile = 1;
+    int32 tournamentId = 2;
+}
+
+message GetActiveUserTournamentResponse{
+    bool isSuccess = 1;
+    repeated RejoinTournamentPlayerData playerData = 2;
+    CardGamesError error = 3;
+}
+
+// message SeedUserRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 levelId = 3;
+// }
+
+// message SeedUserResponse{
+//     bool isSuccess = 1;
+//     CardGamesError error = 2;
+// }
+
+message GetBattleDataRequest{
+    string battleId = 1;
+    string requestId = 2;
+}
+
+message GetBattleDataResponse{
+    map<int32,string> userBattleGameData = 1;
+    bool isSuccess = 2;
+    CardGamesError error = 3;
+}
+
+// message UpdateUserExitStatusForRTRequest{
+//     string requestId = 1;
+//     int32 tournamentId = 2;
+//     int32 levelId = 3;
+//     int32 score = 4;
+//     int32 userId = 5;
+// }
+
+// message UpdateUserExitStatusForRTResponse{
+//     bool isSuccess = 1;
+//     CardGamesError error = 2;
+// }
+
+// message GetUserRummyTournamentGamePlayDataRequest{
+//     string requestId = 1;
+//     int32 gameId = 2;
+//     int32 userId = 3;
+//     int32 tournamentId = 4;
+//     string tableId = 5;
+//     int32 start = 6;
+//     int32 count = 7;
+// }
+
+// message TournamentWiseGamePlayData{
+//     int32 tournamentId = 1;
+//     repeated LevelWiseGamePlayData levelData = 2;
+// }
+
+// message LevelWiseGamePlayData{
+//     int32 levelId = 1;
+//     int32 levelSerialNumber = 2;
+//     repeated UserWiseGamePlayData userData= 3;
+// }
+
+// message UserWiseGamePlayData{
+//     string gameData = 1;
+//     int32 score = 2;
+//     int32 userId = 3;
+//     int32 tournamentId = 4;
+//     int32 levelId = 5;
+//     string tableId =6;
+//     int32 rank = 7;
+//     string extraInfo = 8;
+// }
+
+// message GetUserRummyTournamentGamePlayDataResponse{
+//     string requestId = 1;
+//     bool success = 2;
+//     repeated TournamentWiseGamePlayData rtGamePlayData = 3;
+//     CardGamesError error = 4;
+//     int32 totalGameplayCount = 5;
+// }
+
+// End of models for all new card games - GIN/SPADES/CLUB9
+
+
+message JoinCardGameLobbyRequestData {
+    string requestId = 1;
+    int32 lobbyId = 2;
+    int32 userId = 3;
+    bool isPractice = 4;
+    string ticketCode = 5;
+    string ticketValue = 6;
+    bool isPartPay = 7;
+    MoneyDetail amountToBeDeducted = 8;
+    int32 gameId = 9;
+}
+
+
+message JoinCardGameLobbyResponseData {
+    string requestId = 1;
+    CardGamesError error = 2;
+    int32 userId = 3;
+    MoneyDetail deficit = 4;
+    bool canJoin = 5;
+    string message = 6;
+    string gameConfig = 7;
+    bool success = 8;
+}
+
+message ReJoinCardGameLobbyRequestData {
+    string requestId = 1;
+    int32 lobbyId = 2;
+    int32 userId = 3;
+    bool isPractice = 4;
+    string ticketCode = 5;
+    string ticketValue = 6;
+    bool isPartPay = 7;
+    MoneyDetail amountToBeDeducted = 8;
+    int32 gameId = 9;
+}
+
+
+message ReJoinCardGameLobbyResponseData {
+    string requestId = 1;
+    CardGamesError error = 2;
+    int32 userId = 3;
+    MoneyDetail deficit = 4;
+    bool canJoin = 5;
+    string message = 6;
+    string gameConfig = 7;
+    bool success = 8;
+}
+
+message CreateTablePlayerData {
+    string userId = 1;
+    bool success = 2;
+    AccountTransactionDetails accountTransactionDetails = 3;
+}
+
+
+message ProcessPlayMoreForCardGamesRequest {
+    string requestId = 1;
+    int32 lobbyId = 2;
+    int32 userId = 3;
+}
+
+message ProcessPlayMoreForCardGamesResponse{
+    string requestId = 1;
+    bool isSuccess = 2;
+    CardGamesError error = 3;
+}
+
+message GetLobbyDetailsByIdRequest{
+    string requestId = 1;
+    int32 lobbyId = 2;
+}
+
+message GetLobbyDetailsByIdResponse{
+    string requestId = 1;
+    bool isSuccess = 2;
+    CardGamesError error = 3;
+    LobbyDetails lobbyDetails = 4;
+}
+
+message VerifyCardGamePlayerEligibilityRequest{
+    int32 userId = 1;
+    int32 lobbyId = 2;
+    ActiveTableDetails activeTableDetails = 3;
+    string flowType = 4; // SIGN_UP,INSTANT_DEBIT_VALIDATION
+}
+
+message VerifyCardGamePlayerEligibilityResponse{
+    bool success = 1;
+    bool playerEligible = 2;
+    CardGamesError error = 3;
+}
+
+message DropUserForGameTableRequest{
+    string requestId = 1;
+    int32 userId = 2;
+    string battleId = 3;
+    int32 lobbyId = 4;
+}
+
+message DropUserForGameTableResponse{
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool success = 3;
+}
+
+message SendInstrumentationEventRequest {
+    string requestId = 1;
+    string eventData = 2;
+}
+
+message SendInstrumentationEventResponse{
+    string requestId = 1;
+    bool isSuccess = 2;
+    CardGamesError error = 3;
+}
+message PointRummyAutoDebit{
+    bool isAutoDebitDone  = 1;
+    MoneyDetail moneyDetail = 2;
+    string error = 3;
+}
+
+enum TransactionType{
+    CREDIT=0;
+    DEBIT=1;
+}
+
+enum TransactionReason{
+    FIRST_DROP=0;
+    MIDDLE_DROP=1;
+    VALID_DECLARE=2;
+    EXIT_TABLE=3;
+    SWITCH_TABLE=4;
+    STAND_UP=5;
+    AUTO_ADDITION_OF_FUNDS=6;
+    MANUAL_ADDITION_OF_FUNDS=7;
+    TRANSFERRED_TO_MPL_WALLET=8;
+    OPPONENT_VALID_DECLARE=9;
+    JOIN_TABLE=10;
+    INVALID_DECLARE=11;
+    TRANSFERRED_FROM_MPL_WALLET=12;
+}
+
+message Transaction{
+    TransactionType type = 1;
+    double cashAmount = 2;
+    double totalWalletBalance = 3;
+    double winningsAmount =4;
+    double depositAmount =5;
+    double bonusAmount =6;
+    TransactionReason transactionReason = 7;
+    double gameScore = 8;
+    double ticketBalance = 9;
+    string finalTransactionStatement = 10;
+}
+
+/* userId and lobbyId being the main parameters
+start and count are to be sent for pagination
+*/
+message GetRummyWalletTransactionsRequest{
+    string requestId = 1;
+    int32 lobbyId = 2;
+    int32 userId = 3;
+    int32 gameId = 4;
+    int32 start = 5;
+    int32 count = 6;
+}
+
+/*List of transactions sorted in the created time ascending order
+the key of moreTransactionsPresent is used to make the next call or not.
+*/
+
+
+message GetRummyWalletTransactionsResponse{
+    string requestId = 1;
+    repeated Transaction transaction =2;
+    bool isSuccess = 3;
+    CardGamesError error = 4;
+    bool moreTransactionsPresent = 5;
+}
+
+//message GetRummyTournamentUserBattleDetailRequest {
+//    string battleId = 1;
+//    uint32 userId = 2;
+//    uint32 tournamentId = 3;
+//}
+
+//message GetRummyTournamentUserBattleDetailResponse {
+//    UserWiseGamePlayData gamePlayData = 1;
+//    bool success = 2;
+//    CardGamesError error = 3;
+//}
+
+/**
+Will be used for Multi table rummy
+ */
+
+message GameConfigResponseData {
+    int32 lobbyId = 1;
+    int32 gameId = 2;
+    MoneyDTO entryFee = 3;
+    bool showEmoji = 4;
+    int32 maxPoints = 5;
+    int32 maxPlayers = 6;
+    int32 minPlayers = 7;
+    bool manualSplit = 8;
+
+    string socketUrl = 9;
+    int32 socketTimeout = 10;
+    int32 socketErrorTimeout = 11;
+
+    int32 userTurnTimer = 12;
+    int32 gameStartTimer = 13;
+    int32 userFinishTimer = 14;
+
+    int32 requestRetryCount = 15;
+    int32 requestRetryDelay = 16;
+
+    bool rummyTips = 17;
+    bool networkIndicator = 18;
+    int32 maxPingCounter = 19;
+    bool festivalUIEnabled = 20;
+    int32 pingInterval = 21;
+    int32 maxPongDelay = 22;
+    int32 battleAgainTimeout = 23;
+    int64 startTime = 24;
+
+    bool pileDiscardCheck = 25;
+    bool roundShuffle = 26;
+    bool showLeaderboard = 27;
+    string entryCurrency = 28;
+    string gameType = 29;
+    repeated string activeBattleSocketUrls = 30;
+    string hostUrl = 31;
+
+    bool newlyAddedTable = 32;
+    double rake = 33;
+    string gameFormat = 34;
+
+    int32 disconnectionPopupRetryCount = 35;
+    int32 disconnectToastRetryCount = 36;
+    bool hideProfile = 37;
+    bool newUI = 38;
+    bool multitableAllowed = 39;
+    bool logEnabled = 40;
+    map<string, string> additionalConfig = 41; //Rename this to additionalConfig
+    int32 networkPingPong = 42;
+    bool multiWinner = 43;
+    int32 totalRounds = 44;
+    int32 maxRetryCount = 45;
+    int32 eventTimeout = 46;
+    bool enableRemoteLogger = 47;
+    bool remoteLoggerThirdPartySupport = 48;
+
+}
+message JoinCardGameLobbyMultiTableRequestData {
+    string requestId = 1;
+    int32 lobbyId = 2;
+    int32 userId = 3;
+    bool isPractice = 4;
+    string ticketCode = 5;
+    string ticketValue = 6;
+    int32 gameId = 7;
+    bool dropUserInGameTables = 8;
+    string source = 9;
+    bool isPartPay = 10;
+    int32 reactVersion = 11;
+}
+
+message JoinCardGameLobbyMultiTableResponseData {
+    string requestId = 1;
+    CardGamesError error = 2;
+    int32 userId = 3;
+    MoneyDetail deficit = 4;
+    bool canJoin = 5;
+    string message = 6;
+    bool success = 7;
+    repeated GameConfigResponseData existingBattleConfigs = 8;
+    int32 maxBattleCount = 9;
+}
+
+message GameConfigRejoinLobbyResponseData {
+    int32 lobbyId = 1;
+    int32 gameId = 2;
+    string socketUrl = 3;
+    string entryCurrency = 4;
+    string gameConfig = 5;
+}
+
+message RejoinCardGameLobbyMultiTableRequestData {
+    string requestId = 1;
+    int32 userId = 2;
+    int32 gameId = 3;
+    string gameType = 4;
+    string gameFormat = 5;
+    string source = 6;
+}
+
+message RejoinCardGameLobbyMultiTableResponseData {
+    string requestId = 1;
+    CardGamesError error = 2;
+    int32 userId = 3;
+    int32 gameId = 4;
+    bool canRejoin = 5;
+    string message = 6;
+    repeated GameConfigResponseData existingBattleConfigs = 7;
+    bool success = 8;
+}
+
+message SessionConfigForGamePlayRequest {
+    string gameType = 1;
+    string gameFormat = 2;
+}
+
+message SessionConfigForGamePlayResponse {
+    string serverLedToastMsg = 1;
+    string userLedErrorToastMsg = 2;
+    string reconnectServerLedMsg = 3;
+    string reconnectUserLedMsg = 4;
+    repeated string networkIndicatorColors = 5;
+    bool realityCheckEnabled = 6;
+    int32 realityCheckSessions = 7;
+    int32 realityCheckTimerDuration = 8;
+    bool success = 9;
+    CardGamesError error = 10;
+    int32 maxBattleCount = 11;
+}
+
+message AuthenticateGameServerRequestV2 {
+    string requestId = 1;
+    string authToken = 2;
+    int32 lobbyId = 3;
+    ActiveTableDetails activeTableDetails = 4;
+    uint32 userId = 5;
+}
+
+message AuthenticateGameServerResponseV2 {
+    CardGamesError error = 1;
+    bool isAuthentic = 2;
+    uint32 userId = 3;
+    bool canPlayAgain = 4;
+    string requestId = 5;
+    bool success = 6;
+    Wallet wallet = 7;
+    bool hasRummyWalletBalance = 8;
+    string authFailureReason = 9;
+    string cardGameWalletSessionId = 10;
+}
+
+message GetActiveBattlesRequestV2 {
+    string requestId = 1;
+    int32 userId = 2;
+    int32 gameId = 3;
+    int32 lobbyId = 4;
+    string battleId = 5;
+    string gameType = 6;
+    string gameFormat = 7;
+}
+
+message BattlePlayerDetailsV2 {
+    /*enum WinningState {
+        WINNER = 0;
+        LOSER = 1;
+        TIED = 2;
+        PENDING = 3;
+        REFUNDED = 4;
+    }*/
+
+    int32 userId = 1;
+    string userName = 2;
+    string userImageUrl = 3;
+    //WinningState winningState = 4;
+    //string displayName = 5;
+}
+
+message BattleHistoryDetailsV2 {
+    enum UserBattleState {
+        WAITING = 0;
+        FINISHED = 1;
+        CANCELLED = 2;
+    }
+    UserBattleState userBattleState = 1;
+    int32 gameId = 3;
+    string battleId = 4;
+    int32 lobbyId = 5;
+    repeated BattlePlayerDetailsV2 battlePlayers = 6;
+    string gameType = 7;
+    string gameFormat = 8;
+    //string battleStartTime = 7;
+    //string battleType = 8;
+
+}
+
+message GetActiveBattlesResponseV2 {
+    string requestId = 1;
+    CardGamesError error = 2;
+    repeated BattleHistoryDetailsV2 activeBattles = 3;
+    bool isSuccess = 4;
+}
+
+message BattleLobbyInfo {
+    string battleId = 1;
+    int32 lobbyId = 2;
+    string gameType = 3;
+}
+
+message DropUserForGameTablesRequest{
+    string requestId = 1;
+    int32 userId = 2;
+    repeated BattleLobbyInfo battles = 3;
+}
+
+message DropUserForGameTablesResponse{
+    string requestId = 1;
+    CardGamesError error = 2;
+    bool success = 3;
+}
+
+message CreateCardGameTableRequestV2 {
+    int32 lobbyId = 1;
+    int32 gameId = 2;
+    string gameTableId = 3;
+    repeated int32 userIds = 4;
+    map<int32,string> userIdToSessionIds = 5;
+    string requestId = 6;
+    repeated UserLobbyDetails userLobbyDetailList = 7;//Cross lobby support
+}
+
+message CreateCardGameTableResponseV2 {
+    CardGamesError error = 1;
+    bool success = 2;
+    repeated CreateGameTablePlayerData players = 3;
+    string tableId = 4;
+    string requestId = 5;
+    FraudInfo fraudInfo = 6;
+}
+
+message UpdateOrFinishCardGameTableRequestV2 {
+    int32 lobbyId = 1;
+    string tableId = 2;
+    string roundId = 3;
+    repeated UpdateBattleScoreRequest score = 4;
+    string requestId = 5;
+    bool isFinalRound = 6;
+    RummyType rummyType = 7;
+    bool skipDSEventPublish = 8;
+}
+
+message UpdateOrFinishCardGameTableResponseV2 {
+    string requestId = 1;
+    bool success = 2;
+    string battleStatus = 3;
+    CardGamesError error = 4;
+    bool battlePlayAgainDisabled = 5;
+    repeated LobbyPlayerData playersData = 6;
+    CollusionInfo collusionInfo = 7;
+    bool isFinalRound = 8;
+    FraudInfo fraudInfo = 9;
+}
+
+message FinishUserSessionRequest {
+    string requestId = 1;
+    string sessionId = 2;
+    int32 userId = 3;
+    int32 lobbyId = 4;
+}
+
+message FinishUserSessionResponse {
+    string requestId = 1;
+    bool success = 2;
+    CardGamesError error = 3;
+}
+
+message UpdateUserBattleScoreResponse {
+    string requestId = 1;
+    bool success = 2;
+    LobbyPlayerData playerData = 3;
+    CardGamesError error = 4;
+    //bool matched = 3;
+    //bool resultsDeclared = 5;
+    //bool winner = 6;
+    //MoneyDTO amount = 7;
+    //string currencyType = 8;
+    //int32 rank = 9;
+    //PlayerType playerType = 11;
+}
+
+message EligiblePlayersForBattlePlayRequest {
+    int32 lobbyId = 1;
+    int32 gameId = 2;
+    string battleId = 3;
+}
+
+message EligiblePlayersForBattlePlayResponse {
+    repeated int32 userIds = 1;
+    bool success = 2;
+    int32 lobbyId = 3;
+    int32 gameId = 4;
+    string battleId = 5;
+    CardGamesError error = 6;
+}
+
+message GetActiveBattlesForUserRequest {
+    int32 userId = 1;
+    int32 gameId = 2;
+}
+
+message BattlePlayerDetailsV3 {
+    int32 userId = 1;
+    string userName = 2;
+    string userImageUrl = 3;
+}
+
+message BattleHistoryDetailsV3 {
+    enum UserBattleState {
+        WAITING = 0;
+        FINISHED = 1;
+        CANCELLED = 2;
+    }
+    UserBattleState userBattleState = 1;
+    int32 gameId = 2;
+    string battleId = 3;
+    int32 lobbyId = 4;
+    string lobbyName = 5;
+    repeated BattlePlayerDetailsV3 battlePlayers = 6;
+    string gameType = 7;
+    string gameFormat = 8;
+    string entryFee = 9;
+    int32 maxPoints = 10;
+    string currencyCode = 11;
+}
+
+message GetActiveBattlesForUserResponse {
+    repeated BattleHistoryDetailsV3 activeBattles = 1;
+}
+
+message UserDummyMPLWalletRequest {
+    int32 userId = 1;
+}
+
+message UserDummyMPLWalletResponse {
+    int32 userId = 1;
+    bool success = 2;
+    double depositBalance = 3;
+    double bonusBalance = 4;
+    double withDrawableBalance = 5;
+    double pointsWalletBalance = 6;
+    double totalBalance = 7;
+    double totalDummyBalance = 8;
+    CardGamesError error = 9;
+}
+
+message TestRequest {
+    int32 tournamentId = 1;
+    int32 levelId = 2;
+    int32 userId = 3;
+}
+
+message TestResponse {
+
+}
+
+message TestSaveHistoryToDynamoRequest{
+    string battleId = 1;
+}
+
+message EmptyResponse{}
+
+message GetPlayerHistoryCGHRequest {
+    string startTime = 1;
+    string endTime = 2;
+    uint32 count = 3;
+}
+
+message GetPlayerHistoryCGHResponse {
+    repeated string battleIds = 1;
+    string lastCreatedOn = 2;
+}
+
+message UserLobbyDetails {
+    uint32 userId = 1;
+    uint32 lobbyId = 2;
+    string appType = 3;
+    string sessionId = 4;
+    string appVersion = 5;
+}
+
+message MultiLobbyCreateBattleRequest {
+    string requestId = 1;
+    repeated UserLobbyDetails userLobbyDetailList = 2;
+    string battleId = 3;
+    int32 gameId = 4;
+}
+
+message FinishMultiLobbyBattleRequest{
+    string requestId = 1;
+    string roundId = 2;
+    string battleId = 3;
+    int32 lobbyId = 4;
+    repeated UpdateBattleScoreRequest score = 5;
+    bool isFinalRound = 6;
+    bool skipDSEventPublish = 7;
+}
+
+message FinishMultiLobbyBattleResponse{
+    string requestId = 1;
+    bool isSuccess = 2;
+    string battleStatus = 3;
+    CardGamesError error = 4;
+    bool battlePlayAgainDisabled = 5;
+    repeated LobbyPlayerData playersData = 6;
+    CollusionInfo collusionInfo = 7;
+    bool isFinalRound = 8;
+    FraudInfo fraudInfo = 9;
+}
+
+message MultipleUsersUpdateBattleScoreResponse {
+    CardGamesError error = 1;
+    repeated UpdateBattleScoreResponse updateBattleScoreResponses = 2;
+}
+
+message SaveGameDataHistoryRequest {
+    string tableId  = 1;
+    string gameData = 2;
+    int32 roundNo = 3;
+}
+
+message Empty {}
+
+message UpdateTableRoundRequest {
+    string tableId = 1;
+    int32 roundNo = 2;
+}
+
+service CardGamesService {
+    rpc authenticate (AuthenticationRequest) returns (AuthenticationResponse);
+    // rpc createBattle (CreateBattleRequest) returns (CreateBattleResponse);
+
+    // rpc createPointsRummyBattle (CreatePointsRummyBattleRequest) returns (CreatePointsRummyBattleResponse);
+    // rpc finishPointsRummyBattle (FinishPointsRummyBattleRequest) returns (FinishPointsRummyBattleResponse);
+    // rpc updateBattleScore (UpdateBattleScoreRequest) returns (UpdateBattleScoreResponse);
+
+    // rpc finishRummyBattleWithMultipleRounds (FinishRummyBattleWithMultipleRoundsRequest) returns (FinishRummyBattleWithMultipleRoundsResponse);
+    rpc cancelBattle(CancelBattleRequest) returns (CancelBattleResponse);
+    rpc addCashToRummyWallet(AddCashToRummyWalletRequest) returns (AddCashToRummyWalletResponse);
+
+    rpc getUserBalance(GetUserBalanceRequest)  returns(GetUserBalanceResponse);
+    rpc poolRummyManualSplit(FinishRummyBattleWithMultipleRoundsRequest) returns (FinishRummyBattleWithMultipleRoundsResponse);
+    rpc rejoinBattle(RejoinBattleRequest) returns(RejoinBattleResponse);
+    // rpc finishSession(FinishSessionRequest) returns (FinishSessionResponse); // old
+    
+    rpc authenticateGameServerV2 (AuthenticateGameServerRequestV2) returns (AuthenticateGameServerResponseV2);
+    rpc dropUserForGameTableV2 (DropUserForGameTablesRequest) returns (DropUserForGameTablesResponse);
+    rpc createCardGameTableV2 (CreateCardGameTableRequestV2) returns (CreateCardGameTableResponseV2);
+    rpc updateOrFinishCardGameTableV2 (UpdateOrFinishCardGameTableRequestV2) returns (UpdateOrFinishCardGameTableResponseV2);
+    rpc finishUserSession (FinishUserSessionRequest) returns (FinishUserSessionResponse); // new
+    rpc updateUserBattleScore (UpdateBattleScoreRequest) returns (UpdateUserBattleScoreResponse);
+    rpc getUserDummyMPLWallet (UserDummyMPLWalletRequest) returns (UserDummyMPLWalletResponse);
+    rpc getLobbyDetailsById(GetLobbyDetailsByIdRequest) returns (GetLobbyDetailsByIdResponse);
+    rpc verifyPlayerEligibility(VerifyCardGamePlayerEligibilityRequest) returns (VerifyCardGamePlayerEligibilityResponse);
+
+    // For Game server instrumentation
+    rpc sendInstrumentationEvent(SendInstrumentationEventRequest) returns (SendInstrumentationEventResponse);
+}

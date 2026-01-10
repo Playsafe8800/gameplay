@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+hooks:
+  BeforeInstall:
+    - location: automation-scripts/stop.sh
+      timeout: 300
+      runas: ec2-user
+    - location: automation-scripts/deploy.sh
+      timeout: 300
+      runas: ec2-user
+  AfterInstall:
+    - location: automation-scripts/cleanup.sh
+      timeout: 300
+      runas: ec2-user
+  ApplicationStart:
+    - location: automation-scripts/start.sh
+      timeout: 300
+      runas: ec2-user

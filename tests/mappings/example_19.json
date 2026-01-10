@@ -1,0 +1,30 @@
+{
+  "request": {
+    "url": "/CardGamesService/authenticateGameServerV2",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "requestId": "${json-unit.ignore}",
+          "authToken": "auth-card-game-server-v6-test",
+          "lobbyId": 6075097
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "error": null,
+      "isAuthentic": true,
+      "userId": 837772,
+      "canPlayAgain": true,
+      "requestId": "1f69778f-bf61-4ccb-9dd0-4c9dd8075263",
+      "success": true,
+      "wallet": null,
+      "hasRummyWalletBalance": false,
+      "authFailureReason": "",
+      "cardGameWalletSessionId": ""
+    }
+  }
+}

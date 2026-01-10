@@ -1,0 +1,31 @@
+{
+  "request": {
+    "url": "/CardGamesService/dropUserForGameTableV2",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "requestId": "${json-unit.any-string}",
+          "userId": "${json-unit.any-string}",
+          "battles": [
+            {
+              "battleId": "${json-unit.any-string}",
+              "lobbyId": 6075097,
+              "gameType": "MULTI_TABLE_RUMMY"
+            }
+          ]
+        },
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "requestId": "",
+      "error": null,
+      "success": true
+    }
+  }
+}

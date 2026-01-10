@@ -1,0 +1,60 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "packageManager": "npm",
+  "checkers": ["typescript"],
+  "tsconfigFile": "tsconfig.json",
+  "warnings": true,
+  "testRunner": "jest",
+  "mutate": ["src/utils/index.ts"],
+  "plugins": ["@stryker-mutator/*"],
+  "reporters": ["html", "json", "clear-text", "dots", "progress"],
+  "coverageAnalysis": "off",
+  "allowConsoleColors": true,
+  "tempDirName": ".stryker-tmp",
+  "cleanTempDir": true,
+  "commandRunner": {
+    "command": "npm test"
+  },
+  "maxConcurrentTestRunners": 9007199254740991,
+  "clearTextReporter": {
+    "allowColor": true,
+    "logTests": true,
+    "maxTestsToLog": 3
+  },
+  "jest": {
+    "projectType": "custom",
+    "configFile": "jest.config.js",
+    "config": {
+      "testEnvironment": "node",
+      "preset": "ts-jest",
+      "resetModules": true,
+      "collectCoverageFrom": [
+        "**/*.{js,jsx}",
+        "!**/node_modules/**",
+        "!**/vendor/**",
+        "!**/.stryker-tmp/**"
+      ],
+      "coverageReporters": ["lcov", "text"],
+      "coverageDirectory": "./reports/coverage",
+      "clearMocks": true,
+      "reporters": [
+        "default",
+        [
+          "jest-html-reporters",
+          {
+            "publicPath": "reports/unit",
+            "filename": "index.html"
+          }
+        ]
+      ]
+    },
+    "enableFindRelatedTests": true
+  },
+  "dryRunTimeoutMinutes": 15,
+  "disableTypeChecks": "{tests,src,lib}/**/*.{js,ts,jsx,tsx,html,vue}",
+  "concurrency": 2,
+  "concurrency_comment": "Recommended to use about half of your available cores when running stryker with jest",
+  "checkerNodeArgs": ["--cpu-prof"],
+  "timeoutFactor": 1.5,
+  "timeoutMS": 10000
+}

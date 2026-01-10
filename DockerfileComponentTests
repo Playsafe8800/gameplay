@@ -1,0 +1,19 @@
+# To build run the below Command
+
+# docker build --progress=plain -f DockerfileComponentTests --tag m-central.mpl.live:9092/rummy-multi-table-grpc-wiremock:1.0.0 .
+
+# To publish image to internal JFrog repo/registry
+
+# docker push m-central.mpl.live:9092/rummy-multi-table-grpc-wiremock:1.0.0
+
+FROM adven27/grpc-wiremock:1.3.4
+
+EXPOSE 50000 8888
+
+COPY protos/AuthService.proto /proto/
+COPY protos/CardGamesService.proto /proto/
+COPY protos/UserDataService.proto /proto/
+
+# COPY protos/HealthCheckService.proto /proto/
+
+RUN gradle compileJava

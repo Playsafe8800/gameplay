@@ -1,0 +1,4 @@
+export const REJOIN_POINTS = {
+  SEVENTY_NINE: 79,
+  HUNDRED_SEVENTY_FOUR: 174,
+};

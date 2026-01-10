@@ -1,0 +1,38 @@
+{
+  "request": {
+    "url": "/UserDataService/getBasicProfile",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "requestId": "${json-unit.ignore}",
+          "userId": "837773"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "profile": {
+        "id": "837773",
+        "mobileNumber": "+916377700243",
+        "displayName": "easyseries11954",
+        "avatarId": "pb/ups/a/837773/be67772fd58e42c1ac7f32e95dc01912.jpg",
+        "avatarUrl": "https://mpl-qacdn.mpl.live/pb/ups/a/837773/be67772fd58e42c1ac7f32e95dc01912.jpg",
+        "isPro": true,
+        "tier": "Onyx",
+        "acr": "",
+        "verifyStatus": "NOT_VERIFIED",
+        "state": "OFFLINE",
+        "lastOnline": "1657783865236",
+        "ls": "",
+        "highlight": "",
+        "userName": "easyseries11954",
+        "isUserNameClaimed": false,
+        "profileName": "easyseries11954",
+        "countryCode": "IN"
+      }
+    }
+  }
+}

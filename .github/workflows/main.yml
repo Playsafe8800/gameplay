@@ -1,0 +1,196 @@
+name: Create AMI and New ASG with ALB on Merge to Main
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+
+jobs:
+  build-ami-and-deploy:
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy-on-cloud')
+    runs-on: self-hosted
+    steps:
+      - name: Clean duplicate sources
+        run: |
+          FILE=/etc/apt/sources.list.d/archive_uri-https_apt_releases_hashicorp_com-bookworm.list
+          if [[ -f "$FILE" ]]; then
+            sudo sort -u "$FILE" -o "$FILE"
+          fi
+      - name: Checkout master branch code
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: AKIAZCZ4TCMK3PCFZ5KP
+          aws-secret-access-key: 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
+          aws-region: ap-south-1
+
+      - name: Set Short SHA & Service Name
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          SERVICE_NAME="gameplay-service"
+          echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV
+          echo "SERVICE_NAME=$SERVICE_NAME" >> $GITHUB_ENV
+          
+      - name: Workaround flaky New Relic repo but keep it
+        run: |
+          # Temporarily allow weak checksums (prevents breaking on mismatched metadata)
+          echo 'Acquire::AllowInsecureRepositories "true";' | sudo tee /etc/apt/apt.conf.d/99allow-insecure
+          echo 'Acquire::AllowWeakChecksums "true";' | sudo tee -a /etc/apt/apt.conf.d/99allow-insecure
+      
+          # Retry apt-get update 5x to bypass flaky mirrors
+          for i in {1..5}; do
+            sudo apt-get update && break
+            echo "Retry $i failed. Retrying in 5s..."
+            sleep 5
+          done
+      - name: Install Packer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common unzip
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com bookworm main" || echo "Failed to add repository"
+          sudo apt-get update || echo "Failed to update package list"
+          sudo apt-get install -y packer || echo "Failed to install packer"
+          packer_version=$(packer --version) || echo "Packer version check failed"
+          echo "Installed Packer version: $packer_version"
+          if [[ "$packer_version" < "1.7.0" ]]; then
+            echo "Packer version too old, installing latest manually for AMD64"
+            curl -fsSL https://releases.hashicorp.com/packer/1.10.0/packer_1.10.0_linux_amd64.zip -o packer.zip
+            unzip packer.zip
+            sudo mv packer /usr/local/bin/
+            packer --version || exit 1
+          fi
+          which packer || echo "Packer not found in PATH"
+
+      - name: Build AMI with Packer
+        run: |
+          packer init .
+          packer build -var "short_sha=${{ env.SHORT_SHA }}" gameplay-service.pkr.hcl
+          AMI_ID=$(aws ec2 describe-images \
+            --filters "Name=name,Values=${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+            --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' \
+            --output text)
+          echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
+
+      - name: Create or Update Launch Template
+        env:
+          USER_DATA_SCRIPT: |
+            #!/bin/bash
+            chmod +x /opt/entwik/gameplay-service/start.sh
+            sudo -u admin /opt/entwik/gameplay-service/start.sh
+        run: |
+          USER_DATA=$(echo "$USER_DATA_SCRIPT" | base64 -w 0)
+          aws ec2 create-launch-template \
+            --launch-template-name "asg-lt-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+            --version-description "Template for AMI ${{ env.AMI_ID }}" \
+            --launch-template-data '{
+              "ImageId": "${{ env.AMI_ID }}",
+              "InstanceType": "t3.small",
+              "IamInstanceProfile": {
+                "Name": "DebianSSMRole"
+              },
+              "KeyName": "user-service",
+              "TagSpecifications": [{"ResourceType": "instance", "Tags": [{"Key": "Name", "Value": "ASG-${{ env.SHORT_SHA }}"}]}],
+              "UserData": "'"$USER_DATA"'"
+            }'
+
+      - name: Create Target Group for New ALB
+        run: |
+          TG_ARN=$(aws elbv2 create-target-group \
+            --name "tg-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+            --protocol HTTP \
+            --port 5000 \
+            --vpc-id vpc-090f3076eef114845 \
+            --target-type instance \
+            --health-check-protocol HTTP \
+            --health-check-port 5000 \
+            --health-check-path "/healthcheck" \
+            --query 'TargetGroups[0].TargetGroupArn' \
+            --output text)
+          echo "TG_ARN=$TG_ARN" >> $GITHUB_ENV
+
+      - name: Create New Load Balancer
+        run: |
+          ALB_ARN=$(aws elbv2 create-load-balancer \
+            --name "alb-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+            --subnets subnet-07b46c1717147aea0 subnet-0081f94c7a1f2d203 subnet-0e0168e7c6ed6ca07 \
+            --security-groups sg-01c5f8987482cc751 \
+            --scheme internet-facing \
+            --query 'LoadBalancers[0].LoadBalancerArn' \
+            --output text)
+          echo "ALB_ARN=$ALB_ARN" >> $GITHUB_ENV
+
+      - name: Create HTTPS Listener for ALB
+        run: |
+          LISTENER_ARN=$(aws elbv2 create-listener \
+            --load-balancer-arn ${{ env.ALB_ARN }} \
+            --protocol HTTPS \
+            --port 443 \
+            --certificates CertificateArn=arn:aws:acm:ap-south-1:624507949845:certificate/09bf93db-ea8f-46a4-bd96-7a50fe56a3c4 \
+            --default-actions Type=forward,TargetGroupArn=${{ env.TG_ARN }} \
+            --query 'Listeners[0].ListenerArn' \
+            --output text)
+
+          echo "LISTENER_ARN=$LISTENER_ARN" >> $GITHUB_ENV
+
+          aws elbv2 create-rule \
+            --listener-arn "$LISTENER_ARN" \
+            --priority 1 \
+            --conditions Field=host-header,Values=ping.entwikgaming.com \
+            --actions Type=fixed-response,FixedResponseConfig="{MessageBody=pong,StatusCode=200,ContentType=text/plain}"
+
+      - name: Create HTTP Redirect Listener
+        run: |
+          aws elbv2 create-listener \
+            --load-balancer-arn ${{ env.ALB_ARN }} \
+            --protocol HTTP \
+            --port 80 \
+            --default-actions Type=redirect,RedirectConfig="{Protocol=HTTPS,Port=443,StatusCode=HTTP_301}"
+
+      - name: Create New ASG
+        run: |
+          aws autoscaling create-auto-scaling-group \
+            --auto-scaling-group-name "asg-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+            --launch-template "LaunchTemplateName=asg-lt-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }},Version=\$Latest" \
+            --min-size 2 \
+            --max-size 4 \
+            --desired-capacity 2 \
+            --vpc-zone-identifier "subnet-0bfd32d5ef0a34f5c,subnet-0b6a9da5f8f433e58,subnet-08ef3f2e4e2d8b7a8" \
+            --target-group-arns ${{ env.TG_ARN }}
+
+      - name: Wait for ASG Instances to be Healthy
+        run: |
+          until aws autoscaling describe-auto-scaling-groups \
+            --auto-scaling-group-names "asg-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+            --query "AutoScalingGroups[0].Instances[?HealthStatus=='Healthy']" \
+            --output text | grep -q "Healthy"; do
+            echo "Waiting for ASG instances to be healthy..."
+            sleep 10
+          done
+
+      - name: healthcheck for ELB
+        run: |
+          aws autoscaling update-auto-scaling-group \
+          --auto-scaling-group-name "asg-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+          --health-check-type ELB \
+          --health-check-grace-period 300
+
+      - name: Get ALB DNS Name
+        run: |
+          ALB_DNS=$(aws elbv2 describe-load-balancers \
+            --load-balancer-arns ${{ env.ALB_ARN }} \
+            --query 'LoadBalancers[0].DNSName' \
+            --output text)
+          echo "ALB_DNS=$ALB_DNS" >> $GITHUB_ENV
+
+      - name: Output Results
+        run: |
+          echo "AMI created: ${{ env.AMI_ID }}" >> $GITHUB_STEP_SUMMARY
+          echo "New ASG created: asg-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" >> $GITHUB_STEP_SUMMARY
+          echo "ALB DNS: https://${{ env.ALB_DNS }}" >> $GITHUB_STEP_SUMMARY

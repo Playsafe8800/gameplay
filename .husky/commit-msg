@@ -1,0 +1,28 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+RED='\033[0;31m'
+Green='\033[0;32m'
+NOCOLOR='\033[0m'
+
+PROJECT_CODE="RUM"
+MSG_LENGTH=20
+INPUT_FILE=$1
+START_LINE=`head -n1 $INPUT_FILE`
+
+LEN_MSG=${#START_LINE}
+
+PATTERN="^($PROJECT_CODE)-[[:digit:]]+: "
+PATTERN1="^(chore)+: "
+
+if ! [[ "$START_LINE" =~ $PATTERN || "$START_LINE" =~ $PATTERN1 ]]; then
+  echo "${RED}Bad commit message${NOCOLOR}, see example:\n * $PROJECT_CODE-123: commit message \n * chore: commit message "
+  exit 1
+fi
+
+if [[ $LEN_MSG -lt $MSG_LENGTH ]]; then
+  echo "${RED}Bad commit message${NOCOLOR}, message must be of $MSG_LENGTH+ characters"
+  exit 1
+fi
+
+echo "${Green} ✅ Good to go. 🚀 ${NOCOLOR}"

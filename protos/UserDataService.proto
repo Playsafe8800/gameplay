@@ -1,0 +1,853 @@
+syntax = "proto3";
+
+package com.mpl.services.userdata.grpc;
+
+option java_multiple_files = true;
+
+// Ger or Create User //
+message GetOrCreateUserRequest {
+    string requestId = 1;
+    string mobileNumber = 2;
+    map<string, string> extraData = 3;
+    string appType = 4;
+    string cleverTapId = 5;
+    string deviceId = 6;
+    string apkType = 7;
+    string countryCode = 8;
+    string globalClevertapId = 9;
+}
+
+
+message GetOrCreateUserResponse {
+    string requestId = 1;
+    bool isNewUser = 2;
+    BasicProfile profile = 3;
+}
+
+message SSObject {
+    string id                 = 1;
+    string owner              = 2;
+    string prefix             = 3;
+    bool isPublic             = 4;
+    string contentType        = 5;
+    string contentDisposition = 6;
+}
+
+// Common //
+message UserDataServiceError {
+    enum Reason {
+        NONE = 0;
+        UNKNOWN = 1;
+        BAD_REQUEST = 2;
+        INTERNAL_ERROR = 3;
+        EXTERNAL_ERROR = 4;
+    }
+    Reason reason = 1;
+    string message = 2;
+}
+
+// Constants //
+enum Segment {
+    BASIC_PROFILE = 0;
+    APP_INFO = 1;
+    ACCOUNT_INFO = 2;
+    TOURNAMENT_STATS = 3;
+    BATTLE_STATS = 4;
+    LOCATION = 5;
+    FANTASY_STATS = 6;
+    EXTENDED_PROFILE = 7;
+}
+enum BasicProfileAttributes {
+    BPA_MOBILE_NUMBER = 0;
+    BPA_DISPLAY_NAME = 1;
+    BPA_AVATAR_ID = 2;
+    BPA_IS_PRO = 3;
+    BPA_TIER = 4;
+    BPA_CITY = 5;
+    BPA_STATE = 6;
+}
+enum AppInfoAttributes {
+    AIA_APP_TYPE = 0;
+    AIA_VERSION_CODE = 1;
+}
+enum AccountInfoAttributes {
+    ACA_LIFETIME_CASH_WON = 0;
+    ACA_LTCW_FANTASY = 1;
+}
+enum TournamentStatsAttributes {
+    TSA_X_TOURNAMENTS_PARTICIPATED = 0;
+    TSA_X_GAMES_PLAYED = 1;
+}
+enum BattleStatsAttributes {
+    BSA_X_BATTLES_PLAYED = 0;
+}
+enum LocationAttributes {
+    LCA_LATITUDE = 0;
+    LCA_LONGITUDE = 1;
+    LCA_CITY = 2;
+    LCA_STATE = 3;
+    LCA_COUNTRY = 4;
+}
+
+enum State {
+    ONLINE = 0;
+    OFFLINE = 1;
+    IN_GAME = 2;
+}
+
+enum Tenants {
+    MPL = 0;
+    MUTANT = 1;
+}
+
+// Common Models //
+message UserData {
+    BasicProfile basicProfile = 1;
+    AppInfo appInfo = 2;
+    AccountInfo accountInfo = 3;
+    TournamentStats tournamentStats = 4;
+    BattleStats battleStats = 5;
+    Location location = 6;
+    FantasyStats fantasyStats = 7;
+    ExtendedProfile extendedProfile = 8;
+}
+
+message Location {
+    string city = 1;
+    string state = 2;
+    string country = 3;
+    double latitude = 4;
+    double longitude = 5;
+}
+
+message BasicProfile {
+    uint32 id = 1;
+    string mobileNumber = 2;
+    string displayName = 3;
+    string avatarId = 4;
+    string avatarUrl = 5;
+    bool isPro = 6;
+    string tier = 7;
+    string acr = 8;
+    string verifyStatus = 9;
+    State state = 10;
+    uint64 lastOnline = 11;
+    string ls = 12;
+    string highlight = 13;
+    string userName = 14;
+    bool isUserNameClaimed = 15;
+    string profileName = 16;
+    string countryCode = 17;
+    bool ownProfile = 18;
+    bool isPrime =19;
+}
+
+message ExtendedProfile {
+    string bio = 1;
+    map<string, string> coverPhotos = 2;
+    string audioBio = 3;
+    string videoLinks = 4;
+    map<string, string> deviceIds = 5;
+    repeated string profaneChangeFields = 6;
+}
+
+message AppInfo {
+    uint32 version = 1;
+    string type = 2;
+    uint32 reactVersion = 3;
+    string osType = 4;
+    string osVersion = 5;
+}
+
+message AccountInfo {
+    uint32 lifetimeCashWon = 1;
+    uint32 lifetimeCashWonCricket = 2;
+    uint32 lifetimeCashWonKabaddi = 3;
+    uint32 lifetimeCashWonFootball = 4;
+    uint32 lifetimeCashWonStock = 5;
+    uint32 lifetimeCashWonBaseball = 6;
+    uint32 lifetimeCashWonBasketball = 7;
+    uint32 lifetimeCashWonHockey = 8;
+}
+
+message TournamentStats {
+    map<uint32, uint32> tournamentsParticipated = 1;
+    map<uint32, uint32> gamesPlayed = 2;
+}
+
+message BattleStats {
+    map<uint32, uint32> battlesPlayed = 1;
+}
+
+message FantasyStats {
+    uint32 cricketPlayed = 1;
+    uint32 kabaddiPlayed = 2;
+    uint32 footballPlayed = 3;
+    uint32 stockPlayed = 4;
+    uint32 baseballPlayed = 5;
+    uint32 basketballPlayed = 6;
+    uint32 hockeyPlayed = 7;
+}
+
+// API Models //
+message GetBasicProfileRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+}
+message GetBasicProfileResponse {
+    BasicProfile profile = 1;
+    Tenants tenant = 2;
+}
+message BulkGetBasicProfileRequest {
+    string requestId = 1;
+    repeated uint64 userIds = 2;
+}
+message BulkGetBasicProfileResponse {
+    map<uint64, BasicProfile> profiles = 1;
+}
+message UpdateBasicProfileRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    //pass country code ,if empty uses mobile number to derive country logic,default IN
+    BasicProfile profile = 3;
+    bool returnUpdatedProfile = 4;
+}
+message UpdateBasicProfileResponse {
+    BasicProfile profile = 1;
+}
+
+message SetACRRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    string acr = 3;
+}
+message SetACRResponse {
+}
+message BulkSetACRRequest {
+    string requestId = 1;
+    repeated uint64 userIds = 2;
+    string acr = 3;
+}
+message BulkSetACRResponse {
+}
+
+message GetExtendedProfileRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+}
+message GetExtendedProfileResponse {
+    ExtendedProfile extendedProfile = 1;
+}
+
+message UpdateExtendedProfileRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    ExtendedProfile extendedProfile = 3;
+    repeated string removeCoverPhotos = 4;
+    bool removeAudioBio = 5;
+}
+message UpdateExtendedProfileResponse {
+    ExtendedProfile extendedProfile = 1;
+}
+
+// Update Profile //
+message UpdateProfileRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+    string displayName = 3;
+    SSObject avatar = 4;
+}
+
+message UpdateProfileResponse {
+    string requestId = 1;
+    bool isNewUser = 2;
+    BasicProfile profile = 3;
+}
+
+message UpdateAppInfoRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    AppInfo appInfo = 3;
+    repeated AppInfoAttributes updateAttributes = 4;
+}
+message UpdateAppInfoResponse {
+}
+
+message UpdateAccountInfoRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    AccountInfo accountInfo = 3;
+    repeated AccountInfoAttributes updateAttributes = 4;
+}
+message UpdateAccountInfoResponse {
+}
+
+message IncrLifetimeCashWonFantasyRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    uint32 incrBy = 3;
+    uint32 sportId = 4;
+}
+
+message BulkIncrLifetimeCashWonFantasyRequest {
+    string requestId = 1;
+    map<uint32, uint32> userCashWonMap = 2;
+    uint32 sportId = 3;
+}
+
+message IncrLifetimeCashWonFantasyResponse {
+}
+
+message IncrTournamentsParticipatedRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    uint32 gameId = 3;
+    uint32 incrBy = 4;
+}
+message IncrTournamentsParticipatedResponse {
+}
+
+message IncrGamesPlayedRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    uint32 gameId = 3;
+    uint32 incrBy = 4;
+}
+message IncrGamesPlayedResponse {
+}
+
+message IncrBattlesPlayedRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    uint32 gameId = 3;
+    uint32 incrBy = 4;
+}
+
+message IncrFantasyPlayedRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    uint32 incrBy = 3;
+    uint32 sportId = 4;
+}
+
+message BulkIncrFantasyPlayedRequest {
+    string requestId = 1;
+    map<uint32, uint32> fantasyPlayed = 2;
+    uint32 sportId = 3;
+}
+message IncrBattlesPlayedResponse {
+}
+
+message UpdateLifetimeCashWonRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    double ltcw = 3;
+    string countryCode = 4;
+}
+message UpdateLifetimeCashWonResponse {
+}
+
+
+message GetLocationRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+}
+message GetLocationResponse {
+    Location location = 1;
+}
+
+message UpdateLocationRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    Location location = 3;
+}
+message UpdateLocationResponse {
+}
+
+message GetUserDataRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    repeated Segment includeSegments = 3;
+}
+message GetUserDataResponse {
+    UserData userData = 1;
+}
+message UpdateLastOnlineRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    State state = 3;
+    uint64 lastOnline = 4;
+}
+message UpdateLastOnlineResponse {
+}
+
+message GetAppInfoRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+}
+
+message GetAppInfoResponse {
+    string requestId = 1;
+    uint64 userId = 2;
+    AppInfo appInfo = 3;
+}
+
+message SetLSRequest {
+    string requestId = 1;
+    uint64 userId = 2;
+    string ls = 3;
+}
+
+message SetLSResponse {
+}
+
+message BulkSetLSRequest {
+    string requestId = 1;
+    repeated uint64 userIds = 2;
+    string ls = 3;
+}
+message BulkSetLSResponse {
+}
+message WipeProfileRequest {
+    string requestId = 1;
+    int32 userId = 2;
+    string modifiedBy = 3;
+    repeated string fields = 4;
+}
+
+message SetHighlightRequest {
+    string requestId = 1;
+    string type = 2;
+    string id = 3;
+    uint64 expireAt = 4;
+    uint64 userId = 5;
+}
+
+message EmptyResponse {
+}
+
+message UpdateBasicProfileV2Request{
+    uint64 userId = 1;
+    map<string,string> data= 2;
+}
+message UpdateExtendedProfileV2Request{
+    uint64 userId = 1;
+    map<string,string> data= 2;
+
+}
+
+message UpdateUserNameRequest{
+    string requestId = 1;
+    int32 userId = 2;
+    string userName = 3;
+    bool isUserNameClaimed = 4;
+}
+
+message UpdateUserNameResponse {
+    BasicProfile profile = 1;
+}
+
+message UpdateDisplayNameRequest{
+    string requestId = 1;
+    uint32 userId = 2;
+    string displayName = 3;
+}
+
+message ProfanityCheckRequest{
+    string requestId = 1;
+    repeated uint64 userIds = 2;
+    string profaneWord = 3;
+}
+
+message ProfanityCheckResponse {
+
+}
+
+message ProfanityAckRequest{
+    string requestId = 1;
+    uint64 userId = 2;
+}
+
+message ReportAbuseRequest {
+    string requestId = 1;
+    int32 reportUserId = 2;
+    int32 sourceUserId = 3;
+    string reason = 4;
+}
+
+message ReportAbuseResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Update Tier //
+message UpdateTierRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+    string previousTier = 3;
+    string newTier = 4;
+    uint32 prevCashWon = 5;
+    uint32 currentCashWon = 6;
+}
+
+message GetAllProfileTiersResponse {
+    repeated ProfileTier tiers = 1;
+}
+
+message GetLinkedAccountDetailsRequest {
+    string requestId = 1;
+    repeated string numbers = 2;
+    int32 userId = 3;
+}
+
+message GetLinkedAccountDetailsResponse {
+    string requestID = 1;
+    repeated LinkedAccountDetails linkedAccountDetails = 2;
+}
+
+message LinkedAccountDetails {
+    string mobileNumber = 1;
+    int32 mplId = 2;
+    string displayName = 3;
+    string userName = 4;
+    string avatar = 5;
+}
+
+message ProfileTier {
+    int32 startCash = 1;
+    int32 endCash = 2;
+    string tier = 3;
+}
+
+message GetAllProfileTiersRequest {
+    string countryCode = 1;
+}
+
+
+// Get Mobile Number //
+message GetMobileNumberRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+}
+message GetMobileNumberResponse {
+    string mobileNumber = 1;
+}
+
+// Get Profiles //
+message GetProfileByUserIdRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+}
+message GetProfileByMobileNumberRequest {
+    string requestId = 1;
+    string mobileNumber = 2;
+}
+
+message GetProfileResponse {
+    BasicProfile profile = 1;
+}
+
+message Avatar {
+    string small = 1;
+    string regular = 2;
+}
+
+message CoverPhoto {
+    string small = 1;
+    string regular = 2;
+}
+
+message GetCompleteProfileByUserIdRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+    uint32 requestUserId = 3;
+}
+
+message GetCompleteProfileByUserIdResponse {
+    BasicProfile basicProfile = 1;
+    UserStatsResponse detailedProfile = 2;
+    UserFollowDetails followDetails = 3;
+    ExtendedProfile extendedProfile = 4;
+}
+
+message SetExtendedFieldRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+    ExtendedProfileField fieldName = 3;
+    string fieldValue = 4;
+}
+
+enum ExtendedProfileField {
+    GENDER = 0;
+    DOB = 1;
+    STATE = 2;
+    RATING = 3;
+    EMAIL = 4;
+}
+
+message GetExtendedFieldRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+    ExtendedProfileField fieldName = 3;
+}
+message GetExtendedFieldResponse {
+    string requestId = 1;
+    string fieldValue = 2;
+}
+
+message UserStatsResponse {
+    int32 userId = 1;
+    int32 totalCash = 2;
+    int32 totalTokens = 3;
+    int32 totalReferrals = 4;
+    int32 gamesPlayed = 5;
+    int32 tournamentsPlayed = 6;
+    int32 tournamentsWon = 7;
+    ProfileViews profileViews = 8;
+    repeated GameCount gameCount = 9;
+    int32 totalHearts = 10;
+}
+
+message ProfileViews {
+    int32 allTime = 1;
+    int32 today = 2;
+}
+
+message GameCount {
+    int32 gameId = 1;
+    int32 count = 2;
+    string gameName = 3;
+    string gameIconUrl = 4;
+}
+
+
+message UserExistsRequest{
+    string requestId = 1;
+    string mobileNumber = 2;
+    string imei = 3;
+    string deviceId = 4;
+    uint32 osVersionCode = 5;
+}
+
+enum UserAttribute{
+    MOBILE_NUMBER_EXISTS = 0;
+    IMEI_EXISTS = 1;
+    DEVICE_ID_EXISTS = 2;
+    NONE = 3;
+}
+
+message UserExistsResponse{
+    string requestId = 1;
+    UserAttribute userAttribute = 2;
+}
+
+message GetUserInfoRequest{
+    string requestId = 1;
+    uint32 userId = 2;
+}
+
+message GetUserInfoResponse{
+    string requestId = 1;
+    uint32 id = 2;
+    string mobileNumber = 3;
+    string displayName = 4;
+    string tier = 5;
+    uint64 createdOn = 6;
+    string userName = 7;
+    string createdOnString = 8;
+}
+
+message UserFollowDetails {
+    int32 followers = 1;
+    int32 following = 2;
+    bool isFollowing = 3;
+    bool isFollowed = 4;
+}
+
+message GetUserIdByImeiRequest {
+    string requestId = 1;
+    string imei = 2;
+}
+
+message GetUserIdByImeiResponse {
+    uint64 userId = 1;
+}
+
+message GetDeviceInfoByUserIdRequest {
+    int32 userId = 1;
+}
+
+message GetDeviceInfoByDeviceIdRequest {
+    string deviceId = 1;
+}
+
+message DeleteDeviceInfoResponse {
+    int32 numberOfDevicesDeleted = 1;
+}
+
+message GetDeviceInfoByImeiRequest {
+    string imei = 1;
+}
+
+message GetDeviceInfoByIovationIdRequest {
+    string iovationId = 1;
+}
+
+message GetDeviceInfoByMobileNumberRequest {
+    string mobileNumber = 1;
+}
+
+message DeviceInfoEntry {
+    int32 userId = 1;
+    string imei1 = 2;
+    string deviceId = 3;
+    string iovationId = 4;
+    string deviceInfo = 5;
+    string mobileNumber = 6;
+}
+
+message GetDeviceInfoResponse {
+    repeated DeviceInfoEntry devices = 1;
+}
+
+message CheckImeiRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+}
+message CheckImeiResponse {
+    bool hasImei = 1;
+}
+
+message SetDeviceInfoRequest {
+    string requestId = 1;
+    uint32 userId = 2;
+    string imei1 = 3;
+    string imei2 = 4;
+    string deviceInfo = 5;
+}
+
+message CheckUsernameAvailableRequest {
+    string username = 1;
+    int32 userId = 2;
+    int32 numberOfSuggestions = 3;
+}
+
+message CheckUsernameAvailableResponse {
+    bool usernameAvailable = 1;
+    repeated string usernameSuggestions = 2;
+}
+
+message CheckAndChangeUsernameRequest {
+    int32 userId = 1;
+    string newUsername = 2;
+}
+
+message CheckAndChangeUsernameResponse {
+    bool usernameChanged = 1;
+}
+
+message CanChangeUsernameRequest {
+    int32 userId = 1;
+}
+
+message CanChangeUsernameResponse {
+    bool isUsernameChangePossible = 1;
+}
+
+
+// Service Declarations //
+service UserDataService {
+
+    rpc getOrCreateUser (GetOrCreateUserRequest) returns (GetOrCreateUserResponse);
+
+    rpc getUserData (GetUserDataRequest) returns (GetUserDataResponse);
+
+    // rpc updateBasicProfile (UpdateBasicProfileRequest) returns (UpdateBasicProfileResponse);
+    // rpc updateLastOnline (UpdateLastOnlineRequest) returns (UpdateLastOnlineResponse);
+
+    // rpc setACR (SetACRRequest) returns (SetACRResponse);
+    // rpc bulkSetACR (BulkSetACRRequest) returns (BulkSetACRResponse);
+
+    // rpc getExtendedProfile (GetExtendedProfileRequest) returns (GetExtendedProfileResponse);
+    // rpc updateExtendedProfile (UpdateExtendedProfileRequest) returns (UpdateExtendedProfileResponse);
+
+    // rpc getLocation (GetLocationRequest) returns (GetLocationResponse);
+    // rpc updateLocation (UpdateLocationRequest) returns (UpdateLocationResponse);
+
+    // rpc updateAppInfo (UpdateAppInfoRequest) returns (UpdateAppInfoResponse);
+    // rpc getAppInfo (GetAppInfoRequest) returns (GetAppInfoResponse);
+
+    // rpc updateAccountInfo (UpdateAccountInfoRequest) returns (UpdateAccountInfoResponse);
+    // rpc IncrLifetimeCashWonFantasy (IncrLifetimeCashWonFantasyRequest) returns (IncrLifetimeCashWonFantasyResponse);
+    // rpc BulkIncrLifetimeCashWonFantasy (BulkIncrLifetimeCashWonFantasyRequest) returns (IncrLifetimeCashWonFantasyResponse);
+    // rpc IncrFantasyPlayed (IncrFantasyPlayedRequest) returns (IncrBattlesPlayedResponse);
+    // rpc BulkIncrFantasyPlayed (BulkIncrFantasyPlayedRequest) returns (IncrBattlesPlayedResponse);
+    // rpc updateLifetimeCashWon (UpdateLifetimeCashWonRequest) returns (UpdateLifetimeCashWonResponse);
+
+    // rpc incrTournamentsParticipated (IncrTournamentsParticipatedRequest) returns (IncrTournamentsParticipatedResponse);
+    // rpc incrGamesPlayed (IncrGamesPlayedRequest) returns (IncrGamesPlayedResponse);
+    // rpc incrBattlesPlayed (IncrBattlesPlayedRequest) returns (IncrBattlesPlayedResponse);
+
+    // rpc setLS (SetLSRequest) returns (SetLSResponse);
+    // rpc bulkSetLS (BulkSetLSRequest) returns (BulkSetLSResponse);
+
+    //wipe user to default
+    // rpc wipeProfile (WipeProfileRequest) returns (UpdateExtendedProfileResponse);
+    // rpc wipeProfileV2 (WipeProfileRequest) returns (UpdateExtendedProfileResponse);
+
+
+    // rpc setHighlight (SetHighlightRequest) returns (EmptyResponse);
+    //
+    rpc updateBasicProfileV2(UpdateBasicProfileV2Request) returns (UpdateBasicProfileResponse);
+    rpc updateExtendedProfileV2(UpdateExtendedProfileV2Request) returns (UpdateExtendedProfileResponse);
+    rpc updateProfile (UpdateProfileRequest) returns (UpdateProfileResponse);
+
+    // username
+    //TODO: Not required this
+    //rpc updateUserName(UpdateUserNameRequest) returns (UpdateUserNameResponse);
+    //rpc updateDisplayName(UpdateDisplayNameRequest) returns (EmptyResponse);
+    // rpc profanityCheck(ProfanityCheckRequest) returns(ProfanityCheckResponse);
+    // rpc profanityNotifyAck(ProfanityAckRequest) returns(EmptyResponse);
+    // rpc reportAbuse (ReportAbuseRequest) returns (ReportAbuseResponse);
+    // rpc updateTier(UpdateTierRequest) returns(EmptyResponse);
+    // rpc getAllTiers (GetAllProfileTiersRequest) returns (GetAllProfileTiersResponse);
+
+    // rpc getLinkedAccounts (GetLinkedAccountDetailsRequest) returns (GetLinkedAccountDetailsResponse);
+
+    //Get ID's functions
+    // rpc getMobileNumberByUserId(GetMobileNumberRequest) returns (GetMobileNumberResponse);
+    // rpc getUserIdByImei(GetUserIdByImeiRequest) returns(GetUserIdByImeiResponse);
+
+    //BasicProfiles
+    rpc getBasicProfileByMobileNumber (GetProfileByMobileNumberRequest) returns (GetProfileResponse);
+    rpc getBasicProfile (GetBasicProfileRequest) returns (GetBasicProfileResponse);
+    // rpc bulkGetBasicProfile (BulkGetBasicProfileRequest) returns (BulkGetBasicProfileResponse);
+
+    //Get CompleteProfiles
+    rpc getCompleteProfileByUserId (GetCompleteProfileByUserIdRequest) returns (GetCompleteProfileByUserIdResponse);
+
+    // rpc setExtendedField (SetExtendedFieldRequest) returns (EmptyResponse);
+    // rpc getExtendedField (GetExtendedFieldRequest) returns (GetExtendedFieldResponse);
+    rpc userExists(UserExistsRequest) returns (UserExistsResponse);
+    rpc getUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+
+    //Get Device Info
+    // rpc getDeviceInfoByUserId(GetDeviceInfoByUserIdRequest) returns (GetDeviceInfoResponse);
+    // rpc getDeviceInfoByDeviceId(GetDeviceInfoByDeviceIdRequest) returns (GetDeviceInfoResponse);
+    // rpc getDeviceInfoByImei(GetDeviceInfoByImeiRequest) returns (GetDeviceInfoResponse);
+    // rpc getDeviceInfoByIovationId(GetDeviceInfoByIovationIdRequest) returns (GetDeviceInfoResponse);
+    // rpc getDeviceInfoByMobileNumber(GetDeviceInfoByMobileNumberRequest) returns (GetDeviceInfoResponse);
+    // rpc checkImei (CheckImeiRequest) returns (CheckImeiResponse);
+    // rpc setDeviceInfo (SetDeviceInfoRequest) returns (EmptyResponse);
+
+    // rpc deleteDeviceInfoByDeviceId(GetDeviceInfoByDeviceIdRequest) returns (DeleteDeviceInfoResponse);
+    // rpc deleteDeviceInfoByUserId(GetDeviceInfoByUserIdRequest) returns (DeleteDeviceInfoResponse);
+    // rpc deleteDeviceInfoByImei(GetDeviceInfoByImeiRequest) returns (DeleteDeviceInfoResponse);
+    // rpc deleteDeviceInfoByIovationId(GetDeviceInfoByIovationIdRequest) returns (DeleteDeviceInfoResponse);
+    // rpc deleteDeviceInfoByMobileNumber(GetDeviceInfoByMobileNumberRequest) returns (DeleteDeviceInfoResponse);
+
+    // rpc checkUsernameAvailable(CheckUsernameAvailableRequest) returns (CheckUsernameAvailableResponse); //Check userName & Suggestion via APP
+    // rpc checkAndChangeUsername(CheckAndChangeUsernameRequest) returns (CheckAndChangeUsernameResponse); //For updating userName via APP
+    // rpc canChangeUsername(CanChangeUsernameRequest) returns (CanChangeUsernameResponse);
+
+}

@@ -1,0 +1,80 @@
+{
+  "request": {
+    "url": "/CardGamesService/createCardGameTableV2",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "lobbyId": 6075097,
+          "gameId": 1000229,
+          "gameTableId": "${json-unit.any-string}",
+          "userIds": [
+            833745,
+            837769
+          ],
+          "requestId": "${json-unit.any-string}"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "players": [
+        {
+          "userId": 837769,
+          "success": true,
+          "accountTransactionDetails": {
+            "deficit": null,
+            "totalCashDeduction": {
+              "amount": "2.0",
+              "currencyId": "INR"
+            },
+            "bonusDeduction": {
+              "amount": "0.0",
+              "currencyId": "INR"
+            },
+            "winningDeduction": {
+              "amount": "0.0",
+              "currencyId": "INR"
+            },
+            "depositDeduction": {
+              "amount": "2.0",
+              "currencyId": "INR"
+            },
+            "ticketDeduction": null
+          }
+        },
+        {
+          "userId": 4460834,
+          "success": true,
+          "accountTransactionDetails": {
+            "deficit": null,
+            "totalCashDeduction": {
+              "amount": "1.8",
+              "currencyId": "INR"
+            },
+            "bonusDeduction": {
+              "amount": "0.2",
+              "currencyId": "INR"
+            },
+            "winningDeduction": {
+              "amount": "0.0",
+              "currencyId": "INR"
+            },
+            "depositDeduction": {
+              "amount": "1.8",
+              "currencyId": "INR"
+            },
+            "ticketDeduction": null
+          }
+        }
+      ],
+      "error": null,
+      "success": true,
+      "tableId": "",
+      "requestId": "banda995295ce-ef5f-4957-b21e-c2d5b2fd9970",
+      "fraudInfo": null
+    }
+  }
+}

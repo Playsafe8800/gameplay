@@ -1,0 +1,74 @@
+{
+  "request": {
+    "url": "/CardGamesService/getLobbyDetailsById",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "requestId": "${json-unit.any-string}",
+          "lobbyId": 6075097
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "requestId": "e354b1de-6c7b-41fb-ad7b-0e55061415ad",
+      "isSuccess": true,
+      "error": null,
+      "lobbyDetails": {
+        "topRanks": [],
+        "id": 6075097,
+        "name": "Abul",
+        "description": "",
+        "configId": 90777,
+        "startTime": "2022-07-08T10:00:59.127Z",
+        "activeEndTime": "2022-07-23T07:20:59.127Z",
+        "endTime": "2022-07-23T07:20:59.127Z",
+        "gameId": 1000229,
+        "gameConfig": "{\"MP\":2,\"SP\":\"none\",\"ESP\":101,\"Host\":\"qe-rummy.mpl.live:3006\",\"Rake\":15,\"BaseURL\":\"https://qe-rummy.mpl.live:3006/\",\"EntryFee\":2,\"MaxPoints\":101,\"RummyTips\":true,\"ShowEmoji\":true,\"GameFormat\":\"POOL_RUMMY\",\"MaxPlayers\":5,\"MinPlayers\":2,\"HideProfile\":true,\"ManualSplit\":true,\"RoundShuffle\":true,\"SocketTimeout\":7,\"UserTurnTimer\":30,\"GameStartTimer\":15,\"MaxPingCounter\":5,\"ShowLeaderboard\":true,\"UserFinishTimer\":30,\"Max_player_count\":5,\"Min_player_count\":2,\"NetworkIndicator\":true,\"PileDiscardCheck\":true,\"FestivalUIEnabled\":0,\"RequestRetryCount\":3,\"RequestRetryDelay\":1,\"SocketErrorTimeout\":1,\"GameId\":1000229,\"LobbyId\":6075097,\"MaxBonusPercentage\":10.0}",
+        "currencyType": "CASH",
+        "entryFee": {
+          "amount": "2.00",
+          "currencyId": ""
+        },
+        "rewards": "{\"id\":0,\"maxRanks\":0,\"totalRealCash\":0,\"totalTokens\":0,\"name\":\"\",\"allRankRanges\":[]}",
+        "lobbyStatus": "",
+        "active": true,
+        "extraInfo": "{\"hasTicket\":true,\"supportedAppTypes\":[\"IOS\",\"CASH\"],\"supportedCountries\":[\"IN\"],\"applyBonusLimit\":true,\"enableChat\":false,\"autoFinish\":false,\"battlePlayAgainDisabled\":false,\"ESP\":101,\"SP\":\"none\",\"MaxPoints\":101,\"MP\":2,\"poolRummyConfig\":{\"minPlayers\":2,\"maxPlayers\":5},\"isMultiTableSupported\":true,\"supportedFormats\":[{\"symbol\":\"SP-NONE\",\"name\":\"No Split\",\"description\":\"There will be no Split for this table.\"},{\"description\":\"Maximum 5 Players on each table.\",\"name\":\"5 Players\",\"symbol\":\"5P\"}],\"segmentId\":0,\"next_execution\":\"2022-07-08T10:00:47.513Z\",\"maxBonusPercentage\":10.0,\"ugt\":false,\"bonusLimit\":0.2,\"newDecimalSupportColumnsSupported\":true,\"Rake\":0.0}",
+        "createdOn": "",
+        "modifiedOn": "",
+        "registeredUsers": 0,
+        "activeUsers": 2,
+        "chatChannel": "lobbyChannel6075097",
+        "minPlayers": 2,
+        "maxPlayers": 5,
+        "userRegistered": false,
+        "gameConfigName": "Standard",
+        "gameName": "New Pool Rummy",
+        "style": "NORMAL",
+        "specialRewards": {
+          "rankRanges": [],
+          "totalCash": {
+            "amount": "0",
+            "currencyId": ""
+          },
+          "totalTokens": 0,
+          "maxRanks": 0,
+          "id": 0,
+          "name": ""
+        },
+        "battlePlayAgainDisabled": false,
+        "imageUrl": "",
+        "applyBonusLimit": true,
+        "bonusLimit": {
+          "amount": "0.2",
+          "currencyId": ""
+        },
+        "gameIcon": "https://akedge.mpl.live/pb/gs/14/ic.png",
+        "upsellOffer": null
+      }
+    }
+  }
+}

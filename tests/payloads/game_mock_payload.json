@@ -1,0 +1,133 @@
+{
+  "success": true,
+  "error": {},
+  "data": {
+    "signupResponse": {
+      "userId": 833745,
+      "username": "81525",
+      "profilePicture": "https://mpl-qacdn.mpl.live/pb/ups/a/default-avatars/Avatar_Ninja.png"
+    },
+    "gameTableInfoData": [
+      {
+        "tableId": "62443c94c05ca47412964d08",
+        "availablePlayers": 2,
+        "minimumSeat": 2,
+        "maximumSeat": 5,
+        "bootValue": 1,
+        "rake": 14,
+        "gameType": "POOL",
+        "tablestate": "",
+        "wildCard": "",
+        "openDeck": [],
+        "currentTurn": 833745,
+        "dealer": 833745,
+        "declarePlayer": null,
+        "potValue": 0,
+        "lobbyId": 6075097,
+        "meld": ["pure","seq","set","dwd"],
+        "group":[["H-1-0","S-1-0","D-6-1","D-6-0"],["S-3-1","S-3-0"],
+          ["H-6-0","H-6-1"],["C-8-0","C-10-0","C-11-0","C-12-0"],["D-1-1"]],
+        "isRejoinApplicable": false,
+        "canPickWildcard": false,
+        "rejoin": 1,
+        "roundFinishedUserIds": [],
+        "isNewTable": false,
+        "turnTimer": 0,
+        "currentRound": 1,
+        "isLastScoreBoardEnabled": false,
+        "lastGreyOutCard": "",
+        "entryFee": 5,
+        "roundStatus": "ROUND_STARTED",
+        "playerInfo": [
+          {
+            "userId": "3656992",
+            "prime": false,
+            "splitStatus": false,
+            "seatIndex": 0,
+            "username": "63936",
+            "profilePicture": "https://mpl-qacdn.mpl.live/pb/ups/a/default-avatars/Avatar_Viking.png",
+            "status": "playing",
+            "totalPoints": 0,
+            "isShowTimeOutMsg": false
+          },
+          {
+            "userId": "3656992",
+            "prime": false,
+            "seatIndex": 0,
+            "splitStatus": false,
+            "username": "63936",
+            "profilePicture": "https://mpl-qacdn.mpl.live/pb/ups/a/default-avatars/Avatar_Viking.png",
+            "status": "playing",
+            "totalPoints": 0,
+            "isShowTimeOutMsg": false
+          },
+          {
+            "userId": "3656992",
+            "prime": false,
+            "seatIndex": 0,
+            "splitStatus": false,
+            "username": "63936",
+            "profilePicture": "https://mpl-qacdn.mpl.live/pb/ups/a/default-avatars/Avatar_Viking.png",
+            "status": "playing",
+            "totalPoints": 0,
+            "isShowTimeOutMsg": false
+          },
+          {
+            "userId": "3656992",
+            "prime": false,
+            "seatIndex": 0,
+            "splitStatus": false,
+            "username": "63936",
+            "profilePicture": "https://mpl-qacdn.mpl.live/pb/ups/a/default-avatars/Avatar_Viking.png",
+            "status": "playing",
+            "totalPoints": 0,
+            "isShowTimeOutMsg": false
+          },
+          {
+            "userId": "3656992",
+            "prime": false,
+            "seatIndex": 0,
+            "splitStatus": false,
+            "username": "63936",
+            "profilePicture": "https://mpl-qacdn.mpl.live/pb/ups/a/default-avatars/Avatar_Viking.png",
+            "status": "playing",
+            "totalPoints": 0,
+            "isShowTimeOutMsg": false
+          }
+        ],
+        "tableSessionId": '',
+        "unitySessionId": '',
+        "gameConfig":{
+          "_id":"62443c94c05ca47412964d08",
+          "bootValue":15,
+          "gameId":1000229,
+          "gameStartTimer":15,
+          "userFinishTimer":30,
+          "lobbyId":6049338,
+          "manualSplit":true,
+          "maximumPoints":101,
+          "maximumSeat":5,
+          "minimumSeat":2,
+          "multiWinner":false,
+          "pileDiscardEnabled":true,
+          "rakePercentage":0,
+          "currentRound":1,
+          "shuffleEnabled":true,
+          "userTurnTimer":30,
+          "isSplitable":true,
+          "tableSessionId":"528f3f56-5a49-48f2-9abf-5c5cc14bdb7d",
+          "unitySessionId":"91f86360-f0f8-4b32-809d-77e55b07b03c"
+        }
+      }
+    ]
+  },
+  "metrics": {
+    "uuid": "af2e92f4-e10f-4ecd-8560-5079a49dbd64",
+    "ctst": "1648639132546",
+    "srct": 1648639133397,
+    "srpt": "",
+    "crst": "1.2",
+    "apkVersion": "1000173",
+    "tableId": ""
+  }
+}

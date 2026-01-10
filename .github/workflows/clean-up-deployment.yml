@@ -1,0 +1,184 @@
+name: Revert AMI and Resources
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      short_sha:
+        description: 'Short Git SHA (7 characters)'
+        required: true
+        default: ''
+jobs:
+  revert-ami-and-resources:
+    # Uncomment the next line if this job should wait for a previous one
+    # needs: build-ami-and-deploy
+    runs-on: self-hosted
+    env:
+      SERVICE_NAME: "gameplay-service"
+      SHORT_SHA: ${{ github.event.inputs.short_sha }}
+      AWS_REGION: ap-south-1
+    steps:
+      - name: Show context
+        run: |
+          echo "SERVICE_NAME=${{ env.SERVICE_NAME }}"
+          echo "SHORT_SHA=${{ env.SHORT_SHA }}"
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get Resource ARNs
+        id: get-resources
+        run: |
+          # Get ALB ARN
+          ALB_ARN=$(aws elbv2 describe-load-balancers \
+            --names "alb-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+            --query 'LoadBalancers[0].LoadBalancerArn' --output text 2>/dev/null || echo "None")
+          echo "ALB_ARN=$ALB_ARN" >> $GITHUB_ENV
+
+          # Get Target Group ARN
+          TG_ARN=$(aws elbv2 describe-target-groups \
+            --names "tg-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}" \
+            --query 'TargetGroups[0].TargetGroupArn' --output text 2>/dev/null || echo "None")
+          echo "TG_ARN=$TG_ARN" >> $GITHUB_ENV
+
+      - name: Check Route 53 for active routing to ALB
+        run: |
+          if [ "${{ env.ALB_ARN }}" != "None" ]; then
+            # Get the ALB DNS name
+            ALB_DNS=$(aws elbv2 describe-load-balancers \
+              --load-balancer-arns ${{ env.ALB_ARN }} \
+              --query 'LoadBalancers[0].DNSName' --output text)
+
+            echo "Checking Route 53 records for ALB DNS: $ALB_DNS"
+
+            # List all hosted zones
+            HOSTED_ZONES=$(aws route53 list-hosted-zones --query 'HostedZones[].Id' --output text)
+
+            FOUND_ACTIVE_RECORD=0
+
+            for ZONE_ID in $HOSTED_ZONES; do
+              RECORD_SETS=$(aws route53 list-resource-record-sets --hosted-zone-id $ZONE_ID --query "ResourceRecordSets[?Type=='CNAME' || Type=='A']" --output json)
+              # Check for CNAME record pointing to ALB DNS
+              MATCHING_RECORDS=$(echo "$RECORD_SETS" | jq --arg alb_dns "$ALB_DNS" '[.[] | select(.ResourceRecords != null and ([.ResourceRecords[].Value] | index($alb_dns)))]')
+              # Check for Alias Target (A records with alias)
+              MATCHING_ALIAS=$(echo "$RECORD_SETS" | jq --arg alb_dns "$ALB_DNS" '[.[] | select(.AliasTarget.DNSName == $alb_dns)]')
+
+              # For Weighted records, check weight
+              for REC in $(echo "$MATCHING_RECORDS" | jq -c '.[]'); do
+                WEIGHT=$(echo "$REC" | jq '.Weight // 1')
+                if [ "$WEIGHT" -gt 0 ]; then
+                  FOUND_ACTIVE_RECORD=1
+                  echo "Found CNAME record with weight > 0 in Route 53. Aborting resource deletion."
+                fi
+              done
+
+              for REC in $(echo "$MATCHING_ALIAS" | jq -c '.[]'); do
+                WEIGHT=$(echo "$REC" | jq '.Weight // 1')
+                if [ "$WEIGHT" -gt 0 ]; then
+                  FOUND_ACTIVE_RECORD=1
+                  echo "Found Alias record with weight > 0 in Route 53. Aborting resource deletion."
+                fi
+              done
+            done
+
+            if [ "$FOUND_ACTIVE_RECORD" -eq 1 ]; then
+              echo "Error: Load Balancer is still actively routed in Route 53 (weight > 0)."
+              exit 1
+            else
+              echo "No active Route 53 records with weight > 0 found for this ALB."
+            fi
+          else
+            echo "No ALB ARN found; skipping Route 53 check."
+          fi
+
+      - name: Delete Auto Scaling Group
+        run: |
+          ASG_NAME="asg-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}"
+          echo "Scaling down ASG: $ASG_NAME"
+          aws autoscaling update-auto-scaling-group \
+            --auto-scaling-group-name "$ASG_NAME" \
+            --min-size 0 --max-size 0 --desired-capacity 0 || true
+
+          sleep 30  # Wait before deletion
+
+          echo "Deleting ASG: $ASG_NAME"
+          aws autoscaling delete-auto-scaling-group \
+            --auto-scaling-group-name "$ASG_NAME" --force-delete || true
+
+      - name: Delete Launch Template
+        run: |
+          LT_NAME="asg-lt-${{ env.SERVICE_NAME }}-${{ env.SHORT_SHA }}"
+          echo "Deleting Launch Template: $LT_NAME"
+          aws ec2 delete-launch-template \
+            --launch-template-name "$LT_NAME" || true
+
+      - name: Delete Listeners
+        run: |
+          if [ "${{ env.ALB_ARN }}" != "None" ]; then
+            echo "Deleting listeners for ALB: ${{ env.ALB_ARN }}"
+            for LISTENER_ARN in $(aws elbv2 describe-listeners \
+              --load-balancer-arn ${{ env.ALB_ARN }} \
+              --query 'Listeners[].ListenerArn' --output text); do
+              aws elbv2 delete-listener --listener-arn $LISTENER_ARN || true
+            done
+          else
+            echo "No ALB found; skipping listener deletion."
+          fi
+
+      - name: Delete ALB
+        run: |
+          if [ "${{ env.ALB_ARN }}" != "None" ]; then
+            echo "Deleting ALB: ${{ env.ALB_ARN }}"
+            aws elbv2 delete-load-balancer --load-balancer-arn ${{ env.ALB_ARN }} || true
+          else
+            echo "No ALB to delete."
+          fi
+
+      - name: Delete Target Group
+        run: |
+          if [ "${{ env.TG_ARN }}" != "None" ]; then
+            echo "Deleting Target Group: ${{ env.TG_ARN }}"
+            aws elbv2 delete-target-group --target-group-arn ${{ env.TG_ARN }} || true
+          else
+            echo "No Target Group to delete."
+          fi
+
+      - name: Optionally Delete AMI and Associated Volumes
+        run: |
+          AMI_ID=$(aws ec2 describe-images \
+            --filters "Name=name,Values=gameplay-service-${{ env.SHORT_SHA }}" \
+            --query 'Images | sort_by(@, &CreationDate) | [-1].ImageId' \
+            --output text)
+
+          if [ "$AMI_ID" != "None" ]; then
+            echo "Found AMI: $AMI_ID"
+
+            # Get associated snapshot IDs
+            SNAPSHOT_IDS=$(aws ec2 describe-images --image-ids "$AMI_ID" \
+              --query "Images[].BlockDeviceMappings[].Ebs.SnapshotId" \
+              --output text)
+
+            echo "Deregistering AMI..."
+            aws ec2 deregister-image --image-id "$AMI_ID" || true
+
+            for SNAPSHOT_ID in $SNAPSHOT_IDS; do
+              echo "Deleting snapshot: $SNAPSHOT_ID"
+              aws ec2 delete-snapshot --snapshot-id "$SNAPSHOT_ID" || true
+            done
+          fi
+
+          echo "Searching for unattached volumes tagged with short SHA..."
+          VOLUME_IDS=$(aws ec2 describe-volumes \
+            --filters "Name=tag:Name,Values=gameplay-service-${{ env.SHORT_SHA }}" "Name=status,Values=available" \
+            --query "Volumes[].VolumeId" --output text)
+
+          for VOLUME_ID in $VOLUME_IDS; do
+            echo "Deleting unattached volume: $VOLUME_ID"
+            aws ec2 delete-volume --volume-id "$VOLUME_ID" || true
+          done

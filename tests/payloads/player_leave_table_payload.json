@@ -1,0 +1,16 @@
+{
+  "metrics": {
+    "uuid": "c965fc2f-379e-4ce5-adac-44ce55bd7f14",
+    "ctst": 1668763233733,
+    "srct": "2022-11-18T14:50:33.516Z",
+    "srpt": "",
+    "crst": 1668763233733,
+    "apkVersion": "1000233",
+    "tableId": "6f77eb656bd441cf8e84383a30c4478f"
+  },
+  "data": {
+    "userId": 4566819,
+    "tableId": "6f77eb656bd441cf8e84383a30c4478f",
+    "reason": "Menu exit yes button"
+  }
+}

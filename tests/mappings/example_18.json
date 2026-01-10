@@ -1,0 +1,22 @@
+{
+  "request": {
+    "url": "/CardGamesService/sendInstrumentationEvent",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "requestId": "${json-unit.any-string}",
+          "eventData": "${json-unit.any-string}"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "requestId": "977ec6c9-a9f5-4c16-9b41-80f1e54c4504",
+      "isSuccess": true,
+      "error": null
+    }
+  }
+}

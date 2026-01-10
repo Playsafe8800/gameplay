@@ -1,0 +1,8 @@
+{
+  "file": "tests/prepare.js",
+  "reporterOptions": {
+    "inlineAssets": true,
+    "timestamp": true,
+    "code": false
+  }
+}

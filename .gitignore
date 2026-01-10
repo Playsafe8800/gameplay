@@ -1,0 +1,21 @@
+node_modules/
+.vscode
+.cache/
+.logs/*.log
+coverage/
+service-rummy-multi-table-node.log
+*.DS_Store
+
+.idea
+mochawesome-report
+
+# Coverage directory used by tools like istanbul
+coverage
+# nyc test coverage
+.nyc_output
+
+*.log
+
+.stryker-tmp/
+.env
+dist/

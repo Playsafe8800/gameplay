@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package com.mpl.services.gs2.mm.service;
+
+message RegistrationRequest {
+  string requestId = 1;
+  string source = 2;
+  uint32 lobbyId = 3;
+  uint32 userId = 4;
+  uint32 gameId = 5;
+  map<string, string> extraInfo = 6;
+  string topicName = 7;
+}
+
+message RegistrationResponse {
+  bool success = 1;
+  string message = 2;
+  string matchId = 3;
+  repeated uint32 userIds = 4;
+}
+
+message DeRegistrationRequest {
+  string requestId = 1;
+  string source = 2;
+  uint32 lobbyId = 3;
+  uint32 userId = 4;
+  uint32 gameId = 5;
+}
+
+message DeRegistrationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ELORating {
+  uint32 userId = 1;
+  uint32 gameId = 2;
+  uint32 rating = 3;
+  string eloModel = 4;
+}
+
+message UpdateELORatingRequest {
+  enum Type {
+    CREATE = 0;
+    UPDATE = 1;
+  }
+  Type type = 1;
+  repeated ELORating eloRatings = 2;
+}
+
+message UpdateELORatingResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetELORatingRequest {
+  uint32 userId = 1;
+  uint32 gameId = 2;
+}
+
+message GetELORatingResponse {
+  bool success = 1;
+  string message = 2;
+  repeated ELORating eloRating = 3;
+}
+
+service GlobalMatchMakerService {
+  rpc register(RegistrationRequest) returns (RegistrationResponse);
+  rpc deRegister(DeRegistrationRequest) returns (DeRegistrationResponse);
+
+  rpc updateELORating(UpdateELORatingRequest) returns(UpdateELORatingResponse);
+  rpc getELORating(GetELORatingRequest) returns(GetELORatingResponse);
+}

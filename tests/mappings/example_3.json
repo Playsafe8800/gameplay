@@ -1,0 +1,118 @@
+{
+  "request": {
+    "url": "/CardGamesService/updateOrFinishCardGameTableV2",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "lobbyId": "${json-unit.any-number}",
+          "tableId": "${json-unit.any-string}",
+          "requestId": "${json-unit.any-string}",
+          "score": [
+            {
+              "requestId": "${json-unit.any-string}",
+              "battleId": "${json-unit.any-string}",
+              "userId": "${json-unit.any-number}",
+              "score": "${json-unit.any-number}",
+              "decimalScore": "${json-unit.any-number}",
+              "lobbyId": "${json-unit.any-number}"
+            }
+          ]
+        },
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "playersData": [
+        {
+          "battleId": "RNPO-628220808960711d96b97e79",
+          "userId": 833745,
+          "score": 40,
+          "scoreData": "{\"gameEndReason\":\"won\",\"rummyType\":\"pool\",\"lobbyId\":6075097,\"uniqueId\":\"RNPO-6299e5c5f98d26352c79ced0\",\"startingUsersCount\":3,\"gameDetails\":[{\"roundNo\":1,\"roundId\":\"6299e5c5f98d26352c79ced1\",\"winnerId\":833745,\"createdOn\":\"2022-06-03T10:44:10.809Z\",\"modifiedOn\":\"2022-06-03T10:44:10.809Z\",\"extra_info\":\"H-13-1\",\"turnsDetails\":[{\"turnNo\":1,\"userId\":837769,\"turnStatus\":\"LEFT\",\"startState\":\"C-11-1,S-5-1,D-7-0,S-9-1,H-6-1,S-3-1,S-1-1,S-9-0,C-9-0,D-4-1,H-1-1,H-3-0,S-10-0\",\"cardPicked\":\"\",\"cardPickSource\":\"\",\"cardDiscarded\":\"\",\"endState\":\"\",\"createdOn\":\"2022-06-03T10:43:40.813Z\",\"points\":80,\"sortedStartState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"C-11-1\",\"S-5-1\",\"D-7-0\",\"S-9-1\",\"H-6-1\",\"S-3-1\",\"S-1-1\",\"S-9-0\",\"C-9-0\",\"D-4-1\",\"H-1-1\",\"H-3-0\",\"S-10-0\"]]},\"sortedEndState\":[]}],\"userFinalStateTurnDetails\":[{\"turnNo\":1,\"userId\":837769,\"turnStatus\":\"LEFT\",\"startState\":\"S-1-1,S-3-1,S-5-1,S-9-1,S-9-0,S-10-0,H-1-1,H-3-0,H-6-1,D-4-1,D-7-0,C-9-0,C-11-1\",\"cardPicked\":\"\",\"cardPickSource\":\"\",\"cardDiscarded\":\"\",\"endState\":\"S-1-1,S-3-1,S-5-1,S-9-1,S-9-0,S-10-0,H-1-1,H-3-0,H-6-1,D-4-1,D-7-0,C-9-0,C-11-1\",\"createdOn\":\"2022-06-03T10:49:39.598Z\",\"points\":101,\"sortedStartState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"S-1-1\",\"S-3-1\",\"S-5-1\",\"S-9-1\",\"S-9-0\",\"S-10-0\"],[\"H-1-1\",\"H-3-0\",\"H-6-1\"],[\"D-4-1\",\"D-7-0\"],[\"C-9-0\",\"C-11-1\"]]},\"sortedEndState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"S-1-1\",\"S-3-1\",\"S-5-1\",\"S-9-1\",\"S-9-0\",\"S-10-0\"],[\"H-1-1\",\"H-3-0\",\"H-6-1\"],[\"D-4-1\",\"D-7-0\"],[\"C-9-0\",\"C-11-1\"]]}},{\"turnNo\":2,\"userId\":833745,\"turnStatus\":\"LEFT\",\"startState\":\"C-5-0,C-6-0,C-8-0,C-10-1,D-5-0,D-12-1,D-13-0,S-2-1,S-7-1,S-12-1,H-5-0,H-11-1,J-1-0\",\"cardPicked\":\"\",\"cardPickSource\":\"\",\"cardDiscarded\":\"\",\"endState\":\"C-5-0,C-6-0,C-8-0,C-10-1,D-5-0,D-12-1,D-13-0,S-2-1,S-7-1,S-12-1,H-5-0,H-11-1,J-1-0\",\"createdOn\":\"2022-06-03T10:49:39.598Z\",\"points\":101,\"sortedStartState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"C-5-0\",\"C-6-0\",\"C-8-0\",\"C-10-1\"],[\"D-5-0\",\"D-12-1\",\"D-13-0\"],[\"S-2-1\",\"S-7-1\",\"S-12-1\"],[\"H-5-0\",\"H-11-1\"],[\"J-1-0\"]]},\"sortedEndState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"C-5-0\",\"C-6-0\",\"C-8-0\",\"C-10-1\"],[\"D-5-0\",\"D-12-1\",\"D-13-0\"],[\"S-2-1\",\"S-7-1\",\"S-12-1\"],[\"H-5-0\",\"H-11-1\"],[\"J-1-0\"]]}},{\"turnNo\":3,\"userId\":837769,\"turnStatus\":\"PLAYING\",\"startState\":\"H-10-0,H-11-0,H-12-0,D-5-1,D-6-1,J-2-0,H-2-0,H-7-1,S-4-0,S-11-1,S-13-1,C-3-1,C-5-1\",\"cardPicked\":\"\",\"cardPickSource\":\"\",\"cardDiscarded\":\"\",\"endState\":\"H-10-0,H-11-0,H-12-0,D-5-1,D-6-1,J-2-0,H-2-0,H-7-1,S-4-0,S-11-1,S-13-1,C-3-1,C-5-1\",\"createdOn\":\"2022-06-03T10:49:39.598Z\",\"points\":0,\"sortedStartState\":{\"pure\":[[\"H-10-0\",\"H-11-0\",\"H-12-0\"]],\"seq\":[[\"D-5-1\",\"D-6-1\",\"J-2-0\"]],\"set\":[],\"dwd\":[[\"H-2-0\",\"H-7-1\"],[\"S-4-0\",\"S-11-1\",\"S-13-1\"],[\"C-3-1\",\"C-5-1\"]]},\"sortedEndState\":{\"pure\":[[\"H-10-0\",\"H-11-0\",\"H-12-0\"]],\"seq\":[[\"D-5-1\",\"D-6-1\",\"J-2-0\"]],\"set\":[],\"dwd\":[[\"H-2-0\",\"H-7-1\"],[\"S-4-0\",\"S-11-1\",\"S-13-1\"],[\"C-3-1\",\"C-5-1\"]]}}]}]}",
+          "status": "REWARDED",
+          "matched": true,
+          "rank": 1,
+          "cashWinnings": {
+            "amount": "5.00",
+            "currencyId": ""
+          },
+          "tokenWinnings": 0,
+          "canPlayAgain": false,
+          "followingOpponent": false,
+          "cashWinningsDecimal": 0,
+          "nextLobbySuggestedConfig": "",
+          "nextSuggestedLobby": null,
+          "decimalScore": 101,
+          "extraInfo": "",
+          "entryFee": {
+            "amount": "5.000",
+            "currencyId": ""
+          },
+          "entryCurrency": "CASH",
+          "rewards": "",
+          "isTicketUsed": false,
+          "ticketContribution": 0,
+          "sessionId": "",
+          "wallet": null,
+          "lobbyId": 6075097,
+          "gameId": 1000229,
+          "playState": "REWARDED",
+          "battleState": "CLOSED",
+          "createdOn": "2022-05-16T10:00:51.620Z",
+          "modifiedOn": "2022-05-16T10:05:04.723Z",
+          "hasRummyWalletBalance": false
+        },
+        {
+          "battleId": "RNPO-628220808960711d96b97e79",
+          "userId": 837769,
+          "score": 0,
+          "scoreData": "{\"gameEndReason\":\"left\",\"rummyType\":\"pool\",\"lobbyId\":6075097,\"uniqueId\":\"RNPO-6299e5c5f98d26352c79ced0\",\"startingUsersCount\":3,\"gameDetails\":[{\"roundNo\":1,\"roundId\":\"6299e5c5f98d26352c79ced1\",\"winnerId\":833745,\"createdOn\":\"2022-06-03T10:44:10.809Z\",\"modifiedOn\":\"2022-06-03T10:44:10.809Z\",\"extra_info\":\"H-13-1\",\"turnsDetails\":[{\"turnNo\":1,\"userId\":837769,\"turnStatus\":\"LEFT\",\"startState\":\"C-11-1,S-5-1,D-7-0,S-9-1,H-6-1,S-3-1,S-1-1,S-9-0,C-9-0,D-4-1,H-1-1,H-3-0,S-10-0\",\"cardPicked\":\"\",\"cardPickSource\":\"\",\"cardDiscarded\":\"\",\"endState\":\"\",\"createdOn\":\"2022-06-03T10:43:40.813Z\",\"points\":80,\"sortedStartState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"C-11-1\",\"S-5-1\",\"D-7-0\",\"S-9-1\",\"H-6-1\",\"S-3-1\",\"S-1-1\",\"S-9-0\",\"C-9-0\",\"D-4-1\",\"H-1-1\",\"H-3-0\",\"S-10-0\"]]},\"sortedEndState\":[]}],\"userFinalStateTurnDetails\":[{\"turnNo\":1,\"userId\":837769,\"turnStatus\":\"LEFT\",\"startState\":\"S-1-1,S-3-1,S-5-1,S-9-1,S-9-0,S-10-0,H-1-1,H-3-0,H-6-1,D-4-1,D-7-0,C-9-0,C-11-1\",\"cardPicked\":\"\",\"cardPickSource\":\"\",\"cardDiscarded\":\"\",\"endState\":\"S-1-1,S-3-1,S-5-1,S-9-1,S-9-0,S-10-0,H-1-1,H-3-0,H-6-1,D-4-1,D-7-0,C-9-0,C-11-1\",\"createdOn\":\"2022-06-03T10:49:39.598Z\",\"points\":101,\"sortedStartState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"S-1-1\",\"S-3-1\",\"S-5-1\",\"S-9-1\",\"S-9-0\",\"S-10-0\"],[\"H-1-1\",\"H-3-0\",\"H-6-1\"],[\"D-4-1\",\"D-7-0\"],[\"C-9-0\",\"C-11-1\"]]},\"sortedEndState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"S-1-1\",\"S-3-1\",\"S-5-1\",\"S-9-1\",\"S-9-0\",\"S-10-0\"],[\"H-1-1\",\"H-3-0\",\"H-6-1\"],[\"D-4-1\",\"D-7-0\"],[\"C-9-0\",\"C-11-1\"]]}},{\"turnNo\":2,\"userId\":833745,\"turnStatus\":\"LEFT\",\"startState\":\"C-5-0,C-6-0,C-8-0,C-10-1,D-5-0,D-12-1,D-13-0,S-2-1,S-7-1,S-12-1,H-5-0,H-11-1,J-1-0\",\"cardPicked\":\"\",\"cardPickSource\":\"\",\"cardDiscarded\":\"\",\"endState\":\"C-5-0,C-6-0,C-8-0,C-10-1,D-5-0,D-12-1,D-13-0,S-2-1,S-7-1,S-12-1,H-5-0,H-11-1,J-1-0\",\"createdOn\":\"2022-06-03T10:49:39.598Z\",\"points\":101,\"sortedStartState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"C-5-0\",\"C-6-0\",\"C-8-0\",\"C-10-1\"],[\"D-5-0\",\"D-12-1\",\"D-13-0\"],[\"S-2-1\",\"S-7-1\",\"S-12-1\"],[\"H-5-0\",\"H-11-1\"],[\"J-1-0\"]]},\"sortedEndState\":{\"pure\":[],\"seq\":[],\"set\":[],\"dwd\":[[\"C-5-0\",\"C-6-0\",\"C-8-0\",\"C-10-1\"],[\"D-5-0\",\"D-12-1\",\"D-13-0\"],[\"S-2-1\",\"S-7-1\",\"S-12-1\"],[\"H-5-0\",\"H-11-1\"],[\"J-1-0\"]]}},{\"turnNo\":3,\"userId\":837769,\"turnStatus\":\"PLAYING\",\"startState\":\"H-10-0,H-11-0,H-12-0,D-5-1,D-6-1,J-2-0,H-2-0,H-7-1,S-4-0,S-11-1,S-13-1,C-3-1,C-5-1\",\"cardPicked\":\"\",\"cardPickSource\":\"\",\"cardDiscarded\":\"\",\"endState\":\"H-10-0,H-11-0,H-12-0,D-5-1,D-6-1,J-2-0,H-2-0,H-7-1,S-4-0,S-11-1,S-13-1,C-3-1,C-5-1\",\"createdOn\":\"2022-06-03T10:49:39.598Z\",\"points\":0,\"sortedStartState\":{\"pure\":[[\"H-10-0\",\"H-11-0\",\"H-12-0\"]],\"seq\":[[\"D-5-1\",\"D-6-1\",\"J-2-0\"]],\"set\":[],\"dwd\":[[\"H-2-0\",\"H-7-1\"],[\"S-4-0\",\"S-11-1\",\"S-13-1\"],[\"C-3-1\",\"C-5-1\"]]},\"sortedEndState\":{\"pure\":[[\"H-10-0\",\"H-11-0\",\"H-12-0\"]],\"seq\":[[\"D-5-1\",\"D-6-1\",\"J-2-0\"]],\"set\":[],\"dwd\":[[\"H-2-0\",\"H-7-1\"],[\"S-4-0\",\"S-11-1\",\"S-13-1\"],[\"C-3-1\",\"C-5-1\"]]}}]}]}",
+          "status": "REWARDED",
+          "matched": true,
+          "rank": 3,
+          "cashWinnings": {
+            "amount": "-5.00",
+            "currencyId": ""
+          },
+          "tokenWinnings": 0,
+          "canPlayAgain": false,
+          "followingOpponent": false,
+          "cashWinningsDecimal": -5,
+          "nextLobbySuggestedConfig": "",
+          "nextSuggestedLobby": null,
+          "decimalScore": 101,
+          "extraInfo": "",
+          "entryFee": {
+            "amount": "5.000",
+            "currencyId": ""
+          },
+          "entryCurrency": "CASH",
+          "rewards": "",
+          "isTicketUsed": false,
+          "ticketContribution": 0,
+          "sessionId": "",
+          "wallet": null,
+          "lobbyId": 6075097,
+          "gameId": 1000229,
+          "playState": "REWARDED",
+          "battleState": "CLOSED",
+          "createdOn": "2022-05-16T10:00:51.620Z",
+          "modifiedOn": "2022-05-16T10:05:04.723Z",
+          "hasRummyWalletBalance": false
+        }
+      ],
+      "requestId": "RNPO-9f526731-ff2e-41ac-bc9e-19faf7880527-1667215137482",
+      "success": true,
+      "battleStatus": "CLOSED",
+      "error": null,
+      "battlePlayAgainDisabled": false,
+      "collusionInfo": null,
+      "isFinalRound": true,
+      "fraudInfo": null
+    }
+  }
+}

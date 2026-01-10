@@ -1,0 +1,450 @@
+{
+  "/mpl/lib-pathfinder": {
+    "data": "",
+    "stat": {
+      "czxid": 23493302,
+      "mzxid": 23493302,
+      "ctime": 1605705501631,
+      "mtime": 1605705501631,
+      "version": 0,
+      "cversion": 5,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 0,
+      "numChildren": 5,
+      "pzxid": 99236023
+    }
+  },
+  "/mpl/lib-pathfinder/circuit-breaker-config": {
+    "data": "{\r\n\"dryRun\": false,\r\n\"killFeature\": false,\r\n\r\n\"defaultConfig\": {\r\n\"minimumNumberOfCalls\": 50,\r\n\"failureRateThreshold\": 50,\r\n\"waitDurationInOpenState\": 30,\r\n\"permittedNumberOfCallsInHalfOpenState\": 10,\r\n\"slidingWindowSize\": 100,\r\n\"slidingWindowType\": \"COUNT_BASED\"\r\n},\r\n\r\n\"serviceConfigs\": {\r\n\"com.mpl.exp.pftest.grpc.PFTestService\": {\r\n\"enabled\": true,\r\n\"minimumNumberOfCalls\": 50,\r\n\"failureRateThreshold\": 50,\r\n\"waitDurationInOpenState\": 30,\r\n\"permittedNumberOfCallsInHalfOpenState\": 10,\r\n\"slidingWindowSize\": 100,\r\n\"slidingWindowType\": \"COUNT_BASED\"\r\n}\r\n}\r\n}",
+    "stat": {
+      "czxid": 25920676,
+      "mzxid": 25920676,
+      "ctime": 1618556831910,
+      "mtime": 1618556831910,
+      "version": 0,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 560,
+      "numChildren": 0,
+      "pzxid": 25920676
+    }
+  },
+  "/mpl/lib-pathfinder/circuitbreaker-config": {
+    "data": "{\r\n\"circuitBreakerServiceConfigMap\": {\r\n\"com.mpl.services.userdata.grpc.UserDataService\": {\r\n\"failureRateThreshold\": 50,\r\n\"waitDurationInOpenState\": 60000,\r\n\"permittedNumberOfCallsInHalfOpenState\": 2,\r\n\"slidingWindowSize\": 10,\r\n\"minimumNumberOfCalls\": 5\r\n},\r\n\"com.mpl.services.accounts.AccountsService\": {\r\n\"failureRateThreshold\": 50,\r\n\"waitDurationInOpenState\": 60000,\r\n\"permittedNumberOfCallsInHalfOpenState\": 2,\r\n\"slidingWindowSize\": 10,\r\n\"minimumNumberOfCalls\": 5\r\n}\r\n}\r\n}",
+    "stat": {
+      "czxid": 25683166,
+      "mzxid": 25683166,
+      "ctime": 1617400419911,
+      "mtime": 1617400419911,
+      "version": 0,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 476,
+      "numChildren": 0,
+      "pzxid": 25683166
+    }
+  },
+  "/mpl/lib-pathfinder/config": {
+    "data": "{\r\n\"grpcServerShutdownDelaySeconds\": 5,\r\n\r\n\"consulPort\": 8500,\r\n\r\n\"consulHost\": \"localhost\",\r\n\r\n\"consulPollingMaxRps\": 1,\r\n\"consulPollingTimeoutSeconds\": 60,\r\n\r\n\"tracingProbability\": 1,\r\n\"tracingMaxAnnotations\": 0,\r\n\"tracingMaxAttributes\": 0,\r\n\"tracingMaxEvents\": 0,\r\n\"tracingMaxLinks\": 0,\r\n\r\n\"zipkinCollectorEndpoint\":null\r\n}",
+    "stat": {
+      "czxid": 23493324,
+      "mzxid": 56302493,
+      "ctime": 1605705507824,
+      "mtime": 1634904301650,
+      "version": 2,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 273,
+      "numChildren": 0,
+      "pzxid": 23493324
+    }
+  },
+  "/mpl/lib-pathfinder/istio-acl": {
+    "data": "{\n    \"istioACLMap\": {\n        \"service-home-management\": [\n            \"service-ds-home-personalization\"\n        ],\n        \"api-gateway\": [\n            \"service-ds-home-personalization\",\n            \"service-cs-nps\",\n            \"service-cs-agent\",\n            \"service-cs-take-control\"\n        ]\n    }\n}",
+    "stat": {
+      "czxid": 99236023,
+      "mzxid": 101570957,
+      "ctime": 1647946515857,
+      "mtime": 1648734562158,
+      "version": 5,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 306,
+      "numChildren": 0,
+      "pzxid": 99236023
+    }
+  },
+  "/mpl/lib-pathfinder/istio-config": {
+    "data": "{\n    \"istioDataObjects\": {\n        \"service-invoices\": {\n            \"domainName\": \"invoices.invoices.svc\",\n            \"port\": 50082\n        },\n        \"service-user-data\": {\n            \"domainName\": \"user-data.user-data.svc\",\n            \"port\": 50035\n        },\n        \"service-banners\": {\n            \"domainName\": \"banners.banners.svc\",\n            \"port\": 50009\n        },\n        \"service-offers\": {\n            \"domainName\": \"offers.offers.svc\",\n            \"port\": 50024\n        },\n        \"service-notifications\": {\n            \"domainName\": \"notifications.notifications.svc\",\n            \"port\": 50030\n        },\n        \"service-kyc\": {\n            \"domainName\": \"kyc.kyc.svc\",\n            \"port\": 50008\n        },\n        \"service-segmentation-engine\": {\n            \"domainName\": \"segmentation-engine.segmentation-engine.svc\",\n            \"port\": 50060\n        },\n        \"service-usergame-stats\": {\n            \"domainName\": \"usergame-stats.usergame-stats.svc\",\n            \"port\": 50085\n        },\n        \"service-user-location\": {\n            \"domainName\": \"user-location.user-location.svc\",\n            \"port\": 50090\n        },\n        \"service-mqtt\": {\n            \"domainName\": \"mqtt.mqtt.svc\",\n            \"port\": 50039\n        },\n        \"service-storage\": {\n            \"domainName\": \"storage.storage.svc\",\n            \"port\": 50004\n        },\n        \"service-poker-ops\": {\n            \"domainName\": \"service-poker-ops.service-poker-ops.svc\",\n            \"port\": 50070\n        },\n        \"service-accounts\": {\n            \"domainName\": \"accounts.accounts.svc\",\n            \"port\": 50006\n        },\n        \"service-ds-home-personalization\": {\n            \"domainName\": \"ds-home-personalization.ds-home-personalization.svc\",\n            \"port\": 50021\n        },\n        \"service-data-integration-server\": {\n            \"domainName\": \"data-integration-server.data-integration-server.svc\",\n            \"port\": 50064\n        },\n        \"service-data-integration-ml\": {\n            \"domainName\": \"data-integration-ml.data-integration-ml.svc\",\n            \"port\": 50070\n        },\n        \"service-user-fraud-monitoring\": {\n            \"domainName\": \"user-fraud-monitoring.user-fraud-monitoring.svc\",\n            \"port\": 50081\n        },\n        \"service-auth\": {\n            \"domainName\": \"auth.auth.svc\",\n            \"port\": 51000\n        },\n        \"service-clevertap-relay\": {\n            \"domainName\": \"clevertap-relay.clevertap-relay.svc\",\n            \"port\": 50010\n        },\n        \"service-id-generator\": {\n            \"domainName\": \"id-generator.id-generator.svc\",\n            \"port\": 50091\n        },\n        \"service-tournament-internal\": {\n            \"domainName\": \"tournament-internal.tournament-engine.svc\",\n            \"port\": 50011\n        },\n        \"service-cs-take-control\": {\n            \"domainName\": \"cs-take-control.cs-take-control.svc\",\n            \"port\": 50098\n        },\n        \"service-cs-nps\": {\n            \"domainName\": \"cs-nps.cs-nps.svc\",\n            \"port\": 50097\n        },\n        \"service-cs-jobs\": {\n            \"domainName\": \"cs-jobs.cs-jobs.svc\",\n            \"port\": 50007\n        },\n        \"service-cs-agent\": {\n            \"domainName\": \"cs-agent.cs-agent.svc\",\n            \"port\": 50099\n        },\n        \"service-customer-support\": {\n            \"domainName\": \"customer-support.customer-support.svc\",\n            \"port\": 50055\n        },\n        \"service-fraud\": {\n            \"domainName\": \"fraud.fraud.svc\",\n            \"port\": 50062\n        },\n        \"service-card-games\": {\n            \"domainName\": \"127.0.0.1\",\n            \"port\": 51000\n        }\n    }\n}",
+    "stat": {
+      "czxid": 44371617,
+      "mzxid": 111269161,
+      "ctime": 1631624190220,
+      "mtime": 1652705424534,
+      "version": 71,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 3636,
+      "numChildren": 0,
+      "pzxid": 44371617
+    }
+  },
+  "/mpl/rummy-multi-table-node": {
+    "data": "{}",
+    "stat": {
+      "czxid": 109893753,
+      "mzxid": 109893753,
+      "ctime": 1652126973116,
+      "mtime": 1652126973116,
+      "version": 0,
+      "cversion": 2,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 2,
+      "numChildren": 2,
+      "pzxid": 109896037
+    }
+  },
+  "/mpl/rummy-multi-table-node/config": {
+    "data": "{\n    \"RUMMY_TYPE\": \"pool-multi-table\",\n    \"REJOIN_PLAY_TIME\": 300,\n    \"MAX_TIMEOUT\": 2,\n    \"PLAYMORE_POP_TIMER\": 15,\n    \"PLAYMORE\": true,\n    \"REDIS_DEFAULT_EXPIRY\": 3600,\n    \"CARDS_GAME_ARN\": \"arn:aws:sns:ap-south-1:092846666320:card-game-service-finish-internal\",\n    \"AWS_REGION\": \"ap-south-1\",\n    \"TABLE_MIN_SPLITABLE_POINTS_101\": 80,\n    \"TABLE_MIN_SPLITABLE_POINTS_201\": 175,\n    \"TABLE_MAX_REJOINABLE_POINTS_101\": 79,\n    \"TABLE_MAX_REJOINABLE_POINTS_201\": 174,\n    \"DATA_DUMP_MAX_TIME_SECONDS\": 360,\n    \"DISCONNECT_FROM_TABLE_TIMER\": 3600,\n    \"INSTANT_DEBIT_ENTRY_FEE\": 3,\n    \"INSTANT_DEBIT_VALIDATION\": \"INSTANT_DEBIT_VALIDATION\",\n    \"VALID_DECLARE_CHECK_LIST\": [\n        2,\n        3,\n        5\n    ],\n    \"GENERIC_POPUP_APK_VERSIONS\": [\n        1000170\n    ],\n    \"GENERIC_POPUP_BASELINE_VERSION\": -1\n}",
+    "stat": {
+      "czxid": 109893818,
+      "mzxid": 118731059,
+      "ctime": 1652126999564,
+      "mtime": 1655209587635,
+      "version": 5,
+      "cversion": 2,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 824,
+      "numChildren": 0,
+      "pzxid": 109895943
+    }
+  },
+  "/mpl/rummy-multi-table-node/product-config": {
+    "data": "{\n    \"DPM\": \"Are you sure you want to Declare? Note : Selected card will be discarded.\",\n    \"DRM\": \"You will lose #20.$ Are you sure you want to Drop from the Round?\",\n    \"EM\": \"You will lose by leaving the Game.$ Are you sure you want to Exit?\",\n    \"EMM\": \"Are you sure you want to Exit?\",\n    \"WMPM\": \"A Game is in progress, please wait for the next round.\",\n    \"IPM\": \"Add Cash from MPL Wallet to Continue Playing.\",\n    \"PMGL\": \"You lost the game.$ Do you want to play another Game?\",\n    \"PMG\": \"Your last game has ended.$ Do you want to play another Game?\",\n    \"RCP\": \"Sorry we cannot reconnect you to the game due to poor Internet connection.$Please move to a stable network to resume the game or Exit.\",\n    \"RJP\": \"#20 Rs will be debited from your MPL Wallet.$ Are you sure you want to Rejoin?\",\n    \"IMWPM\": \"You don't have sufficient amount in your MPL wallet. Please add money and come back again. Thank you!\",\n    \"SFPM\": \"Your New game has started as you had enough balance in your MPL Wallet. Note: We have added # from your MPL Wallet.\",\n    \"EPM\": \"You have been disconnected from the game for a long time. Please contact MPL helpdesk.\",\n    \"RCPM\": \"You Have no Internet connection. Please re-connect to resume the game.\",\n    \"ERRM\": \"Oops! Something went wrong. Please try again.\",\n    \"ESM\": \"Your MPL Wallet has already been credited. Please go to your wallet and check you balance.\",\n    \"SFM\": \"All seats have been occupied. Please wait for an empty seat or Switch Table.\",\n    \"TTM\": \"This is your 2nd timeout. Note: Do not stay inactive. Else you will be dropped once your turn ends.\",\n    \"AFM\": \"Oops! Something went wrong. Please try to join again.\",\n    \"BFM\": \"There was an error in fetching your account balance. Please try again later!\",\n    \"FSFM\": \"There was an error in submitting your score. You will get your money back in 30 minutes. Thank you!\",\n    \"ISM\": \"You were disconnected from the game because you were detected sitting idle for a long time.\",\n    \"LEM\": \"This lobby has expired.\",\n    \"FGFM\": \"Because of a Technical issue, this game has been cancelled. You will get your money back in 30 minutes. Thank you!\",\n    \"GSDM\": \"There was an error in debiting from your MPL wallet. Please try again later!\",\n    \"NCPM\": \"Collusion has been detected on this table. The game will be cancelled and your entry fee will be refunded. Players involved in collusion will be blocked.\",\n    \"CPM\": \"Collusion has been detected in your gameplay. You have been removed from this table and blocked for cheating.\",\n    \"TIPS\": [\n        \"If you are disconnected, you can rejoin and resume the game.\",\n        \"If you do invalid declare, you lose with 80 points\",\n        \"It�s better to do a first drop than playing with bad cards and losing more points\",\n        \"If you are facing any issue while playing, rejoining the game would solve most of the issues\",\n        \"If you are inactive you will have 2 Timeouts to comeback to game\",\n        \"If you are Inactive, there will be Max 2 Timeouts\",\n        \"If you exceed 2 Timeouts, you will be dropped and go to stand up mode\",\n        \"If your game is cancelled due to technical issues, you will be refunded for that particular game\",\n        \"If you do not rejoin back before reconnection time, you will lose with point at hand\",\n        \"Your money gets debited only when your game is started.\"\n    ],\n    \"INFOTXT\": [\n        \"If you are disconnected, you can rejoin and resume the game.\",\n        \"If you do invalid declare, you lose with 80 points\",\n        \"It�s better to do a first drop than playing with bad cards and losing more points\",\n        \"If you are facing any issue while playing, rejoining the game would solve most of the issues\",\n        \"If you are inactive you will have 2 Timeouts to comeback to game\",\n        \"If you are Inactive, there will be Max 2 Timeouts\",\n        \"If you exceed 2 Timeouts, you will be dropped and go to stand up mode\",\n        \"If your game is cancelled due to technical issues, you will be refunded for that particular game\",\n        \"If you do not rejoin back before reconnection time, you will lose with point at hand\",\n        \"Your money gets debited only when your game is started.\"\n    ],\n    \"IARPM\": \"You have been removed from this table because of your inactivity from a long time. Please exit and join again. Thank you!\",\n    \"GSSP\": \"Game score submission in progress..\",\n    \"CREATE_BATTLE_FRAUD_USER_TEXT\": \"You have been found violating fairplay policies and have been banned from MPL\",\n    \"FINISH_BATTLE_FRAUD_USER_TEXT\": \"You have been found violating fairplay policies and have been banned from MPL\",\n    \"FINISH_BATTLE_FRAUD_ROOM_TEXT\": \"have been found violating fairplay policies & have been removed from the table. This game is cancelled and your entry fees is refunded\",\n    \"REBUY_POPUP_TEXT\": \"#20 Rs will be debited from your MPL Wallet.$ Are you sure you want to Rejoin?\",\n    \"REBUY_INVALID_POPUP\": \"Table is not open, please join another table\",\n    \"PLAY_MORE_TEXT\": \"Your last game has ended. Do you want to play another Game?\",\n    \"SEAT_SHUFFLE_MSG\": \"Seats are being shuffled. Dealer will be assigned as per seating of first round\"\n}",
+    "stat": {
+      "czxid": 109896037,
+      "mzxid": 119297592,
+      "ctime": 1652127863452,
+      "mtime": 1655461071298,
+      "version": 2,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 5211,
+      "numChildren": 0,
+      "pzxid": 109896037
+    }
+  },
+  "/mpl/service-auth": {
+    "data": "",
+    "stat": {
+      "czxid": 11,
+      "mzxid": 11,
+      "ctime": 1534877366875,
+      "mtime": 1534877366875,
+      "version": 0,
+      "cversion": 8,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 0,
+      "numChildren": 4,
+      "pzxid": 2171541
+    }
+  },
+  "/mpl/service-auth/config": {
+    "data": "{\n    \"countryCode\": 91,\n    \"mobileNumberRegex\": \"\\\\+\\\\d{12}\",\n    \"dbConnectionString\": \"jdbc:postgresql://qa-postgres-001-cluster.cluster-cimrja03mw4l.ap-south-1.rds.amazonaws.com:5432/auth\",\n    \"dbPassword\": \"dockerMPLPostgres\",\n    \"dbUsername\": \"postgres\",\n    \"mobileNumberWhitelist\":[\n        \"+917349368311\"\n    ],\n    \"loginAppNameExpDate\": \"180\",\n    \"loginAppNameFromConfig\": \"LUDOWIN\",\n    \"globalCtId\": \"__5611f203b3524a21a66425f6639b5f37\",\n    \"esportsCtId\": \"__5611f203b3524a21a66425f6639b5f37\",\n    \"defaultOTPWhitelist\": [\n        \"+919999999999\",\n        \"+919000000001\",\n        \"+916377700238\",\n        \"+916377700239\",\n        \"+916377700240\",\n        \"+916377700241\",\n        \"+916377700242\",\n        \"+916377700243\",\n        \"+916377700244\",\n        \"+916377700245\",\n        \"+916377700246\",\n        \"+916377700247\",\n        \"+916377700248\",\n        \"+916377700249\",\n        \"+916377700250\",\n        \"+916377700251\",\n        \"+916377700252\",\n        \"+916377700253\",\n        \"+916377700254\",\n        \"+916377700255\",\n        \"+916377700256\",\n        \"+916377700257\",\n        \"+916377700258\",\n        \"+916377700259\",\n        \"+916377700260\",\n        \"+916377700261\",\n        \"+916377700262\",\n        \"+916377700263\",\n        \"+916377700264\",\n        \"+916377700265\",\n        \"+916377700266\",\n        \"+916377700267\",\n        \"+916377700268\",\n        \"+916377700269\",\n        \"+916377700270\",\n        \"+916377700271\",\n        \"+916377700272\",\n        \"+916377700273\",\n        \"+916377700274\",\n        \"+916377700275\",\n        \"+916377700276\",\n        \"+916377700277\",\n        \"+916377700278\",\n        \"+916377700279\",\n        \"+916377700280\",\n        \"+916377700281\",\n        \"+916377700282\",\n        \"+916377700283\",\n        \"+916377700284\",\n        \"+916377700285\",\n        \"+916377700286\",\n        \"+916377700287\",\n        \"+916377700288\",\n        \"+916377700289\",\n        \"+916377700290\",\n        \"+916377700291\",\n        \"+916377700292\",\n        \"+916377700293\",\n        \"+916377700294\",\n        \"+916377700295\",\n        \"+916377700296\",\n        \"+916377700297\",\n        \"+916377700298\",\n        \"+916377700299\",\n        \"+916377700300\",\n        \"+916377700301\",\n        \"+916377700302\",\n        \"+916377700303\",\n        \"+916377700304\",\n        \"+916377700305\",\n        \"+916377700306\",\n        \"+916377700307\",\n        \"+916377700308\",\n        \"+916377700309\",\n        \"+916377700310\",\n        \"+916377700311\",\n        \"+916377700312\",\n        \"+916377700313\",\n        \"+916377700314\",\n        \"+916377700315\",\n        \"+916377700316\",\n        \"+916377700317\",\n        \"+916377700318\",\n        \"+916377700319\",\n        \"+916377700320\",\n        \"+916377700321\",\n        \"+916377700322\",\n        \"+916377700323\",\n        \"+916377700324\",\n        \"+916377700325\",\n        \"+916377700326\",\n        \"+916377700327\",\n        \"+916377700328\",\n        \"+916377700329\",\n        \"+916377700330\",\n        \"+916377700331\",\n        \"+916377700332\",\n        \"+916377700333\",\n        \"+916377700334\",\n        \"+916377700335\",\n        \"+916377700336\",\n        \"+916377700337\",\n        \"+629668883624\",\n        \"+629000000002\",\n        \"+629000000003\",\n        \"+629000000004\",\n        \"+629999999998\",\n        \"+629999999999\",\n        \"+628095837676\",\n        \"+625154392875\",\n        \"+626000000000\",\n        \"+626000000001\",\n        \"+626000000002\",\n        \"+626000000003\",\n        \"+919708016695\",\n        \"+916118750679\",\n        \"+917670513119\",\n        \"+916996273009\",\n        \"+911238983825\",\n        \"+628694213825\",\n        \"+623408530088\",\n        \"+626862654221\",\n        \"+629453703707\",\n        \"+626658979120\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+629123123461\",\n        \"+629123123462\",\n        \"+629123123463\",\n        \"+629123123464\",\n        \"+919940127832\",\n        \"+914103183046\",\n        \"+919474386103\",\n        \"+917066193366\",\n        \"+917434581785\",\n        \"+918861264933\",\n        \"+916913355856\",\n        \"+918207741371\",\n        \"+919677002962\",\n        \"+919860292489\",\n        \"+917917009421\",\n        \"+917716575813\",\n        \"+918257590191\",\n        \"+917191836615\",\n        \"+917242623722\",\n        \"+917158988707\",\n        \"+916725447748\",\n        \"+918371087040\",\n        \"+916545955133\",\n        \"+919571278831\",\n        \"+918670754521\",\n        \"+919661420014\",\n        \"+917206840203\",\n        \"+918959149139\",\n        \"+919424874554\",\n        \"+919535319991\",\n        \"+919450791391\",\n        \"+917183812080\",\n        \"+919468460692\",\n        \"+919536271051\",\n        \"+917648547977\",\n        \"+918566849385\",\n        \"+917761397807\",\n        \"+917463595699\",\n        \"+918875785736\"\n    ],\n    \"googleClientId\": \"56054691869-n3g89qr32c2n9llrbqnkubiust8l2if1.apps.googleusercontent.com\",\n    \"inQAMode\": true,\n    \"myId\": \"auth\",\n    \"myName\": \"service-auth\",\n    \"myPort\": 51000,\n    \"redisHost\": \"red1.mpl.internal\",\n    \"redisPoolConfig\": {\n        \"maxIdle\": 4,\n        \"maxTotal\": 8,\n        \"minIdle\": 1\n    },\n    \"redisPort\": 6379,\n    \"redissonConfig\": {\n        \"codec\": {\n            \"class\": \"org.redisson.codec.JsonJacksonCodec\"\n        },\n        \"singleServerConfig\": {\n            \"address\": \"redis://qa-cache-001.zvemcp.ng.0001.aps1.cache.amazonaws.com:6379\",\n            \"connectionMinimumIdleSize\": 1,\n            \"connectionPoolSize\": 4,\n            \"pingConnectionInterval\": 0\n        }\n    },\n    \"smsProviders\": {\n        \"TWO_FACTOR\": {\n            \"priority\": 1,\n            \"supportedCountries\": [\n                \"IN\"\n            ],\n            \"config\": {\n                \"apiBaseUrl\": \"https://2factor.in/API/V1\",\n                \"apiKey\": \"cb24165f-6af1-11e8-a895-0200cd936042\",\n                \"templates\": {\n                    \"IOS\": \"\",\n                    \"CASH\": \"OTP_CASH\",\n                    \"PWA_NDTV\": \"OTP_CASH\",\n                    \"PWA_MIPAY\": \"OTP_CASH\",\n                    \"PWA_FANTASY\": \"OTP_CASH\",\n                    \"PWA_MPLFANTASY\": \"OTP_CASH\",\n                    \"PWA_PHONEPE\": \"OTP_CASH\",\n                    \"PLAY_STORE\": \"OTP_PLAY_STORE\",\n                    \"POOL_CHAMPS\": \"OTP_POOL_CHAMPS\"\n                }\n            }\n        },\n        \"MessageBird\": {\n            \"priority\": 1,\n            \"supportedCountries\": [\n                \"IN\"\n            ],\n            \"config\": {\n                \"apiBaseUrl\": \"https://rest.messagebird.com/messages\",\n                \"apiKey\": \"LyBPxNlZr4qGIoZKQyZMwxMvt\",\n                \"sender\": \"MPL ID\",\n                \"templates\": {\n                    \"IOS\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\",\n                    \"CASH\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\",\n                    \"PLAY_STORE\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\",\n                    \"PWA_MPLFANTASY\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\",\n                    \"PWA_GOJEK\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\"\n                }\n            }\n        },\n        \"VALUE_FIRST\": {\n            \"priority\": 0,\n            \"supportedCountries\": [\n                \"IN\"\n            ],\n            \"config\": {\n                \"apiBaseUrl\": \"http://www.myvaluefirst.com/smpp/sendsms\",\n                \"username\": \"galachtptrans\",\n                \"password\": \"gala8459\",\n                \"shortcode\": \"MPLSMS\",\n                \"templates\": {\n                    \"IOS\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA-VF\",\n                    \"CASH\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA-VF\",\n                    \"PWA_NDTV\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_MIPAY\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_FANTASY\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_MPLFANTASY\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_PHONEPE\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_WEBPOKER\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PLAY_STORE\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! RXUhq/uIRoc\",\n                    \"POOL_CHAMPS\": \"<#> OTP : {OTP} for verification, by MPL Originals 7ZcL6TtSQmF\"\n                }\n            }\n        },\n        \"AWS_PINPOINT\": {\n            \"priority\": 0,\n            \"supportedCountries\": [\n                \"IN\"\n            ],\n            \"config\": {\n                \"senderId\": \"MPLAPP\",\n                \"region\": \"ap-south-1\",\n                \"messageType\": \"TRANSACTIONAL\",\n                \"appId\": \"187f63346f464217aec6bddd33ae4c74\",\n                \"templates\": {\n                    \"IOS\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA-AWS_PP\",\n                    \"CASH\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA-AWS_PP\",\n                    \"PWA_NDTV\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_MIPAY\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_FANTASY\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_MPLFANTASY\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_PHONEPE\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PWA_WEBPOKER\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PLAY_STORE\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! RXUhq/uIRoc\",\n                    \"POOL_CHAMPS\": \"<#> OTP : {OTP} for verification, by MPL Originals 7ZcL6TtSQmF\"\n                }\n            }\n        },\n        \"WAVE_CELL\": {\n            \"priority\": 0,\n            \"tempGlobalPriority\": 1,\n            \"supportedCountries\": [\n                \"ID\"\n            ],\n            \"config\": {\n                \"apiKey\": \"0uUEA0D2EB208BD4721986A84674CE\",\n                \"apiBaseUrl\": \"https://api.wavecell.com/sms/v1/MPLgame_OTP/single\",\n                \"senderId\": \"MPL ID\",\n                \"templates\": {\n                    \"CASH\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\",\n                    \"PLAY_STORE\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\",\n                    \"PWA_MPLFANTASY\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\",\n                    \"PWA_GOJEK\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\"\n                }\n            }\n        },\n        \"KALEYRA\": {\n            \"priority\": 0,\n            \"tempGlobalPriority\": 0,\n            \"supportedCountries\": [\n                \"ID\"\n            ],\n            \"config\": {\n                \"apiBaseUrl\": \"https://api-global.kaleyra.com/v4/\",\n                \"apiKey\": \"Ac64db9ea657d5ce7d9aeec33a3b5aa13\",\n                \"senderId\": \"MPL ID\",\n                \"templates\": {\n                    \"CASH\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! eK1T98gNuVA\",\n                    \"IOS\": \"<#> OTP : {OTP} for verification.MPL family welcomes you! eK1T98gNuVA\",\n                    \"PLAY_STORE\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! RXUhq/uIRoc\",\n                    \"PWA_MPLFANTASY\": \"<#> OTP : {OTP} for verification.MPL family welcomes you! RXUhq/uIRoc\",\n                    \"PWA_GOJEK\": \"<#> OTP : {OTP} for verification.MPL family welcomes you! RXUhq/uIRoc\"\n                }\n            }\n        },\n        \"NEXMO\": {\n            \"priority\": 0,\n            \"supportedCountries\": [\n                \"ID\"\n            ],\n            \"config\": {\n                \"apiBaseUrl\": \"https://rest.nexmo.com/sms/json\",\n                \"apiKey\": \"2a05a8e3\",\n                \"apiSecret\": \"M4Q5G5lySsWZg9JZ\",\n                \"senderId\": \"NXSMS\",\n                \"templates\": {\n                    \"IOS\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"CASH\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! eK1T98gNuVA\",\n                    \"PLAY_STORE\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! RXUhq/uIRoc\"\n                }\n            }\n        }\n    },\n    \"timeoutLogin\": 3600,\n    \"treatAsNewUsersList\": [\n        \"+919028420302\",\n        \"+629380412988\",\n        \"+629840864627\",\n        \"+629741497631\",\n        \"+918880008883\",\n        \"+918880008813\",\n        \"+919380412988\",\n        \"+919880344334\",\n        \"+918880001120\",\n        \"+918880001121\",\n        \"+919993911651\",\n        \"+917588868656\",\n        \"+919993912177\",\n        \"+918880002321\",\n        \"+918880001100\"\n    ],\n    \"verifyTCSignature\": true,\n    \"qaNumbersForDefaultToken\": [\n        \"+919028420320\",\n        \"+913452698124\"\n    ],\n    \"pwaAppTypes\": [\n        \"PWA_NDTV\"\n    ],\n    \"unblockRequestMaxDays\": 15,\n    \"minutesOfExpiry\": 3,\n    \"minutesAfterExpiry\": 2,\n    \"generatedDeviceIdEnabled\": false,\n    \"gojekValidCountry\": [\n        \"+62\",\n        \"+91\"\n    ],\n    \"gojekAuthUrl\": \"https://accounts.go-jek.com/oauth2/token\",\n    \"mplClientId\": \"sKAfbxyzUwsPwy5e\",\n    \"mplClientSecret\": \"2nfm19hAhCW2tAnJP7upx2dT3eeYGotG\",\n    \"profileServiceTimeout\": 15,\n    \"changeIndoUserIds\": false,\n    \"imeiSkipOSVersionCode\": 29,\n    \"asyncOtpThreadPoolSize\": 1,\n    \"disableAsyncOtpFlow\": false,\n    \"iosGoogleClientId\": \"56054691869-2s46nvn77rmrbtfkg3fmalqo5crsdfgv.apps.googleusercontent.com\",\n    \"socialLoginValidationEnabled\": true,\n    \"ipqsVerificationEnabled\": false,\n    \"ipqsFraudScore\": 100,\n    \"ipqsApiTimeout\": \"1\",\n    \"publicKeyUrl\": \"https://qa-forgerock.mpl.live/am/oauth2/realms/mplUser/connect/jwk_uri\",\n    \"tokenIssuer\": \"https://qa-forgerock.mpl.live/am/oauth2/mplUser\",\n    \"oneLoginJwksUrl\": \"https://qa-auth.mpl.live/oauth2/jwks\",\n    \"oneLoginIssuer\": \"https://qa-auth.mpl.live\",\n    \"appWiseDeviceLogin\": {\n        \"SAMPLE\": 3\n    },\n    \"odnlCheckEnabled\": false,\n    \"koGameId\": [\n        1954\n    ],\n    \"koAppType\": [\n        \"CASH\"\n    ],\n    \"errorMessages\": {\n        \"ODNL_DENIED_LOGIN\": \"You already have an account on MPL. Please login with your existing credentials - (ODNL Block) SURYA\",\n        \"ODNL_MISSING_PARAMS\": \"Pleae provide shield data  - (Buggy build-ODNL) SURYA\",\n        \"ODNL_VPN_SPOOFER_RUNNING\": \"Please close VPN and restart the app - try\",\n        \"FRAUD_BLOCK\": \"Fraud Block from Auth service Contact Surya / Srijan\",\n        \"BLOCK_NON_PRO_APPS\": \"This number is already being used on our MPL Pro App. Try playing with our MPL Pro App or go back and try again with another number.\"\n    },\n    \"vpnSpooferEnabled\": false,\n    \"blockingServiceEnabled\": true,\n    \"treatAsNewUsersSocialLogin\": [\n        \"SAMPLESUID2\",\n        \"SAMPLESUID\"\n    ]\n}",
+    "stat": {
+      "czxid": 12,
+      "mzxid": 122345904,
+      "ctime": 1534877373118,
+      "mtime": 1657015156129,
+      "version": 487,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 17571,
+      "numChildren": 0,
+      "pzxid": 12
+    }
+  },
+  "/mpl/service-auth/config-international": {
+    "data": "{\r\n\t\"countryCode\": 44,\r\n\t\"mobileNumberRegex\": \"\\\\+44\\\\d.*\",\r\n\t\"dbConnectionString\": \"jdbc:postgresql://pg1.mpl.internal:5432/auth\",\r\n\t\"dbPassword\": \"dockerMPLPostgres\",\r\n\t\"dbUsername\": \"postgres\",\r\n\t\"defaultOTPWhitelist\":[\r\n\t\t\"+629000000001\",\r\n\t\t\"+629000000002\",\r\n\t\t\"+629000000003\",\r\n\t\t\"+629000000004\",\r\n\t\t\"+629999999998\",\r\n\t\t\"+629999999999\",\r\n\t\t\"+628095837676\",\r\n\t\t\"+625154392875\",\r\n\t\t\"+626000000000\",\r\n\t\t\"+626000000001\",\r\n\t\t\"+626000000002\",\r\n\t\t\"+626000000003\",\r\n\t\t\"+627204068883\"\r\n\t],\r\n\t\"googleClientId\": \"728507009882-om6ngojfvnvg3pvd4ggv745doh1oc8ge.apps.googleusercontent.com\",\r\n\t\"googleClientSecret\": \"Dw4Wf3InK3CwnJqXvjKEMJjv\",\r\n\t\"inQAMode\": false,\r\n\t\"myId\": \"auth\",\r\n\t\"myName\": \"service-auth\",\r\n\t\"myPort\": 51000,\r\n\t\"redisHost\": \"red1.mpl.internal\",\r\n\t\"redisPoolConfig\": {\r\n\t\t\"maxIdle\": 4,\r\n\t\t\"maxTotal\": 8,\r\n\t\t\"minIdle\": 1\r\n\t},\r\n\t\"redisPort\": 6379,\r\n\t\"redissonConfig\": {\r\n\t\t\"clusterServersConfig\": {\r\n\t\t\t\"slaveConnectionMinimumIdleSize\": 12,\r\n\t\t\t\"slaveConnectionPoolSize\": 24,\r\n\t\t\t\"masterConnectionMinimumIdleSize\": 64,\r\n\t\t\t\"masterConnectionPoolSize\": 128,\r\n\t\t\t\"readMode\": \"MASTER\",\r\n\t\t\t\"nodeAddresses\": [\"redis://dev-redclst-004.gihsz4.clustercfg.aps1.cache.amazonaws.com:6379\"],\r\n\t\t\t\"scanInterval\": 1000,\r\n\t\t\t\"pingConnectionInterval\": 0\r\n\t\t}\r\n\t},\r\n\t\"smsProviders\": {\r\n\t\t\"ACL\": {\r\n\t\t\t\"config\": {\r\n\t\t\t\t\"apiBaseUrl\": \"http://172.31.13.39/OTP_ACL_Web/OtpRequestListener\",\r\n\t\t\t\t\"enterpriseId\": \"galfunotp\",\r\n\t\t\t\t\"pusheid\": \"galfunotp\",\r\n\t\t\t\t\"pushepwd\": \"galfunotp1\",\r\n\t\t\t\t\"sender\": \"MPLAPP\",\r\n\t\t\t\t\"subEnterpriseid\": \"galfunotp\",\r\n\t\t\t\t\"templates\": {\r\n\t\t\t\t\t\"CASH\": \"<#> OTP : {OTP} for verification. ACL MPL family welcomes you! RXUhq/uIRoc\",\r\n\t\t\t\t\t\"IOS\": \"\",\r\n\t\t\t\t\t\"PLAY_STORE\": \"<#> OTP : {OTP} for verification. ACL MPL family welcomes you! RXUhq/uIRoc\"\r\n\t\t\t\t}\r\n\t\t\t},\r\n\t\t\t\"priority\": 0\r\n\t\t},\r\n\t\t\"NEXMO\": {\r\n\t\t\t\"priority\": 1,\r\n\t\t\t\"config\": {\r\n\t\t\t\t\"apiBaseUrl\": \"https://rest.nexmo.com/sms/json\",\r\n\t\t\t\t\"apiKey\": \"2a05a8e3\",\r\n\t\t\t\t\"apiSecret\": \"M4Q5G5lySsWZg9JZ\",\r\n\t\t\t\t\"senderId\": \"NXSMS\",\r\n\t\t\t\t\"templates\": {\r\n\t\t\t\t\t\"IOS\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! 9ysZfGSoNxb\",\r\n\t\t\t\t\t\"CASH\": \"<#> OTP : {OTP} for verification. MPL family welcomes you! 9ysZfGSoNxb\",\r\n\t\t\t\t\t\"PLAY_STORE\": \"<#> OTP : {OTP} Masukan kode verifikasi. Keluarga MPL menyambutmu! 9ysZfGSoNxb\"\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t},\r\n\t\t\"TWO_FACTOR\": {\r\n\t\t\t\"config\": {\r\n\t\t\t\t\"apiBaseUrl\": \"https://2factor.in/API/V1\",\r\n\t\t\t\t\"apiKey\": \"cb24165f-6af1-11e8-a895-0200cd936042\",\r\n\t\t\t\t\"templates\": {\r\n\t\t\t\t\t\"CASH\": \"OTP_CASH\",\r\n\t\t\t\t\t\"IOS\": \"\",\r\n\t\t\t\t\t\"PLAY_STORE\": \"OTP_PLAY_STORE\"\r\n\t\t\t\t}\r\n\t\t\t},\r\n\t\t\t\"priority\": 0\r\n\t\t},\r\n\t\t\"VALUE_FIRST\": {\r\n\t\t\t\"config\": {\r\n\t\t\t\t\"apiBaseUrl\": \"http://www.myvaluefirst.com/smpp/sendsms\",\r\n\t\t\t\t\"password\": \"gala8459\",\r\n\t\t\t\t\"senderId\": \"MPL ID\",\r\n\t\t\t\t\"shortcode\": \"MPLSMS\",\r\n\t\t\t\t\"templates\": {\r\n\t\t\t\t\t\"CASH\": \"<#> OTP : {OTP} for verification.VALUE_FIRST MPL family welcomes you! eK1T98gNuVA\",\r\n\t\t\t\t\t\"IOS\": \"\",\r\n\t\t\t\t\t\"PLAY_STORE\": \"<#> OTP : {OTP} for verification.VALUE_FIRST MPL family welcomes you! RXUhq/uIRoc\"\r\n\t\t\t\t},\r\n\t\t\t\t\"username\": \"galachtptrans\"\r\n\t\t\t},\r\n\t\t\t\"priority\": 0\r\n\t\t},\r\n\t\t\"WAVE_CELL\": {\r\n\t\t\t\"config\": {\r\n\t\t\t\t\"apiBaseUrl\": \"https://api.wavecell.com/sms/v1/MPLgame_1/single\",\r\n\t\t\t\t\"apiKey\": \"0uUEA0D2EB208BD4721986A84674CE\",\r\n\t\t\t\t\"templates\": {\r\n\t\t\t\t\t\"CASH\": \"<#> OTP : {OTP} WAVE_CELL for verification. MPL family welcomes you! eK1T98gNuVA\",\r\n\t\t\t\t\t\"IOS\": \"\",\r\n\t\t\t\t\t\"PLAY_STORE\": \"<#> OTP : {OTP} WAVE_CELL for verification. MPL family welcomes you! RXUhq/uIRoc\"\r\n\t\t\t\t}\r\n\t\t\t},\r\n\t\t\t\"priority\": 0\r\n\t\t}\r\n\t},\r\n\t\"timeoutLogin\": 3600,\r\n\t\"treatAsNewUsersList\": [\r\n\t\t\"+629380412988\",\r\n\t\t\"+629840864627\",\r\n\t\t\"+629741497631\"\r\n\t],\r\n\t\"verifyTCSignature\": true\r\n}",
+    "stat": {
+      "czxid": 2171537,
+      "mzxid": 2171643,
+      "ctime": 1562846383804,
+      "mtime": 1562846714780,
+      "version": 2,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 3660,
+      "numChildren": 0,
+      "pzxid": 2171537
+    }
+  },
+  "/mpl/service-auth/walkie-talkie-config": {
+    "data": "{ \r\n\"region\":\"ap-south-1\", \r\n\"publisher\":[ \r\n{ \r\n\"topic\":\"int-service-auth\" \r\n} \r\n], \r\n\"subscriber\":[ ] \r\n} ",
+    "stat": {
+      "czxid": 1115008,
+      "mzxid": 3892226,
+      "ctime": 1554289867487,
+      "mtime": 1571996630315,
+      "version": 3,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 108,
+      "numChildren": 0,
+      "pzxid": 1115008
+    }
+  },
+  "/mpl/service-card-games": {
+    "data": "",
+    "stat": {
+      "czxid": 27052369,
+      "mzxid": 27052369,
+      "ctime": 1623866862691,
+      "mtime": 1623866862691,
+      "version": 0,
+      "cversion": 8,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 0,
+      "numChildren": 8,
+      "pzxid": 122182640
+    }
+  },
+  "/mpl/service-card-games/COUNTRY_CONFIG": {
+    "data": "",
+    "stat": {
+      "czxid": 27052374,
+      "mzxid": 27052374,
+      "ctime": 1623866881711,
+      "mtime": 1623866881711,
+      "version": 0,
+      "cversion": 3,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 0,
+      "numChildren": 3,
+      "pzxid": 95482956
+    }
+  },
+  "/mpl/service-card-games/COUNTRY_CONFIG/ID": {
+    "data": "{}",
+    "stat": {
+      "czxid": 78717002,
+      "mzxid": 78717002,
+      "ctime": 1642482768518,
+      "mtime": 1642482768518,
+      "version": 0,
+      "cversion": 1,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 2,
+      "numChildren": 1,
+      "pzxid": 78717038
+    }
+  },
+  "/mpl/service-card-games/COUNTRY_CONFIG/ID/countrySpecificConfig": {
+    "data": "{\n    \"applySegment\": true\n}",
+    "stat": {
+      "czxid": 78717038,
+      "mzxid": 95483166,
+      "ctime": 1642482782064,
+      "mtime": 1646830065310,
+      "version": 3,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 28,
+      "numChildren": 0,
+      "pzxid": 78717038
+    }
+  },
+  "/mpl/service-card-games/COUNTRY_CONFIG/IN": {
+    "data": "",
+    "stat": {
+      "czxid": 27052393,
+      "mzxid": 27052393,
+      "ctime": 1623866958700,
+      "mtime": 1623866958700,
+      "version": 0,
+      "cversion": 1,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 0,
+      "numChildren": 1,
+      "pzxid": 27052400
+    }
+  },
+  "/mpl/service-card-games/COUNTRY_CONFIG/IN/countrySpecificConfig": {
+    "data": "{\n    \"applySegment\": true,\n    \"segmentationEnabledGameIds\":[\n        1000215,\n        1000216,\n        1000217,\n        1000220,\n        1000223,\n        1000227\n    ],\n    \"callBreakRejoinEnabled\": true,\n    \"rummyWalletTransactionStatementsPerReason\": {\n        \"JOIN_TABLE\": \"Rs. %s credited, on joining Rummy Table to play Points Rummy\",\n        \"FIRST_DROP\": \"Rs. %s debited, on losing %s points due to First Drop \",\n        \"MIDDLE_DROP\": \"Rs. %s debited, on losing %s points due to Middle Drop \",\n        \"VALID_DECLARE\": \"Rs. %s credited, on winning  %s points due to Valid Declare\",\n        \"EXIT_TABLE\": \"Rs. %s debited, on losing %s points due to game forfeit via Exit Table\",\n        \"STAND_UP\": \"Rs. %s debited, on losing %s points due to game forfeit via Exit Table\",\n        \"SWITCH_TABLE\": \"Rs. %s debited, on losing %s points due to game forfeit via Switch Table\",\n        \"AUTO_ADDITION_OF_FUNDS\": \"Rs. %s credited, on auto addition of funds from MPL Wallet to Rummy Table Wallet to continue playing next game\",\n        \"MANUAL_ADDITION_OF_FUNDS\": \"Rs. %s credited, on manual addition of funds from MPL Wallet to Rummy Table Wallet\",\n        \"TRANSFERRED_TO_MPL_WALLET\": \"Rs.%s debited,transferring funds from Rummy Table Wallet to your MPL Wallet on Table Exit \\n Winnings - Rs. %s \\n Deposit - Rs. %s \\n Bonus - Rs. %s\",\n        \"TRANSFERRED_FROM_MPL_WALLET\": \"Rs. %s credited, on joining Rummy Table to play Points Rummy\",\n        \"OPPONENT_VALID_DECLARE\": \"Rs. %s debited, on losing %s points due to opponent’s Valid Declare\",\n        \"INVALID_DECLARE\": \"Rs. %s debited, on losing %s points due to Invalid Declare \",\n        \"NONE\": \"Rs. %s transactionType: %s points: %s points reason: %s\"\n    }\n}",
+    "stat": {
+      "czxid": 27052400,
+      "mzxid": 109226443,
+      "ctime": 1623866990079,
+      "mtime": 1651836754165,
+      "version": 7,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 1725,
+      "numChildren": 0,
+      "pzxid": 27052400
+    }
+  },
+  "/mpl/service-card-games/COUNTRY_CONFIG/US": {
+    "data": "{}",
+    "stat": {
+      "czxid": 95482956,
+      "mzxid": 95482956,
+      "ctime": 1646830013462,
+      "mtime": 1646830013462,
+      "version": 0,
+      "cversion": 1,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 2,
+      "numChildren": 1,
+      "pzxid": 95483099
+    }
+  },
+  "/mpl/service-card-games/COUNTRY_CONFIG/US/countrySpecificConfig": {
+    "data": "{\n  \"applySegment\": true\n}",
+    "stat": {
+      "czxid": 95483099,
+      "mzxid": 95483099,
+      "ctime": 1646830049897,
+      "mtime": 1646830049897,
+      "version": 0,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 26,
+      "numChildren": 0,
+      "pzxid": 95483099
+    }
+  },
+  "/mpl/service-card-games/PRODUCT_CONFIG": {
+    "data": "{\n    \"limiterEnabledLobbiesEntryFeeMap\":{\n        \"1000217\":[\n            1,\n            4,\n            10\n        ],\n        \"1000223\": [\n            3,\n            4,\n            10\n        ]\n    }\n}",
+    "stat": {
+      "czxid": 122182640,
+      "mzxid": 122224936,
+      "ctime": 1656921991424,
+      "mtime": 1656944011500,
+      "version": 6,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 204,
+      "numChildren": 0,
+      "pzxid": 122182640
+    }
+  },
+  "/mpl/service-card-games/cluster-config": {
+    "data": "{\"movedLobbies\":{\"89493\":1656937531105,\"5995012\":1656937531105,\"6039840\":1657023670967}}",
+    "stat": {
+      "czxid": 121634392,
+      "mzxid": 122362860,
+      "ctime": 1656590413319,
+      "mtime": 1657023671082,
+      "version": 8,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 88,
+      "numChildren": 0,
+      "pzxid": 121634392
+    }
+  },
+  "/mpl/service-card-games/config": {
+    "data": "{\n    \"myName\": \"service-card-games\",\n    \"myId\": \"cg\",\n    \"myPort\": \"51000\",\n    \"hostUrl\": \"http://127.0.0.1\",\n    \"pointRummyGameIds\":[\n        1000215\n    ],\n    \"dropAndSwitchEnabled\": true,\n    \"dropAndSwitchEnabledGameIds\": [\n        1000223\n    ],\n    \"poolRummyCollusionCheckEnabled\": false,\n    \"dealsRummyCollusionCheckEnabled\": true,\n    \"pointsRummyCollusionCheckEnabled\": false,\n    \"rejoinEnabledGameIdMap\": {\n        \"1000215\": true,\n        \"1000216\": true,\n        \"1000217\": true,\n        \"1000219\": true,\n        \"1000223\": true,\n        \"1000229\": true\n    },\n    \"redissonConfig\": {\n        \"singleServerConfig\": {\n            \"address\": \"redis://qa-card-games.zvemcp.0001.aps1.cache.amazonaws.com:6379\",\n            \"connectionMinimumIdleSize\": 30,\n            \"connectionPoolSize\": 100,\n            \"pingConnectionInterval\": 0,\n            \"timeout\": 200\n        }\n    },\n    \"dbConnectionStringCardGames\": \"jdbc:postgresql://qa-postgres-001-cluster.cluster-cimrja03mw4l.ap-south-1.rds.amazonaws.com:5432/card-games\",\n    \"dbConnectionStringCardGamesRead\": \"jdbc:postgresql://qa-postgres-001-cluster.cluster-cimrja03mw4l.ap-south-1.rds.amazonaws.com:5432/card-games\",\n    \"dbUsernameCardGames\": \"postgres\",\n    \"dbPasswordCardGames\": \"dockerMPLPostgres\",\n    \"dbConnectionStringCardGamesHistory\": \"jdbc:postgresql://pg1.mpl.internal:5432/card_games_history\",\n    \"dbConnectionStringCardGamesHistoryRead\": \"jdbc:postgresql://pg1.mpl.internal:5432/card_games_history\",\n    \"dbUsernameCardGamesHistory\": \"postgres\",\n    \"dbPasswordCardGamesHistory\": \"dockerMPLPostgres\",\n    \"lobbySFSHostMap\": {\n        \"102059896\": \"dgs-artoon3.mpl.live\"\n    },\n    \"gameLobbyHostsList\": {\n        \"1000215\": [\n            \"qa-points-rummy.mpl.live\"\n        ],\n        \"1000216\": [\n            \"qa-pool-rummy.mpl.live\"\n        ],\n        \"1000217\": [\n            \"qafsycjdy_deals_rummy_qa.mpl.live:3005\"\n        ],\n        \"1000220\": [\n            \"qafsycjdy_deals_rummy_qa.mpl.live:3005\"\n        ]\n    },\n    \"rummyWalletIntegrationEnabled\": true,\n    \"s3BucketName\": \"mpl-storage-qa\",\n    \"nextLobbySuggestionEnabled\": true,\n    \"lobbyDetailsCacheTimeInSeconds\": 21600,\n    \"gameDetailsCacheTimeInSeconds\": 86400,\n    \"numberOfStepsShownInRechargeWalletForPointRummy\": 10,\n    \"poolRummyGameIds\": [\n        1000216\n    ],\n    \"multiTablePoolRummyGameIds\": [\n        1000229\n    ],\n    \"dealsRummyGameIds\": [\n        1000217\n    ],\n    \"finishUnFinishedTablesJobTimePeriodInHours\": 1,\n    \"finishUnFinishedTablesJobTimePeriodInMinutes\": 120,\n    \"finishPendingTablesJobEnabled\": true,\n    \"finishPendingTablesJobTimePeriodInMinutes\": 2,\n    \"rummyWalletToMPLWalletCronInMinutes\": 45,\n    \"rummyWalletToMPLWalletTimeCheckInMinutes\": 45,\n    \"newCallBreakGameIds\": [\n        1000219,\n        1000223,\n        1000227\n    ],\n    \"callBreakGameIds\": [\n        1000219,\n        1000223,\n        1000227\n    ],\n    \"appendRoundWiseGameDataEnabledGameIds\": [\n        \"1000216\",\n        \"1000220\",\n        \"1000221\"\n    ],\n    \"activeBattleCheckEnabledGameIds\": [\n        \"1000217\",\n        \"1000216\",\n        \"1000215\",\n        \"1000223\",\n        \"1000220\",\n        \"1000229\"\n    ],\n    \"newAuthCallForCardGamesEnabled\": false,\n    \"decimalSupportEnabledGameIds\": [\n        1000223,\n        1000219,\n        1000220,\n        1000227\n    ],\n    \"finishUnFinishedTablesJobEnabled\": false,\n    \"isAutoDebitEnabledPointRummyLobbyEntryFee\": [\n        8,\n        25,\n        4\n    ],\n    \"rummyGameIds\": [\n        \"1000215\",\n        \"1000216\",\n        \"1000217\"\n    ],\n    \"gameIdToMinPlayerCountMap\": {\n        \"1000216\": 2,\n        \"1000217\": 2\n    },\n    \"flowTypeToEntryFeeMapForFC\": {\n        \"1000215\": {\n            \"CREATE_TABLE\": [\n                24\n            ],\n            \"FINISH_TABLE\": [\n                24\n            ]\n        },\n        \"1000216\": {\n            \"CREATE_TABLE\": [\n                17,\n                3\n            ],\n            \"FINISH_TABLE\": [\n                17,\n                3\n            ]\n        },\n        \"1000223\": {\n            \"CREATE_TABLE\": [\n                1\n            ],\n            \"FINISH_TABLE\": [\n                1\n            ]\n        }\n    },\n    \"finishPendingTablesTaskEnabledGameIds\": [\n        1000215,\n        1000216,\n        1000217,\n        1000220,\n        1000223,\n        1000227,\n        1000229\n    ],\n    \"gameIdToAverageTableFinishTimeMap\": {\n        \"1000215\": 45,\n        \"1000216\": 120,\n        \"1000217\": 60,\n        \"1000220\": 60,\n        \"1000223\": 60,\n        \"1000227\": 60,\n        \"1000229\": 60\n    },\n    \"dataIntegrationEnabled\": true,\n    \"lastFewHoursWalletTransactionCount\": 12,\n    \"maxAllowedTableCountForMultiTableRummy\": 3,\n    \"enableLobbyCheckForSchedulerOnGameId\": {\n        \"1000220\": true,\n        \"1000223\": false\n    },\n    \"schedulerEnabledLobbyIdsOnGameId\": {\n        \"1000220\": [\n            5721238\n        ],\n        \"1000223\": []\n    },\n    \"countryCheckEnabledGameIdMap\": {\n        \"1000215\": true,\n        \"1000216\": true,\n        \"1000217\": true,\n        \"1000219\": true,\n        \"1000220\": true,\n        \"1000223\": true,\n        \"1000229\": true\n    },\n    \"lobbyLimiterCallEnabled\": true,\n    \"rummyWalletActiveSessionLatestByMinutes\": 5760,\n    \"moveClusterEnabledGameIds\": [\n        1000223\n    ],\n    \"minGameVersionToSupportMoveCluster\": {\n        \"1000223\": 0\n    },\n    \"gameSocketUrlKeys\": {\n        \"1000223\": \"socketUrl\"\n    },\n    \"rummyWalletDataIntegrationEnabled\": true,\n    \"winningMultiplierValidationsEnabled\": true,\n    \"maxWinningsMultiplier\": 100,\n    \"maxWinningsAmount\": 1000,\n    \"minScorePerFormatForPoolRummyManualSplit\": {\n        \"61\": 44,\n        \"101\": 79,\n        \"201\": 175\n    }\n}",
+    "stat": {
+      "czxid": 27052378,
+      "mzxid": 123794993,
+      "ctime": 1623866894660,
+      "mtime": 1657706032157,
+      "version": 175,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 5728,
+      "numChildren": 0,
+      "pzxid": 27052378
+    }
+  },
+  "/mpl/service-card-games/down-time-config": {
+    "data": "{}",
+    "stat": {
+      "czxid": 119849204,
+      "mzxid": 120599184,
+      "ctime": 1655718461728,
+      "mtime": 1656054997673,
+      "version": 13,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 2,
+      "numChildren": 0,
+      "pzxid": 119849204
+    }
+  },
+  "/mpl/service-card-games/gameConfig": {
+    "data": "{\n    \"gameConfigMap\":{\n        \"MULTI_TABLE_RUMMY\": {\n            \"POOL_RUMMY\": {\n                \"serverLedToastMsg\": \"Connection lost. Trying to reconnect...\",\n                \"reconnectUserLedMsg\": \"Check your connection! Your internet is not stable enough to play right now. Please check your connection and try again.\",\n                \"userLedErrorToastMsg\": \"Connection lost. Trying to reconnect...\",\n                \"reconnectServerLedMsg\": \"Your internet is unstable. Tap on resume to reconnect.\",\n                \"networkIndicatorColors\":[\n                    \"#00FF00\",\n                    \"#FFFF00\",\n                    \"#FFA500\",\n                    \"#FF0000\"\n                ],\n                \"realityCheckEnabled\": false,\n                \"realityCheckSessions\": 1,\n                \"realityCheckTimerDuration\": 120\n            }\n        }\n    }\n}",
+    "stat": {
+      "czxid": 113920605,
+      "mzxid": 121591339,
+      "ctime": 1653373703279,
+      "mtime": 1656569342554,
+      "version": 4,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 864,
+      "numChildren": 0,
+      "pzxid": 113920605
+    }
+  },
+  "/mpl/service-card-games/pub-sub": {
+    "data": "{\n    \"region\": \"ap-south-1\",\n    \"publisher\":[\n        {\n            \"topic\": \"int-service-tournaments\"\n        },\n        {\n            \"topic\": \"int-service-invoices-contest-concluded\"\n        },\n        {\n            \"topic\": \"int-service-cch\"\n        },\n        {\n            \"topic\": \"int-card-games-history\"\n        },\n        {\n            \"topic\": \"int-service-create-invoice\"\n        }\n    ],\n    \"subscriber\": [\n        {\n            \"queue\": \"inq-card-games-finish-table\",\n            \"topic\": \"card-game-service-finish-internal\",\n            \"class\": \"com.mpl.services.cardGames.events.FinishGameTableConsumer\",\n            \"consumers\": 8\n        },\n        {\n            \"queue\": \"inq-card-games-lobby-table-creation\",\n            \"topic\": \"int-service-card-games-lobby-table-creation\",\n            \"class\": \"com.mpl.services.cardGames.events.LobbyTableCreationConsumer\",\n            \"consumers\": 8\n        }\n    ]\n}",
+    "stat": {
+      "czxid": 27052382,
+      "mzxid": 120608703,
+      "ctime": 1623866908113,
+      "mtime": 1656058950445,
+      "version": 9,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 931,
+      "numChildren": 0,
+      "pzxid": 27052382
+    }
+  },
+  "/mpl/service-card-games/rummy-tournament-config": {
+    "data": "{\n    \"dbConnectionStringCardGamesTournaments\": \"jdbc:postgresql://pg1.mpl.internal:5432/rummy_tournaments_v2\",\n    \"dbConnectionStringCardGamesTournamentsRead\": \"jdbc:postgresql://pg1.mpl.internal:5432/rummy_tournaments_v2\",\n    \"dbUsernameCardGamesTournaments\": \"postgres\",\n    \"dbPasswordCardGamesTournaments\": \"dockerMPLPostgres\",\n    \"rummyTournamentKey\": \"rummy:tournament:%s\",\n    \"levelStartBufferTimeInMins\": 2,\n    \"levelSeedBufferTimeInSecs\": 10,\n    \"matchStartBufferTimeInMins\": 0,\n    \"matchAutoResolutionDelayInSecs\": 120,\n    \"redissonConfig\":{\n        \"singleServerConfig\": {\n            \"address\": \"redis://qa-card-games.zvemcp.0001.aps1.cache.amazonaws.com:6379\",\n            \"connectionMinimumIdleSize\": 30,\n            \"connectionPoolSize\": 100,\n            \"pingConnectionInterval\": 0,\n            \"timeout\": 200\n        }\n    },\n    \"playersRangeToBucketsMap\": {\n        \"0\": \"1\",\n        \"36\": \"2\",\n        \"216\": \"3\"\n    },\n    \"redisNodeExecutor\": \"RummyTournamentExecutor\",\n    \"redisNodeWorkers\": 20,\n    \"redisJobQueue\": \"rummy:tournament:job:queue\",\n    \"redisJobQueueThreads\": 10,\n    \"rummyTournamentGameIds\":[\n        \"218\"\n    ],\n    \"startRTNotificationParams\": {\n        \"title\": \"Rummy Tournament is starting soon!\",\n        \"feature\": \"Rummy Tournament\",\n        \"deepLink\": \"{\\\"actionType\\\":\\\"nav\\\",\\\"actionPayload\\\":{\\\"route\\\":\\\"RummyGameList\\\", \\\"param\\\" : {\\\"rummyType\\\":\\\"deals\\\"}}}\",\n        \"body\": \"Your registered Rummy Tournament is starting soon! \",\n        \"supportedCountries\": [\n            \"IN\"\n        ],\n        \"isSilent\": true,\n        \"displayPriority\": \"DP_HIGH\",\n        \"displayInBackground\": true,\n        \"analyticsLabel\": \"card-games\",\n        \"subText\": \"\"\n    },\n    \"levelWinnerRTNotificationParams\": {\n        \"title\": \"Won Prize for Rummy Tournament!\",\n        \"feature\": \"Rummy Tournament\",\n        \"deepLink\": \"{\\\"actionType\\\":\\\"nav\\\",\\\"actionPayload\\\":{\\\"route\\\":\\\"RummyGameList\\\", \\\"param\\\" : {\\\"rummyType\\\":\\\"deals\\\"}}}\",\n        \"body\": \"Congratulations! You won prize in the recently conlcuded rummy tournament. The amount will be credited in your wallet in some time. \",\n        \"supportedCountries\": [\n            \"IN\"\n        ],\n        \"isSilent\": true,\n        \"displayPriority\": \"DP_HIGH\",\n        \"displayInBackground\": true,\n        \"analyticsLabel\": \"card-games\",\n        \"subText\": \"\"\n    }\n}",
+    "stat": {
+      "czxid": 39277564,
+      "mzxid": 68923797,
+      "ctime": 1629737397194,
+      "mtime": 1639131575429,
+      "version": 12,
+      "cversion": 0,
+      "aversion": 0,
+      "ephemeralOwner": 0,
+      "dataLength": 2380,
+      "numChildren": 0,
+      "pzxid": 39277564
+    }
+  }
+}

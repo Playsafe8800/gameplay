@@ -1,0 +1,596 @@
+import { networkParams } from '../../../objectModels';
+import { Logger } from '../../../newLogger';
+import { tableConfigurationService } from '../../../db/tableConfiguration';
+import { tableGameplayService } from '../../../db/tableGameplay';
+import { playerGameplayService } from '../../../db/playerGameplay';
+import { SeatSchema } from '../../../objectModels';
+import { PlayerGameplay } from '../../../objectModels';
+import { PLAYER_STATE } from '../../../constants';
+import { cardHandler } from '../../gameplay/cardHandler';
+import { cardUtils } from '../../../utils/cards';
+import { deductScoreForDeals, roundInt } from '../../../utils';
+import { MELD } from '../../../objectModels';
+import { NUMERICAL } from '../../../constants';
+import { socketOperation } from '../../../socketHandler/socketOperation';
+import {
+  EVENTS,
+  USER_EVENTS,
+  STATE_EVENTS,
+} from '../../../constants/events';
+import { eventStateManager } from '../../../state/events';
+import { dateUtils } from '../../../utils/date';
+import { scheduler } from '../../schedulerQueue';
+import { POINTS, GAME_END_REASONS } from '../../../constants';
+import { turnHistoryService } from '../../../db/turnHistory';
+import { TURN_HISTORY } from '../../../constants';
+import { declareCardEvent } from '../declareCard';
+import { dropGame } from '../dropGame';
+import { finishGame } from '../finishGame';
+import _ from 'underscore';
+import { changeTurn } from '../../gameplay/turn';
+import { winner } from '../winner';
+
+class FinishGame {
+  async finishGame(
+    meld: Array<string>,
+    tableId: string,
+    userId: number,
+    group: Array<Array<string>>,
+    networkParams?: networkParams,
+  ) {
+    try {
+      Logger.info(
+        `Finish game deals called tableId: ${tableId}, userId: ${userId}`,
+      );
+      const tableConfigData =
+        await tableConfigurationService.getTableConfiguration(
+          tableId,
+          [
+            '_id',
+            'currentRound',
+            'maximumPoints',
+            'userFinishTimer',
+            'gameType',
+          ],
+        );
+      const { currentRound } = tableConfigData;
+      const tableGameplayData =
+        await tableGameplayService.getTableGameplay(
+          tableId,
+          currentRound,
+          [
+            'seats',
+            'trumpCard',
+            'declarePlayer',
+            'finishPlayer',
+            'pointsForRoundWinner',
+            'opendDeck',
+            'closedDeck',
+            'trumpCard',
+          ],
+        );
+      if (!tableGameplayData) {
+        throw Error(
+          `TGP not found for table ${tableId} for finishGame`,
+        );
+      }
+      const { seats, trumpCard, declarePlayer } = tableGameplayData;
+
+      const pgps = await this.getCurrentPlayerGameData(
+        seats,
+        tableId,
+        currentRound,
+      );
+      const declarePlayerGameData = pgps.find(
+        (ele) => ele?.userId === declarePlayer,
+      );
+
+      const playersGameData: any[] = [];
+
+      pgps.forEach((pgp: any | null) => {
+        if (pgp) playersGameData.push(pgp);
+      });
+      const finishPlayerGameData =
+        playersGameData.find((ele) => ele.userId === userId) ||
+        ({} as any);
+      if (!finishPlayerGameData || !declarePlayerGameData)
+        throw new Error(
+          `Value not found for finish player or declare player game data ${tableId}`,
+        );
+
+      await this.handleFinish(
+        finishPlayerGameData,
+        tableConfigData,
+        tableGameplayData,
+        meld,
+        group,
+        userId,
+        networkParams,
+        playersGameData,
+        declarePlayerGameData,
+      );
+    } catch (err: any) {
+      Logger.error(`INTERNAL_SERVER_ERROR Error occurred at finishGame ${tableId}`, [err]);
+      throw new Error(err);
+    }
+  }
+
+  private async getCurrentPlayerGameData(
+    seats: SeatSchema[],
+    tableId: string,
+    currentRound: number,
+  ) {
+    const pgps = await Promise.all(
+      seats.map((seat) =>
+        playerGameplayService.getPlayerGameplay(
+          seat._id,
+          tableId,
+          currentRound,
+          [
+            'userId',
+            'seatIndex',
+            'meld',
+            'userStatus',
+            'dealPoint',
+            'points',
+            'groupingCards',
+            'tenant',
+            'isFirstTurn',
+          ],
+        ),
+      ),
+    );
+    return pgps;
+  }
+
+  private async handleFinish(
+    finishPlayerGameData: any,
+    tableConfigData: any,
+    tableGameplayData: any,
+    meld: Array<string>,
+    group: Array<Array<string>>,
+    userId: number,
+    networkParams: networkParams | undefined,
+    playersGameData: any[],
+    declarePlayerGameData: any,
+  ) {
+    if (
+      finishPlayerGameData.userStatus === PLAYER_STATE.DECLARED ||
+      finishPlayerGameData.userStatus === PLAYER_STATE.PLAYING
+    ) {
+      const { _id: tableId, currentRound } = tableConfigData;
+      const { seats, trumpCard, declarePlayer } = tableGameplayData;
+      // Calculate card points
+      const { score: points } = cardHandler.groupCardsOnMeld(
+        group,
+        trumpCard,
+        tableConfigData.maximumPoints,
+      );
+      const isValidSequence = cardUtils.areSequencesValid(meld);
+
+      /**
+       * if user has declared in his first turn
+       * then devide points by 2
+       */
+      const cardPoints = finishPlayerGameData.isFirstTurn
+        ? roundInt(points / 2, 0)
+        : points;
+
+      // let isPointAdded = false;
+      // if (userId !== declarePlayer) {
+      //   isPointAdded = true;
+      // }
+
+      // finishPlayerGameData.dealPoint = cardPoints;
+      finishPlayerGameData.userStatus = PLAYER_STATE.FINISH;
+      finishPlayerGameData.points = cardPoints;
+      Logger.info('-finishPlayerGameData.dealPoint-gg-', [
+        finishPlayerGameData.dealPoint,
+        finishPlayerGameData.points,
+        '--finishPlayerGameData.points---',
+        finishPlayerGameData.userId,
+        cardPoints,
+        tableId,
+      ]);
+
+      tableGameplayData.finishPlayer.push(
+        finishPlayerGameData.userId,
+      );
+      const sequenceCount = cardUtils.sequenceCount(meld);
+      if (
+        cardPoints === 0 &&
+        declarePlayer !== finishPlayerGameData.userId &&
+        sequenceCount[MELD.PURE] + sequenceCount[MELD.SEQUENCE] > 1
+      ) {
+        finishPlayerGameData.points = NUMERICAL.TWO;
+      }
+
+      const finishRoundEventData = {
+        tableId,
+        userId,
+        totalPoints: finishPlayerGameData.dealPoint,
+      };
+
+      await Promise.all([
+        socketOperation.sendEventToRoom(
+          tableId,
+          EVENTS.FINISH_ROUND,
+          finishRoundEventData,
+        ),
+        eventStateManager.fireEventUser(
+          tableId,
+          userId,
+          USER_EVENTS.FINISH,
+          networkParams?.timeStamp || dateUtils.getCurrentEpochTime(),
+        ),
+      ]);
+
+      // cancelling finish timer
+      if (finishPlayerGameData.userId === declarePlayer) {
+        await scheduler.cancelJob.finishTimer(tableId, currentRound);
+      }
+
+      if (userId !== declarePlayer) {
+        if (isValidSequence && cardPoints === 0) {
+          /**
+           * If user is not the declarePlayer but
+           * If card points is 0 &&
+           * contains valid seq AKA valid declare
+           */
+
+          deductScoreForDeals(
+            finishPlayerGameData,
+            tableGameplayData,
+            POINTS.LATE_DECLARE_PENALTY_POINTS,
+          );
+        } else {
+          deductScoreForDeals(
+            finishPlayerGameData,
+            tableGameplayData,
+            cardPoints,
+          );
+        }
+        // finishPlayerGameData.dealPoint += finishPlayerGameData.points;
+        // declarePlayerGameData.dealPoint +=
+        //   declarePlayerGameData.points;
+        Logger.info('--finishPlayerGameData.dealPoint--kk', [
+          finishPlayerGameData.dealPoint,
+          finishPlayerGameData.points,
+          '--finishPlayerGameData.points;--',
+          declarePlayerGameData.dealPoint,
+          '--declarePlayerGameData.dealPoint--',
+          declarePlayerGameData.points,
+          '--declarePlayerGameData.points--',
+          cardPoints,
+          tableId,
+        ]);
+        await playerGameplayService.setPlayerGameplay(
+          declarePlayerGameData.userId,
+          tableId,
+          currentRound,
+          declarePlayerGameData,
+        );
+      }
+
+      Logger.info(
+        `finishGame: update tgp, pgp for table: ${tableId}`,
+        [
+          tableGameplayData,
+          finishPlayerGameData,
+          declarePlayerGameData,
+        ],
+      );
+      await Promise.all([
+        tableGameplayService.setTableGameplay(
+          tableId,
+          currentRound,
+          tableGameplayData,
+        ),
+        playerGameplayService.setPlayerGameplay(
+          userId,
+          tableId,
+          currentRound,
+          finishPlayerGameData,
+        ),
+      ]);
+      let isInvalidDeclare = false;
+
+      if (
+        userId === declarePlayer &&
+        isValidSequence &&
+        cardPoints === NUMERICAL.ZERO
+      ) {
+        await Promise.all([
+          declareCardEvent.scheduleFinishTimer(
+            tableConfigData,
+            tableGameplayData,
+            playersGameData,
+            true,
+          ),
+
+          eventStateManager.fireEvent(
+            tableId,
+            STATE_EVENTS.VALID_FINISH,
+          ),
+        ]);
+      } else if (userId === declarePlayer) {
+        // if invalid declare
+        /**
+         * as use lock in parent func hence
+         * don't use await here to avoid lock conflicts
+         */
+        isInvalidDeclare = true;
+        const invalidFinishData = {
+          tableId,
+          userId,
+          openCard: tableGameplayData.opendDeck.slice(-1)[0],
+          score: finishPlayerGameData.points,
+          meld,
+        };
+        if (finishPlayerGameData.userId === declarePlayer) {
+          await Promise.all([
+            eventStateManager.fireEvent(
+              tableId,
+              STATE_EVENTS.INVALID_FINISH,
+            ),
+            socketOperation.sendEventToRoom(
+              tableId,
+              EVENTS.INVALID_DECLARE_FINISH,
+              invalidFinishData,
+            ),
+          ]);
+        }
+
+        await dropGame(
+          { tableId },
+          { userId },
+          GAME_END_REASONS.INVALID_DECLARE,
+        );
+      }
+
+      /**
+       * send room event with player data to show declaring scoreboard
+       */
+      if (!isInvalidDeclare) {
+        await finishGame.showRoundDeclaredScoreBoard(
+          tableId,
+          seats,
+          playersGameData,
+          tableGameplayData.trumpCard,
+        );
+      }
+
+      const activePlayers = playersGameData.filter(
+        (ele) => ele.userStatus === PLAYER_STATE.PLAYING,
+      );
+
+      if (!activePlayers.length) {
+        Logger.info(' everyone has finished -----', [
+          tableId,
+          playersGameData,
+        ]);
+        // if all players finished or any declare player do invalid decalre(ps > 0)
+        // const jobIds = `${PLAYER_STATE.FINISH}-${tableId}-${currentRound}-true`;
+        await scheduler.cancelJob.finishTimer(
+          tableId,
+          currentRound,
+          true, // forOthers
+        );
+        // finishPlayerGameData.dealPoint +=
+        //   finishPlayerGameData.cardPoints;
+        await playerGameplayService.setPlayerGameplay(
+          userId,
+          tableId,
+          currentRound,
+          finishPlayerGameData,
+        );
+        Logger.info(' helperAllPlayersFinished is called -----', [
+          tableId,
+          playersGameData,
+        ]);
+        await this.helperAllPlayersFinished(
+          tableConfigData,
+          tableGameplayData,
+          playersGameData,
+          declarePlayerGameData,
+          finishPlayerGameData,
+          userId,
+          currentRound,
+        );
+      }
+    }
+  }
+
+  private async helperAllPlayersFinished(
+    tableInfo: any,
+    tableGamePlay: any,
+    playerList: any[],
+    declarePlayerInfo: any,
+    playerGamePlay: any,
+    userObjectId: number,
+    currentRound: number,
+  ) {
+    Logger.info(' helperAllPlayersFinished :', [
+      tableInfo._id,
+      tableInfo,
+      tableGamePlay,
+      playerList,
+      declarePlayerInfo,
+      playerGamePlay,
+      userObjectId,
+      currentRound,
+    ]);
+    let invalidFinishData;
+    try {
+      const tableId = tableInfo._id;
+      const playerInfo = playerList;
+      let playersIndex = playerInfo.map((id) => id.seatIndex);
+
+      playersIndex = _.without(
+        playersIndex,
+        declarePlayerInfo.seatIndex,
+      );
+      const sequenceCount = cardUtils.sequenceCount(
+        declarePlayerInfo.meld,
+      );
+      /**
+       * If declarePlayer has left the game after declaring
+       * Ignore the declare & resume the game and change the turn
+       */
+      if (
+        tableGamePlay.declarePlayer &&
+        declarePlayerInfo.userStatus === PLAYER_STATE.LEFT
+      ) {
+        // const pureCnt = sequenceCount[MELD.PURE];
+        // const seqCnt = sequenceCount[MELD.SEQUENCE];
+
+        invalidFinishData = {
+          tableId: tableGamePlay._id,
+          userId: declarePlayerInfo.seatIndex,
+          openCard:
+            tableGamePlay.opendDeck[
+              tableGamePlay.opendDeck.length - 1
+            ],
+          score: playerGamePlay.points,
+        };
+        await changeTurn(tableInfo._id);
+      } else {
+        /**
+         * Else proceed with the round / game winner logic
+         */
+        // declare user has valid rummy hence set winner
+        const declPlayerValid = cardUtils.areSequencesValid(
+          declarePlayerInfo.meld,
+        );
+        // const declPureCount = sequenceCount[MELD.PURE];
+        // const declSeqCount = sequenceCount[MELD.SEQUENCE];
+
+        const currentRoundHistory =
+          await turnHistoryService.getTurnHistory(
+            tableId,
+            currentRound,
+          );
+        currentRoundHistory.turnsDetails[
+          currentRoundHistory.turnsDetails.length - 1
+        ].turnStatus = TURN_HISTORY.VALID_DECLARE;
+        currentRoundHistory.turnsDetails[
+          currentRoundHistory.turnsDetails.length - 1
+        ].points = declarePlayerInfo.points;
+
+        /**
+         * If declarePlayer has valid declare
+         */
+        if (declPlayerValid) {
+          const winnerData = await winner.handleWinner(
+            playerGamePlay,
+            tableInfo,
+            tableGamePlay,
+          );
+          return winnerData;
+        }
+
+        currentRoundHistory.turnsDetails[
+          currentRoundHistory.turnsDetails.length - 1
+        ].turnStatus = TURN_HISTORY.INVALID_DECLARE;
+
+        await this.handleOtherPlayers(
+          tableInfo,
+          playerInfo,
+          playerGamePlay,
+          currentRound,
+          tableGamePlay,
+        );
+        Logger.info(
+          'finally calling dropGame inside helperAllPlayersFinished----',
+          [
+            tableId,
+            userObjectId,
+            tableInfo,
+            tableGamePlay,
+            playerList,
+            declarePlayerInfo,
+            playerGamePlay,
+            userObjectId,
+            currentRound,
+          ],
+        );
+        await dropGame(
+          { tableId: tableId },
+          { userId: userObjectId },
+        );
+
+        turnHistoryService.setTurnHistory(
+          tableId,
+          currentRound,
+          currentRoundHistory,
+        );
+      }
+    } catch (error: any) {
+      Logger.error('INTERNAL_SERVER_ERROR CATCH_ERROR:', [
+        'helperAllPlayersFinished',
+        tableInfo._id,
+        error.message,
+        error,
+        tableInfo,
+      ]);
+      invalidFinishData = { error: error.message };
+    } finally {
+      if (
+        tableGamePlay.declarePlayer === userObjectId &&
+        invalidFinishData &&
+        invalidFinishData.declarePlayer
+      ) {
+        await socketOperation.sendEventToRoom(
+          tableGamePlay._id,
+          EVENTS.INVALID_DECLARE_FINISH,
+          invalidFinishData,
+        );
+      }
+    }
+    return true;
+  }
+
+  async handleOtherPlayers(
+    tableInfo: any,
+    playerInfo: any[],
+    playerGamePlay: any,
+    currentRound: number,
+    tableGamePlay: any,
+  ) {
+    Logger.info('otherPlayer :', [
+      tableInfo._id,
+      tableInfo,
+      playerInfo,
+      playerGamePlay,
+      currentRound,
+      tableGamePlay,
+    ]);
+    playerInfo.map(async (playerData) => {
+      if (
+        !_.isEmpty(playerData) &&
+        playerData.userStatus !== null &&
+        playerData.userStatus === PLAYER_STATE.FINISH
+      ) {
+        const player = await playerGameplayService.getPlayerGameplay(
+          playerData.userId,
+          tableInfo._id,
+          currentRound,
+          ['userStatus'],
+        );
+        if (!player)
+          throw new Error(
+            `Player data not set at handleOtherplayers`,
+          );
+        player.userStatus = PLAYER_STATE.PLAYING;
+        await playerGameplayService.setPlayerGameplay(
+          playerData.userId,
+          tableInfo._id,
+          currentRound,
+          player,
+        );
+      }
+    });
+  }
+}
+
+export const finishGameDeals = new FinishGame();

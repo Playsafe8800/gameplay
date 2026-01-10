@@ -1,0 +1,17 @@
+{
+  "en": "FIRST_USER_TURN_START",
+  "data": {
+    "tableId": "bbcf6000f7ac4510a0bf91f17a24cc86",
+    "userId": "833745",
+    "time": 30,
+    "isShowTimeOutMsg": false
+  },
+  "metrics": {
+    "uuid": "ddeb01fb-8e18-4974-a27c-29cf1430e8ec-1648639152710",
+    "ctst": 1648639152710,
+    "srct": "",
+    "srpt": "",
+    "crst": "",
+    "apkVersion": "1000173"
+  }
+}
