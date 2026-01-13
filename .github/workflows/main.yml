@@ -82,8 +82,8 @@ jobs:
         env:
           USER_DATA_SCRIPT: |
             #!/bin/bash
-            chmod +x /opt/entwik/gameplay-service/start.sh
-            sudo -u admin /opt/entwik/gameplay-service/start.sh
+            chmod +x /opt/trust/gameplay-service/start.sh
+            sudo -u admin /opt/trust/gameplay-service/start.sh
         run: |
           USER_DATA=$(echo "$USER_DATA_SCRIPT" | base64 -w 0)
           aws ec2 create-launch-template \
@@ -142,7 +142,7 @@ jobs:
           aws elbv2 create-rule \
             --listener-arn "$LISTENER_ARN" \
             --priority 1 \
-            --conditions Field=host-header,Values=ping.entwikgaming.com \
+            --conditions Field=host-header,Values=ping.trustgaming.com \
             --actions Type=fixed-response,FixedResponseConfig="{MessageBody=pong,StatusCode=200,ContentType=text/plain}"
 
       - name: Create HTTP Redirect Listener

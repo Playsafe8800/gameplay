@@ -36,9 +36,6 @@ import { initializeGame } from '../gameplay/initialiseGame';
 import { scheduler } from '../schedulerQueue';
 import gameTableInfo from './gameTableInfo';
 import { cancelBattle } from '../gameplay/cancelBattle';
-import { seatShuffle } from '../gameplay/seatShuffle';
-import { RemoteConfig } from '../../constants/remoteConfig';
-import * as console from 'node:console';
 
 class TableOperation {
   async addInTable(

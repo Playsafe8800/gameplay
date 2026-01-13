@@ -49,10 +49,10 @@ build {
   # Set up the user service directory
   provisioner "shell" {
     inline = [
-      "sudo mkdir -p /opt/entwik/gameplay-service",
-      "sudo chown admin:admin /opt/entwik/gameplay-service",
-      "git clone https://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@github.com/entwikGaming/rummy-node.git /opt/entwik/gameplay-service",
-      "cd /opt/entwik/gameplay-service",
+      "sudo mkdir -p /opt/trust/gameplay-service",
+      "sudo chown admin:admin /opt/trust/gameplay-service",
+      "git clone https://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@github.com/trustGaming/rummy-node.git /opt/entwik/gameplay-service",
+      "cd /opt/trust/gameplay-service",
       "npm i --legacy-peer-deps",
       "npm run build"
     ]
@@ -60,10 +60,10 @@ build {
 
   provisioner "shell" {
     inline = [
-      "sudo mkdir -p /opt/entwik/rummy-tutor",
-      "sudo chown admin:admin /opt/entwik/rummy-tutor",
-      "git clone https://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@github.com/entwikGaming/rummy-tutor.git /opt/entwik/rummy-tutor",
-      "cd /opt/entwik/rummy-tutor",
+      "sudo mkdir -p /opt/trust/rummy-tutor",
+      "sudo chown admin:admin /opt/trust/rummy-tutor",
+      "git clone https://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@github.com/trustGaming/rummy-tutor.git /opt/entwik/rummy-tutor",
+      "cd /opt/trust/rummy-tutor",
       "python3 -m venv venv"
     ]
   }
@@ -71,7 +71,7 @@ build {
   # Fetch secrets and set up environment
   provisioner "shell" {
     inline = [
-      "aws s3 cp s3://entwik-be/gameplay-service.sh gameplay-service.sh && sudo mv gameplay-service.sh /etc/profile.d/gameplay-service.sh",
+      "aws s3 cp s3://trust-be/gameplay-service.sh gameplay-service.sh && sudo mv gameplay-service.sh /etc/profile.d/gameplay-service.sh",
       "sudo chmod +x /etc/profile.d/gameplay-service.sh",
       "sudo chown admin:admin /etc/profile.d/gameplay-service.sh",
       "echo 'export DEPLOYMENT_HASH=${var.short_sha}' | sudo tee -a /etc/profile.d/gameplay-service.sh",

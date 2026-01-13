@@ -27,9 +27,9 @@ export default class UserService {
   static CREATE_BATTLE = '/v2/match/create';
   static FINISH_BATTLE = '/v2/match/finish';
   static CANCEL_MATCH = '/v2/match/cancel';
-  static PICK = "/pick"
-  static DROP = "/drop"
-  static THROW = "/get_throw_multi_deck"
+  static PICK = '/pick';
+  static DROP = '/drop';
+  static THROW = '/get_throw_multi_deck';
 
   private static async retryRequest<T>(
     requestFn: () => Promise<AxiosResponse<T>>,
@@ -42,12 +42,26 @@ export default class UserService {
         return await requestFn();
       } catch (error: any) {
         const status = error?.response?.status;
-        const isRetryableStatus = status >= 500
-        const isNetworkError = ['ECONNABORTED', 'ERR_NETWORK' , 'ETIMEDOUT', 'ECONNRESET', 'ENOTFOUND', 'ECONNREFUSED'].includes(error.code)
+        const isRetryableStatus = status >= 500;
+        const isNetworkError = [
+          'ECONNABORTED',
+          'ERR_NETWORK',
+          'ETIMEDOUT',
+          'ECONNRESET',
+          'ENOTFOUND',
+          'ECONNREFUSED',
+        ].includes(error.code);
         lastError = new InternalError(error.message, error);
-        if ((isRetryableStatus || isNetworkError) && attempt < maxRetries - 1) {
-          Logger.info(`retryRequest `, [attempt, url, `status: ${status}`]);
-          await new Promise(resolve => setTimeout(resolve, 500));
+        if (
+          (isRetryableStatus || isNetworkError) &&
+          attempt < maxRetries - 1
+        ) {
+          Logger.info(`retryRequest `, [
+            attempt,
+            url,
+            `status: ${status}`,
+          ]);
+          await new Promise((resolve) => setTimeout(resolve, 500));
         } else {
           break;
         }
@@ -65,29 +79,34 @@ export default class UserService {
     tableId: string,
   ) {
     try {
-      const { hand, jokerRank, topCard } = dropInputFormator(currentCards, wildCard, openedCard)
-      const handIds = hand.map(card => card.id);
-      const topCardId = topCard.id;
-      Logger.info("DropInputBotService:- ", [tableId, {
-        hand: handIds,
-        joker_rank: jokerRank,
-        cohorts,
-        deck_cnt: deckCount,
-      }]);
-      const url = `${this.botHost}${this.DROP}`;
-      const userInfo = await this.retryRequest(() =>
-          axios.post(
-            url,
-            {
-              hand: handIds,
-              joker_rank: jokerRank,
-              cohort_array: cohorts,
-              deck_cnt: deckCount,
-            }
-          ),
-        url
+      const { hand, jokerRank, topCard } = dropInputFormator(
+        currentCards,
+        wildCard,
+        openedCard,
       );
-      Logger.info("DropOutputBotService: ", [tableId, userInfo.data])
+      const handIds = hand.map((card) => card.id);
+      const topCardId = topCard.id;
+      Logger.info('DropInputBotService:- ', [
+        tableId,
+        {
+          hand: handIds,
+          joker_rank: jokerRank,
+          cohorts,
+          deck_cnt: deckCount,
+        },
+      ]);
+      const url = `${this.botHost}${this.DROP}`;
+      const userInfo = await this.retryRequest(
+        () =>
+          axios.post(url, {
+            hand: handIds,
+            joker_rank: jokerRank,
+            cohort_array: cohorts,
+            deck_cnt: deckCount,
+          }),
+        url,
+      );
+      Logger.info('DropOutputBotService: ', [tableId, userInfo.data]);
       return dropOutPutFormator(userInfo.data, hand);
     } catch (e) {
       Logger.error(`INTERNAL_SERVER_ERROR_drop`, [e, tableId]);
@@ -100,36 +119,44 @@ export default class UserService {
     openedCard: string,
     wildCard: string,
     is_first_turn: boolean,
-    tableId: string
+    tableId: string,
   ) {
     try {
-      const { hand, topCard, jokerRank } = pickInputFormator(currentCards, openedCard, wildCard)
-      const handIds = hand.map(card => card.id);
+      const { hand, topCard, jokerRank } = pickInputFormator(
+        currentCards,
+        openedCard,
+        wildCard,
+      );
+      const handIds = hand.map((card) => card.id);
       const topCardId = topCard.id;
 
-      Logger.info("PickInputBotService:- ", [tableId, {
-        hand: handIds,
-        top_card_id: topCardId,
-        joker_rank: jokerRank,
-        is_first_turn: is_first_turn ? 1 : 0
-      }]);
+      Logger.info('PickInputBotService:- ', [
+        tableId,
+        {
+          hand: handIds,
+          top_card_id: topCardId,
+          joker_rank: jokerRank,
+          is_first_turn: is_first_turn ? 1 : 0,
+        },
+      ]);
       const url = `${this.botHost}${this.PICK}`;
-      const userInfo = await this.retryRequest(() =>
-        axios.post(
-          url,
-          {
+      const userInfo = await this.retryRequest(
+        () =>
+          axios.post(url, {
             hand: handIds,
             top_card_id: topCardId,
             joker_rank: jokerRank,
-            is_first_turn: is_first_turn ? 1 : 0
-          }
-        ),
-        url
+            is_first_turn: is_first_turn ? 1 : 0,
+          }),
+        url,
       );
-      Logger.info("PickOutputBotService:- ", [tableId, userInfo.data])
+      Logger.info('PickOutputBotService:- ', [
+        tableId,
+        userInfo.data,
+      ]);
       return userInfo.data['should_pick'];
     } catch (e) {
-      Logger.error(`INTERNAL_SERVER_ERROR_pick`, [e,tableId]);
+      Logger.error(`INTERNAL_SERVER_ERROR_pick`, [e, tableId]);
       throw e;
     }
   }
@@ -144,61 +171,83 @@ export default class UserService {
     pickCards?: string[],
   ) {
     try {
-      Logger.info("RawThrowInputBotService:- ", [tableId, {
-        currentCards,
-        wildCard,
-        deckCount,
-        opendDeck,
-        rejCards,
-        pickCards
-      }]);
-      const { hand, jokerRank, p_array, rejectedCards, pickedCards } = throwInputFormator(currentCards, wildCard, opendDeck, rejCards, pickCards)
-      const handIds = hand.map(c => c.id);
-      const pArrayIds = p_array.map(c => c.id);
-      const rejectedCardIds = rejectedCards?.map(c => c.id);
-      const pickedCardIds = pickedCards?.map(c => c.id);
+      Logger.info('RawThrowInputBotService:- ', [
+        tableId,
+        {
+          currentCards,
+          wildCard,
+          deckCount,
+          opendDeck,
+          rejCards,
+          pickCards,
+        },
+      ]);
+      const { hand, jokerRank, p_array, rejectedCards, pickedCards } =
+        throwInputFormator(
+          currentCards,
+          wildCard,
+          opendDeck,
+          rejCards,
+          pickCards,
+        );
+      const handIds = hand.map((c) => c.id);
+      const pArrayIds = p_array.map((c) => c.id);
+      const rejectedCardIds = rejectedCards?.map((c) => c.id);
+      const pickedCardIds = pickedCards?.map((c) => c.id);
 
-      Logger.info("ThrowInputBotService:- ", [tableId, {
-        hand: handIds,
-        joker_rank: jokerRank,
-        deck_cnt: deckCount,
-        p_array: pArrayIds,
-        rejectedCards: rejectedCardIds,
-        pickedCards: pickedCardIds
-      }]);
+      Logger.info('ThrowInputBotService:- ', [
+        tableId,
+        {
+          hand: handIds,
+          joker_rank: jokerRank,
+          deck_cnt: deckCount,
+          p_array: pArrayIds,
+          rejectedCards: rejectedCardIds,
+          pickedCards: pickedCardIds,
+        },
+      ]);
 
-      const sendingObj = rejCards ? {
-        hand: handIds,
-        joker_rank: jokerRank,
-        deck_cnt: deckCount,
-        p_array: pArrayIds,
-        rejected_array: rejectedCardIds,
-        picked_array: pickedCardIds
-      } : {
-        hand: handIds,
-        joker_rank: jokerRank,
-        deck_cnt: deckCount,
-        p_array: pArrayIds
-      };
+      const sendingObj = rejCards
+        ? {
+            hand: handIds,
+            joker_rank: jokerRank,
+            deck_cnt: deckCount,
+            p_array: pArrayIds,
+            rejected_array: rejectedCardIds,
+            picked_array: pickedCardIds,
+          }
+        : {
+            hand: handIds,
+            joker_rank: jokerRank,
+            deck_cnt: deckCount,
+            p_array: pArrayIds,
+          };
 
-      const url = `${this.botHost}${this.THROW}`
-      const userInfo = await this.retryRequest(() =>
-        axios.post(
-          `${this.botHost}${this.THROW}`,
-          sendingObj,
-        ),
-        url
-      )
-      Logger.info("ThrowOutputBotService: ", [tableId, userInfo.data])
-      const { thrownCard, groupCards } = throwOutPutFormator(userInfo.data, hand);
-      Logger.info("RawThrowOutputBotService: ", [tableId, thrownCard,groupCards])
+      const url = `${this.botHost}${this.THROW}`;
+      const userInfo = await this.retryRequest(
+        () => axios.post(`${this.botHost}${this.THROW}`, sendingObj),
+        url,
+      );
+      Logger.info('ThrowOutputBotService: ', [
+        tableId,
+        userInfo.data,
+      ]);
+      const { thrownCard, groupCards } = throwOutPutFormator(
+        userInfo.data,
+        hand,
+      );
+      Logger.info('RawThrowOutputBotService: ', [
+        tableId,
+        thrownCard,
+        groupCards,
+      ]);
       return {
         thrownCard,
-        isRummy: userInfo.data["rummy_complete"],
-        groupCards
+        isRummy: userInfo.data['rummy_complete'],
+        groupCards,
       };
     } catch (e) {
-      Logger.error(`INTERNAL_SERVER_ERROR_throw`, [e,tableId]);
+      Logger.error(`INTERNAL_SERVER_ERROR_throw`, [e, tableId]);
       throw e;
     }
   }
@@ -211,7 +260,7 @@ export default class UserService {
         {
           headers: {
             Authorization: defaultToken,
-            "User-Agent": "BestHTTP/2 v2.8.5"
+            'User-Agent': 'BestHTTP/2 v2.8.5',
           },
         },
       );
@@ -230,7 +279,7 @@ export default class UserService {
         {
           headers: {
             Authorization: authToken,
-            "User-Agent": "BestHTTP/2 v2.8.5"
+            'User-Agent': 'BestHTTP/2 v2.8.5',
           },
         },
       );
@@ -248,7 +297,7 @@ export default class UserService {
         {
           headers: {
             Authorization: authToken,
-            "User-Agent": "BestHTTP/2 v2.8.5"
+            'User-Agent': 'BestHTTP/2 v2.8.5',
           },
         },
       );
@@ -271,14 +320,14 @@ export default class UserService {
         {
           headers: {
             Authorization: defaultToken,
-            "User-Agent": "BestHTTP/2 v2.8.5"
+            'User-Agent': 'BestHTTP/2 v2.8.5',
           },
         },
       );
       Logger.info(`getUserProfile response `, [userInfo.data.data]);
       return userInfo.data.data;
     } catch (e) {
-      Logger.error(`INTERNAL_SERVER_ERROR`, [e,userId]);
+      Logger.error(`INTERNAL_SERVER_ERROR`, [e, userId]);
       throw e;
     }
   }
@@ -290,7 +339,7 @@ export default class UserService {
         {
           headers: {
             Authorization: authToken,
-            "User-Agent": "BestHTTP/2 v2.8.5"
+            'User-Agent': 'BestHTTP/2 v2.8.5',
           },
         },
       );
@@ -309,7 +358,7 @@ export default class UserService {
         {
           headers: {
             Authorization: defaultToken,
-            "User-Agent": "BestHTTP/2 v2.8.5"
+            'User-Agent': 'BestHTTP/2 v2.8.5',
           },
         },
       );
@@ -326,7 +375,7 @@ export default class UserService {
         {
           headers: {
             Authorization: defaultToken,
-            "User-Agent": "BestHTTP/2 v2.8.5"
+            'User-Agent': 'BestHTTP/2 v2.8.5',
           },
         },
       );
@@ -354,7 +403,7 @@ export default class UserService {
       );
       return userInfo.data.data;
     } catch (e) {
-      Logger.error(`INTERNAL_SERVER_ERROR`, [e,userId]);
+      Logger.error(`INTERNAL_SERVER_ERROR`, [e, userId]);
       throw e;
     }
   }
@@ -365,58 +414,64 @@ export default class UserService {
     matchId: string,
   ) {
     try {
-      const IdempotencyKey =  Date.now().toString()
-      const url = `${this.host}${this.CREATE_BATTLE}`
-      const userInfo = await this.retryRequest(() =>
-        axios.post(
-          url,
-          {
-            usersId: userIds,
-            lobbyId,
-            matchId
-          },
-          {
-            headers: {
-              Authorization: defaultToken,
-              "User-Agent": "BestHTTP/2 v2.8.5",
-              'Idempotency-Key': IdempotencyKey
+      const IdempotencyKey = Date.now().toString();
+      const url = `${this.host}${this.CREATE_BATTLE}`;
+      const userInfo = await this.retryRequest(
+        () =>
+          axios.post(
+            url,
+            {
+              usersId: userIds,
+              lobbyId,
+              matchId,
             },
-          },
-        ),
-        url
+            {
+              headers: {
+                Authorization: defaultToken,
+                'User-Agent': 'BestHTTP/2 v2.8.5',
+                'Idempotency-Key': IdempotencyKey,
+              },
+            },
+          ),
+        url,
       );
       return userInfo.data.data;
     } catch (e) {
-      Logger.error('INTERNAL_SERVER_ERROR createBattle_error', [e,matchId]);
+      Logger.error('INTERNAL_SERVER_ERROR createBattle_error', [
+        e,
+        matchId,
+      ]);
       throw e;
     }
   }
 
-  static async cancelBattle(
-    matchId: string,
-  ) {
+  static async cancelBattle(matchId: string) {
     try {
-      const IdempotencyKey =  Date.now().toString()
-      const url = `${this.host}${this.CANCEL_MATCH}`
-      const userInfo = await this.retryRequest(() =>
-        axios.post(
-          `${this.host}${this.CANCEL_MATCH}`,
-          {
-            matchId,
-          },
-          {
-            headers: {
-              Authorization: defaultToken,
-              "User-Agent": "BestHTTP/2 v2.8.5",
-              'Idempotency-Key': IdempotencyKey
+      const IdempotencyKey = Date.now().toString();
+      const url = `${this.host}${this.CANCEL_MATCH}`;
+      const userInfo = await this.retryRequest(
+        () =>
+          axios.post(
+            `${this.host}${this.CANCEL_MATCH}`,
+            {
+              matchId,
             },
-          },
-        ),
-        url
+            {
+              headers: {
+                Authorization: defaultToken,
+                'User-Agent': 'BestHTTP/2 v2.8.5',
+                'Idempotency-Key': IdempotencyKey,
+              },
+            },
+          ),
+        url,
       );
       return userInfo.data.data;
     } catch (e) {
-      Logger.error('INTERNAL_SERVER_ERROR createBattle_error', [e,matchId]);
+      Logger.error('INTERNAL_SERVER_ERROR createBattle_error', [
+        e,
+        matchId,
+      ]);
       throw e;
     }
   }
@@ -430,7 +485,7 @@ export default class UserService {
     isFinalRound: boolean,
   ) {
     try {
-      const IdempotencyKey =  Date.now().toString()
+      const IdempotencyKey = Date.now().toString();
       const payload = {
         matchId: matchId,
         roundId: roundId,
@@ -440,23 +495,27 @@ export default class UserService {
         isFinalRound: isFinalRound,
       };
       Logger.info(`finishBattle request `, [payload]);
-      const url = `${this.host}${this.FINISH_BATTLE}`
-      const userInfo = await this.retryRequest(() =>
-        axios.post(url, payload, {
-          headers: {
-            Authorization: defaultToken,
-            "User-Agent": "BestHTTP/2 v2.8.5",
-            'Idempotency-Key': IdempotencyKey
-          },
-        }),
-        url
+      const url = `${this.host}${this.FINISH_BATTLE}`;
+      const userInfo = await this.retryRequest(
+        () =>
+          axios.post(url, payload, {
+            headers: {
+              Authorization: defaultToken,
+              'User-Agent': 'BestHTTP/2 v2.8.5',
+              'Idempotency-Key': IdempotencyKey,
+            },
+          }),
+        url,
       );
       Logger.info(`finishBattle response ${matchId}`, [
         userInfo.data,
       ]);
       return userInfo.data;
     } catch (e: any) {
-      Logger.error('INTERNAL_SERVER_ERROR finishBattle_error', [e,matchId]);
+      Logger.error('INTERNAL_SERVER_ERROR finishBattle_error', [
+        e,
+        matchId,
+      ]);
       throw new CancelBattleError(e.messsage, e);
     }
   }

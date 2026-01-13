@@ -4,8 +4,8 @@ import { Initializer } from '../init';
 import { pickFromClosedDeck } from '../../../services/moves/pickFromClosedDeck';
 import { scheduler } from '../index';
 import {
+  BOT_CONFIG,
   GAME_END_REASONS,
-  LEAVE_TABLE_REASONS,
   NUMERICAL,
   RUMMY_TYPES,
   TABLE_STATE,
@@ -19,7 +19,6 @@ import userServiceExt from '../../../userService';
 import { cardHandler } from '../../gameplay/cardHandler';
 import { Worker } from 'bullmq';
 import { createInstrumentedWorker } from '../instrumentedWorker';
-import { RemoteConfig } from '../../../constants/remoteConfig';
 
 export class BotTurn extends Initializer {
   private worker: Worker<any>;
@@ -123,13 +122,14 @@ export class BotTurn extends Initializer {
         (tableConfigData.gameType === RUMMY_TYPES.POOL ||
           tableConfigData.gameType === RUMMY_TYPES.POINTS)
       ) {
-        const cohorts = RemoteConfig.getString('DROP_COHORT').split(",")
+        const cohorts = BOT_CONFIG.DROP_COHORT.split(",")
         const { shouldDrop, groupCards } = await userServiceExt.drop(
           playerGamePlayData.currentCards,
           tableGameData.trumpCard,
-          cohorts.map((e) => {
-            e = Number(e)
-            return e
+          // @ts-ignore
+          cohorts.map((e: number) => {
+            e = Number(e);
+            return e;
           }),
           tableGameData.opendDeck[tableGameData.opendDeck.length - 1],
           tableConfigData.maximumSeat === 2 ? 1 : 2,

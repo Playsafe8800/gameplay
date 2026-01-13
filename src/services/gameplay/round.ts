@@ -7,7 +7,7 @@ import {
   PLAYER_STATE,
   SINGLE_DECK,
   TABLE_STATE,
-  CURRENCY_TYPE, SINGLE_DECK_COMBINATIONS, DOUBLE_DECK_COMBINATIONS,
+  CURRENCY_TYPE, SINGLE_DECK_COMBINATIONS, DOUBLE_DECK_COMBINATIONS, BOT_CONFIG,
 } from '../../constants';
 import { playerGameplayService } from '../../db/playerGameplay';
 import { roundScoreCardService } from '../../db/roundScoreCard';
@@ -38,7 +38,6 @@ import {
 import { redlock } from '../../utils/lock/redlock';
 import { Lock } from 'redlock';
 const { MAX_TIMEOUT } = zk.getConfig();
-import { RemoteConfig } from '../../constants/remoteConfig';
 import { seatShuffle } from './seatShuffle'
 
 class Round {
@@ -737,10 +736,7 @@ class Round {
     let realPlayerProfitLoss = 0;
     if (realPlayer) {
       for (const player of playersData) {
-        const giveBotFavorThreshold = RemoteConfig.getNumber(
-          'GIVE_BOT_FAVOR_THRESHOLD',
-        ) || 0
-
+        const giveBotFavorThreshold = BOT_CONFIG.GIVE_BOT_FAVOR_THRESHOLD
         if (!player.isBot && player.profitLoss >= giveBotFavorThreshold)
           realPlayerProfitLoss = player.profitLoss;
       }
@@ -749,9 +745,7 @@ class Round {
     const usersCards: any = [];
     for (const player of playersData) {
       const playerCards: any[] = [];
-      const isSetBotCardsEnable = RemoteConfig.getBoolean(
-        'BOT_SET_CARD_ENABLE',
-      );
+      const isSetBotCardsEnable = BOT_CONFIG.BOT_SET_CARD_ENABLE
       let giveSetCards = false
       if (isFree && !player.isBot) {
         giveSetCards = true

@@ -1,13 +1,13 @@
 require('newrelic');
 const bull = require('bullmq');
-import { Cluster } from 'ioredis';
+import Redis from 'ioredis';
 import { Logger } from '../../newLogger';
 import { zk } from '../../connections';
 
 export abstract class Initializer {
   static queueMap: Map<string, typeof bull.Queue> = new Map();
   Queue: typeof bull.Queue;
-  private readonly cluster!: any;
+  private readonly redis!: any;
   public options: Object = {};
   public workerOpts: Object = {};
 
@@ -19,22 +19,18 @@ export abstract class Initializer {
       process.env.SCHEDULER_REDIS_PORT
 
     const redisPassword = process.env.SCHEDULER_REDIS_PASSWORD;
-    const clusterNodes = [
-      {
-        host: `${hostName}`,
-        port: Number.parseInt(`${schedulerPort}`),
-      },
-    ];
-    this.cluster = new Cluster(clusterNodes, {
-      redisOptions: redisPassword
-        ? { password: redisPassword }
-        : undefined,
+
+    this.redis = new Redis({
+      host: `${hostName}`,
+      port: Number.parseInt(`${schedulerPort}`),
+      ...(redisPassword ? { password: redisPassword } : {}),
     });
-    const queueNameHash = `${QueueName}-${process.env.DEPLOYMENT_HASH}`
+
+    const queueNameHash = `${QueueName}-${process.env.DEPLOYMENT_HASH}`;
 
     this.Queue = new bull.Queue(queueNameHash, {
-      connection: this.cluster,
-      prefix: `{${queueNameHash}}`
+      connection: this.redis,
+      prefix: queueNameHash,
     });
 
     this.options = {
@@ -60,7 +56,7 @@ export abstract class Initializer {
     });
   }
 
-  static async shutdownQueues(){
+  static async shutdownQueues() {
     const queues = Array.from(Initializer.queueMap.values());
     await Promise.all(queues.map(async (queue) => {
       try {

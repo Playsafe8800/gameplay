@@ -7,12 +7,10 @@ import { Logger } from './newLogger';
 import rdsOps from './connections/redis';
 import socketOps from './connections/socket';
 const { HTTP_SERVER_PORT, SERVER_TYPE } = MODULE_CONFIG;
-import { FirebaseConfig } from './firebase';
 
 (async () => {
   try {
     await Logger.initializeLogger();
-    await FirebaseConfig.init();
     const [redisClient] = await Promise.all([
       rdsOps.init(),
       socketOps.createSocketServer(),

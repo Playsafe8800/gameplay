@@ -1,6 +1,5 @@
 import express, { Request, Response, Router } from 'express';
 import { Logger } from '../newLogger';
-import { FirebaseConfig } from '../firebase';
 import axios from 'axios'
 import { Initializer } from '../services/schedulerQueue/init';
 import rdsOps from "../connections/redis"
@@ -21,7 +20,6 @@ class RouterClass {
     this.router.get(
       '/update/config',
       (_req: Request, res: Response) => {
-        FirebaseConfig.init();
         res.status(200).json('config updated ...  ;)');
       },
     );

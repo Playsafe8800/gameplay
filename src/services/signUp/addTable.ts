@@ -11,11 +11,10 @@ import { getBot } from '../../utils';
 import { userProfileService } from '../../db/userProfile';
 import { setValueInKeyWithExpiry } from '../../db/redisWrapper';
 import { tableGameplayService } from '../../db/tableGameplay';
-import { TABLE_STATE } from '../../constants';
+import { BOT_CONFIG, TABLE_STATE } from '../../constants';
 import { redlock } from '../../utils/lock/redlock';
 import { Lock } from 'redlock';
 import { eventStateManager } from '../../state/events';
-import { RemoteConfig } from '../../constants/remoteConfig';
 import userServiceExt from '../../userService';
 
 export async function addTable(
@@ -138,13 +137,9 @@ export async function addTable(
     userData.profitLoss = profile.profitLosss || 0;
     await userProfileService.setUserDetails(userId, userData);
 
-    const getBotProfitThreshold = RemoteConfig.getNumber(
-      'GET_BOT_PROFIT_THRESHOLD',
-    );
+    const getBotProfitThreshold = BOT_CONFIG.GET_BOT_PROFIT_THRESHOLD
 
-    const bannedUsersForBot = RemoteConfig.getString(
-      'BANNED_USERS_FROM_BOTS',
-    ).split(',');
+    const bannedUsersForBot = BOT_CONFIG.BANNED_USERS_FROM_BOTS.split(',');
 
     if (
       tableConfigurationData.isMultiBotEnabled &&
@@ -154,11 +149,11 @@ export async function addTable(
       !bannedUsersForBot.includes(userId.toString())
     ) {
       const botRange =
-        RemoteConfig.getString('MULTI_BOT_RANGE').split(',');
+        BOT_CONFIG.MULTI_BOT_RANGE.split(',');
       let totalBot =
-        botRange[Math.floor(Math.random() * botRange.length)];
+        Number(botRange[Math.floor(Math.random() * botRange.length)])
 
-      const DELAY_MULTIPLIER = RemoteConfig.getNumber('DELAY_MULTIPLIER')
+      const DELAY_MULTIPLIER = BOT_CONFIG.DELAY_MULTIPLIER
 
       let waitTime = 1
       for (let i = 1; i <= totalBot; i++) {
@@ -178,7 +173,7 @@ export async function addTable(
         await scheduler.addJob.bot(
           gtiData.tableId,
           gtiData.currentRound,
-          RemoteConfig.getNumber('BOT_WAITING_TIME_IN_MS'),
+          BOT_CONFIG.BOT_WAITING_TIME_IN_MS,
         );
       }
     }

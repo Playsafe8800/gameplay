@@ -1,6 +1,7 @@
 import { Logger } from '../../newLogger';
 import { Lock } from 'redlock';
 import {
+  BOT_CONFIG,
   EVENTS,
   GAME_END_REASONS,
   LEAVE_TABLE_REASONS,
@@ -25,7 +26,6 @@ import {
   LeaveTableInput,
   LeaveTableOnRoundStartedPointsInput,
   LeaveTableResult,
-  PlayerGameplay,
   SeatSchema,
   StandupUserSchema,
   UpdateTurnDetailsSchema,
@@ -57,7 +57,6 @@ import userServiceExt from '../../userService';
 import { GAME_END_REASONS_INSTRUMENTATION } from '../../constants/gameEndReasons';
 import { UpdateTurnDetails } from '../../utils/turnHistory';
 import { shuffleOpenDeck } from '../gameplay/ShuffleOpenDeck';
-import { RemoteConfig } from '../../constants/remoteConfig';
 
 class LeaveTableHandler {
   async main(
@@ -811,9 +810,7 @@ class LeaveTableHandler {
                 await scheduler.addJob.bot(
                   tableId,
                   currentRound,
-                  RemoteConfig.getNumber(
-                    'BOT_WAITING_TIME_IN_MS',
-                  ),
+                  BOT_CONFIG.BOT_WAITING_TIME_IN_MS
                 );
               }
             }

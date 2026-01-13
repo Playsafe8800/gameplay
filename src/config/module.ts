@@ -9,7 +9,7 @@ class Modules {
 
   constructor() {
     this.HTTP_SERVER_PORT =
-      Number(process.argv[2]) || Number(process.env.port) || 5000;
+      Number(process.argv[2]) || Number(process.env.port) || 5001;
     this.SERVER_TYPE = process.argv[3]
       ? process.argv[3].toUpperCase()
       : 'SOCKET';

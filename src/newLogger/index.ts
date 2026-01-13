@@ -31,7 +31,7 @@ export class Logger {
             ),
           }),
           new LokiTransport({
-            host: "http://grafana.entwikgaming.com:3100",
+            host: "http://grafana.trustgaming.com:3100",
             labels: { app: `gameplay-service-${process.env.NODE_ENV}` },
             json: true,
             batching: true,

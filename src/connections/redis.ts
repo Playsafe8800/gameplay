@@ -1,20 +1,17 @@
 import { Logger } from '../newLogger';
 import zk from './zk';
-import { Cluster } from 'ioredis';
+import Redis from 'ioredis';
 
-class Redis {
-  queryClient!: Cluster;
+class RedisI {
+  queryClient!: Redis;
 
   connectionCallback = async (
     resolve: (
-      value: Cluster | PromiseLike<Cluster>,
+      value: Redis | PromiseLike<Redis>,
     ) => void,
     reject: (reason?: any) => void,
   ) => {
-    if (
-      this.queryClient &&
-      this.queryClient instanceof Cluster
-    ) {
+    if (this.queryClient && this.queryClient instanceof Redis) {
       resolve(this.queryClient);
       return;
     }
@@ -24,31 +21,21 @@ class Redis {
       GAMEPLAY_REDIS_PORT,
     } = zk.getConfig();
 
-    const nodes = [{
+    const redisOptions = {
       host: GAMEPLAY_REDIS_HOST,
-      port: GAMEPLAY_REDIS_PORT
-    }]
-
-    const clusterOptions: any = {
-      redisOptions: {
-        ...(GAMEPLAY_REDIS_PASSWORD && { password: GAMEPLAY_REDIS_PASSWORD }),
-      }
-    };
-
-    const log = {
-      nodes,
+      port: GAMEPLAY_REDIS_PORT,
       ...(GAMEPLAY_REDIS_PASSWORD && { password: GAMEPLAY_REDIS_PASSWORD }),
     };
-    Logger.info(log);
-    this.queryClient = new Cluster(nodes, clusterOptions);
+
+    Logger.info({
+      host: GAMEPLAY_REDIS_HOST,
+      port: GAMEPLAY_REDIS_PORT,
+    });
+
+    this.queryClient = new Redis(redisOptions);
 
     this.queryClient.on('error', (error: any) => {
       Logger.error('INTERNAL_SERVER_ERROR Redis Client error : ', [error]);
-      reject(error);
-    });
-
-    this.queryClient.on('node error', (error, node) => {
-      Logger.error(`INTERNAL_SERVER_ERROR Redis Cluster node error (${node}): `, [error]);
       reject(error);
     });
 
@@ -58,8 +45,8 @@ class Redis {
     });
   };
 
-  init = async (): Promise<Cluster> =>
+  init = async (): Promise<Redis> =>
     new Promise(this.connectionCallback);
 }
 
-export default new Redis();
+export default new RedisI();
