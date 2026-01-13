@@ -11,4 +11,3 @@ pip install requests
 pip install pandas
 pm2 start api.py
 pm2 save
-sudo systemctl restart amazon-ssm-agent
