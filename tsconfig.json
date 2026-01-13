@@ -13,7 +13,7 @@
     /* Language and Environment */
     "target": "es6" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "typeRoots": ["node_modules/@types"],
-    "types": ["node", "jest", "@types/jest"],
+    "types": ["node"],
     "rootDir": "./src",
     "moduleResolution": "node",
     "lib": [
