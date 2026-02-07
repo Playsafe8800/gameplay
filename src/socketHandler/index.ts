@@ -1,4 +1,3 @@
-import newrelic = require('newrelic');
 import * as authMe from '../utils/ackMid';
 import { Logger } from '../newLogger';
 import { eventStateManager } from '../state/events';
@@ -34,7 +33,6 @@ async function requestHandler(
   next,
 ) {
   const that = this;
-  return newrelic.startWebTransaction(eventName, async () => {
     const requestReceivedAt = `${new Date().getTime()}`;
     const socket = that;
     const requestUUID = uuidv4();
@@ -392,7 +390,6 @@ async function requestHandler(
       }
     }
     next();
-  });
 }
 
 export = requestHandler;

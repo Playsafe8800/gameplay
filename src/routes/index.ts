@@ -4,7 +4,6 @@ import axios from 'axios'
 import { Initializer } from '../services/schedulerQueue/init';
 import rdsOps from "../connections/redis"
 import socketOps from "../connections/socket"
-import newrelic from 'newrelic'
 
 class RouterClass {
   router: Router;
@@ -63,11 +62,6 @@ class RouterClass {
           socketOps.socketClient.close((err) => {
             if (err) Logger.error('socket shutdown error', err.message);
             else Logger.info('socket connections closed.');
-          });
-
-          newrelic.shutdown({ collectPendingData: true }, (err) => {
-            if (err) Logger.error('Error shutting down New Relic:', err.message);
-            else Logger.info('New Relic agent shut down successfully.');
             resolve(true)
           });
         });

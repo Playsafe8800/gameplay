@@ -1,4 +1,3 @@
-require('newrelic');
 import MODULE_CONFIG from './config/module';
 import httpServer from './connections/http';
 

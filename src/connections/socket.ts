@@ -1,4 +1,3 @@
-import newrelic = require('newrelic');
 import { Server, ServerOptions } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import * as authMe from '../utils/ackMid';
@@ -70,10 +69,6 @@ class Socket {
           },${os.hostname()}`,
         );
         const count = this.socketClient.sockets.sockets.size;
-        newrelic.recordCustomEvent('SocketHealth', {
-          socketCount: count,
-          timestamp: Date.now()
-        });
       }
     }, 5000);
   }
@@ -118,11 +113,6 @@ class Socket {
       EVENTS.CONNECTION_SUCCESS,
     );
     client.use(requestHandler.bind(client));
-    newrelic.recordCustomEvent('SocketEvent', {
-      action: 'connected',
-      socketId: client.id,
-      timestamp: Date.now()
-    });
     // client.conn is default menthod for ping pong request
     client.conn.on(
       SOCKET.PACKET,
@@ -150,11 +140,6 @@ class Socket {
         client.eventMetaData,
       );
       this.DisconnectHandler(client);
-      newrelic.recordCustomEvent('SocketEvent', {
-        action: 'disconnected',
-        socketId: client.id,
-        timestamp: Date.now()
-      });
     });
   }
 

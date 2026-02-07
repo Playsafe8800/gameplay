@@ -1,4 +1,3 @@
-require('newrelic');
 const bull = require('bullmq');
 import Redis from 'ioredis';
 import { Logger } from '../../newLogger';

@@ -1,7 +1,6 @@
 import winston from 'winston';
 import { formatLogMessages } from './utils/loggerUtils';
 import LokiTransport from "winston-loki"
-import newrelicFormatter from '@newrelic/winston-enricher';
 
 export class Logger {
   private static isInitialized: boolean;
@@ -19,7 +18,8 @@ export class Logger {
 
       Logger.logger = winston.createLogger({
         level: "info",
-        format: newrelicFormatter(winston)(),
+        // Use default JSON format at the base logger; transports have their own formatting below
+        format: winston.format.json(),
         transports: [
           new winston.transports.Console({
             format: winston.format.combine(
