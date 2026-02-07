@@ -1,0 +1,11 @@
+import { DropCardRoomInterface, DropCardRoomPointsInterface, PickCardAckInterface, PickCardRoomInterface, RebuyActionRes, RoundScoreBoardDataAckInterface, RoundScoreCardDataAckInterface, StandupRoomInterface, ThrowCardAckInterface, ThrowCardRoomInterface } from '../objectModels';
+export declare function validatePickCardAckRes(pickCardData: PickCardAckInterface): void;
+export declare function validatePickCardRoomRes(pickCardData: PickCardRoomInterface): void;
+export declare function validateThrowCardAckRes(throwCardData: ThrowCardAckInterface): void;
+export declare function validateThrowCardRoomRes(throwCardData: ThrowCardRoomInterface): void;
+export declare function validateDropCardRoomRes(dropCardData: DropCardRoomInterface): void;
+export declare function validateDropCardRoomPointsRes(dropCardData: DropCardRoomPointsInterface): void;
+export declare function validateLastRoundScoreCardRes(roundScoreCardData: RoundScoreCardDataAckInterface): RoundScoreCardDataAckInterface;
+export declare function validateLastRoundScoreBoardRes(roundScoreBoardData: RoundScoreBoardDataAckInterface | null): RoundScoreBoardDataAckInterface | null;
+export declare function validateRebuyActionRes(rebuyActionRes: RebuyActionRes): void;
+export declare function validateStandupRoomRes(standupData: StandupRoomInterface): void;

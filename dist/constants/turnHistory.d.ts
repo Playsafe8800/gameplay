@@ -1,0 +1,11 @@
+export declare const TURN_HISTORY: Readonly<{
+    CLOSED_DECK: "DECK";
+    OPENED_DECK: "PILE";
+    TURN: "TURN";
+    TIMEOUT: "TIMEOUT";
+    DROP: "DROP";
+    MIDDLE_DROP: "MIDDLE_DROP";
+    VALID_DECLARE: "VALID_DECLARE";
+    INVALID_DECLARE: "INVALID_DECLARE";
+    LEFT: "LEFT";
+}>;

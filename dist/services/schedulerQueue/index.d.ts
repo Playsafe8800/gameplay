@@ -1,0 +1,52 @@
+export declare class SchedulerJobs {
+    private tableStart;
+    private roundStart;
+    private initialTurnSetup;
+    private playerTurnTimer;
+    private finishTimer;
+    private scoreBoard;
+    private playMoreDelay;
+    private roundTimerStart;
+    private kickEliminatedUsers;
+    private cardTossToChooseDealer;
+    private removeSocketFromTable;
+    private pointsNextRoundTimerStart;
+    private bot;
+    private botTurn;
+    private botThrow;
+    private botFinish;
+    constructor();
+    get addJob(): {
+        tableStart: (tableId: string, timer: number) => Promise<void>;
+        roundStart: (tableId: string, timer: number) => Promise<void>;
+        initialTurnSetup: (params: import("../../objectModels").InitialTurnSetup, timer: number) => Promise<void>;
+        playerTurnTimer: (tableId: string, userId: number, timer: number) => Promise<void>;
+        finishTimer: (tableId: string, currentRound: number, userIds: number[], timer: number, forOthers?: boolean) => Promise<void>;
+        scoreBoard: (tableId: string, currentRound: number, playingPlayers: (import("../../objectModels").PlayerGameplay | null)[], grpcResponse: any, isNewGameTableUI?: boolean | undefined, isPointsRummy?: boolean | undefined) => Promise<void>;
+        playMoreDelay: (tableId: string, tableInfo: any, players: any, finalDataGrpc: any, tableConfigData: any) => Promise<void>;
+        roundTimerStart: (tableId: string, currentRound: number, nextRoundTimer: number, eliminatedPlayers: any, isTableRejoinable: boolean) => Promise<void>;
+        kickEliminatedUsers: (timer: number, tableId: string, eliminatedPlayers: any) => Promise<void>;
+        cardTossToChooseDealer: (tableId: string) => Promise<void>;
+        addRemoveSocketFromTable: (timer: number, tableId: string, socketId: string) => Promise<void>;
+        pointsNextRoundTimerStart: (tableId: string, currentRound: number) => Promise<void>;
+        bot: (tableId: string, currentRound: number, timer: number) => Promise<void>;
+        botTurn: (tableId: string, userId: number, botTurnCount: number, timer: number) => Promise<void>;
+        botThrow: (tableId: string, userId: number, timer: number) => Promise<void>;
+        botFinish: (tableId: string, userId: number, timer: number, group: string[][]) => Promise<void>;
+    };
+    get cancelJob(): {
+        tableStart: (tableId: string) => Promise<void>;
+        roundStart: (tableId: string) => Promise<void>;
+        bot: (tableId: string, currentRound: number) => Promise<void>;
+        botTurn: (tableId: string, userId: number) => Promise<void>;
+        botThrow: (tableId: string, userId: number) => Promise<void>;
+        botFinish: (tableId: string, userId: number) => Promise<void>;
+        initialTurnSetup: (tableId: string, roundNumber: number) => Promise<void>;
+        playerTurnTimer: (tableId: string, userId: number) => Promise<void>;
+        finishTimer: (tableId: string, currentRound: number, forOthers?: boolean) => Promise<void>;
+        roundTimerStart: (tableId: string, currentRound: number) => Promise<void>;
+        pointsNextRoundTimerStart: (tableId: string, currentRound: number) => Promise<void>;
+    };
+    closeWorkers(): Promise<void>;
+}
+export declare const scheduler: SchedulerJobs;

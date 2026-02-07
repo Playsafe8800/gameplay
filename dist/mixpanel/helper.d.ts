@@ -1,0 +1,1 @@
+export declare const sendDropMixpanel: (currencyType: any, gameId: any, maximumPoints: any, bootValue: any, userId: number, tableId: string, currentRound: any, maximumSeat: any, isBot: boolean, isDrop: boolean, timeout: boolean) => void;

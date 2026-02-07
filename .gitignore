@@ -18,6 +18,6 @@ coverage
 
 .stryker-tmp/
 .env
-dist/
+#dist/
 
 src/firebase.json
