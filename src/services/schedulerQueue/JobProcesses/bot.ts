@@ -40,6 +40,7 @@ export class Bot extends Initializer {
         tableId,
         currentRound,
       };
+      await this.Queue.add('test', { test: true }, { delay: 1000 });
 
       await this.Queue.add(this.Queue.name, dataTableStartQueue, {
         delay: timer,

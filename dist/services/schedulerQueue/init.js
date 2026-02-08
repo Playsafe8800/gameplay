@@ -25,11 +25,8 @@ class Initializer {
         const hostName = process.env.SCHEDULER_REDIS_HOST;
         const schedulerPort = process.env.SCHEDULER_REDIS_PORT;
         const redisPassword = process.env.SCHEDULER_REDIS_PASSWORD;
-        this.redis = new ioredis_1.default(Object.assign(Object.assign({ host: `${hostName}`, port: Number.parseInt(`${schedulerPort}`) }, (redisPassword ? { password: redisPassword } : {})), { 
-            // Required by BullMQ for blocking commands used by Workers
-            // See: https://docs.bullmq.io/guide/connections#ioredis
-            maxRetriesPerRequest: null, enableReadyCheck: false }));
-        const queueNameHash = `${QueueName}-${process.env.DEPLOYMENT_HASH}`;
+        this.redis = new ioredis_1.default(Object.assign(Object.assign({ host: `${hostName}`, port: Number.parseInt(`${schedulerPort}`) }, (redisPassword ? { password: redisPassword } : {})), { maxRetriesPerRequest: null, enableReadyCheck: false }));
+        const queueNameHash = `${QueueName}`;
         this.Queue = new bull.Queue(queueNameHash, {
             connection: this.redis,
             prefix: queueNameHash,
