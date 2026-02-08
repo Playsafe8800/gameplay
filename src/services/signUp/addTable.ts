@@ -16,6 +16,7 @@ import { redlock } from '../../utils/lock/redlock';
 import { Lock } from 'redlock';
 import { eventStateManager } from '../../state/events';
 import userServiceExt from '../../userService';
+import * as console from 'node:console';
 
 export async function addTable(
   signUpData: SignUpInterface,
@@ -229,7 +230,10 @@ export async function sitBotOnTable(tableId: string) {
     );
     if (!tableGameData)
       throw new Error(`TableGamePlay not found, ${tableId}`);
-
+    console.log(!tableConfigData.isMultiBotEnabled &&
+      (tableGameData.tableState !== TABLE_STATE.WAITING_FOR_PLAYERS ||
+        tableGameData.noOfPlayers !== NUMERICAL.ONE), "=---first==-")
+    console.log(tableGameData.tableState, "----", tableGameData.noOfPlayers, tableConfigData.isMultiBotEnabled)
     if (
       !tableConfigData.isMultiBotEnabled &&
       (tableGameData.tableState !== TABLE_STATE.WAITING_FOR_PLAYERS ||
