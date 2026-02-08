@@ -25,7 +25,6 @@ class Bot extends init_1.Initializer {
                     tableId,
                     currentRound,
                 };
-                yield this.Queue.add('test', { test: true }, { delay: 1000 });
                 yield this.Queue.add(this.Queue.name, dataTableStartQueue, Object.assign({ delay: timer, jobId: `${jobId}-${timer}` }, this.options));
             }
             catch (error) {
