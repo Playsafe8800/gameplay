@@ -142,42 +142,42 @@ export async function addTable(
 
     const bannedUsersForBot = BOT_CONFIG.BANNED_USERS_FROM_BOTS.split(',');
 
-    if (
-      tableConfigurationData.isMultiBotEnabled &&
-      tableConfigurationData.maximumSeat == 6 &&
-      gtiData?.isNewTable &&
-      userData.profitLoss < getBotProfitThreshold &&
-      !bannedUsersForBot.includes(userId.toString())
-    ) {
-      const botRange =
-        BOT_CONFIG.MULTI_BOT_RANGE.split(',');
-      let totalBot =
-        Number(botRange[Math.floor(Math.random() * botRange.length)])
-
-      const DELAY_MULTIPLIER = BOT_CONFIG.DELAY_MULTIPLIER
-
-      let waitTime = 1
-      for (let i = 1; i <= totalBot; i++) {
-        waitTime += Math.round(i * DELAY_MULTIPLIER)
-        await scheduler.addJob.bot(
-          gtiData.tableId,
-          gtiData.currentRound,
-          waitTime* NUMERICAL.THOUSAND,
-        );
-      }
-    } else {
-      if (
-        gtiData.playerInfo.length === 1 &&
-        userData.profitLoss < getBotProfitThreshold &&
-        !bannedUsersForBot.includes(userId.toString())
-      ) {
-        await scheduler.addJob.bot(
-          gtiData.tableId,
-          gtiData.currentRound,
-          BOT_CONFIG.BOT_WAITING_TIME_IN_MS,
-        );
-      }
-    }
+    // if (
+    //   tableConfigurationData.isMultiBotEnabled &&
+    //   tableConfigurationData.maximumSeat == 6 &&
+    //   gtiData?.isNewTable &&
+    //   userData.profitLoss < getBotProfitThreshold &&
+    //   !bannedUsersForBot.includes(userId.toString())
+    // ) {
+    //   const botRange =
+    //     BOT_CONFIG.MULTI_BOT_RANGE.split(',');
+    //   let totalBot =
+    //     Number(botRange[Math.floor(Math.random() * botRange.length)])
+    //
+    //   const DELAY_MULTIPLIER = BOT_CONFIG.DELAY_MULTIPLIER
+    //
+    //   let waitTime = 1
+    //   for (let i = 1; i <= totalBot; i++) {
+    //     waitTime += Math.round(i * DELAY_MULTIPLIER)
+    //     await scheduler.addJob.bot(
+    //       gtiData.tableId,
+    //       gtiData.currentRound,
+    //       waitTime* NUMERICAL.THOUSAND,
+    //     );
+    //   }
+    // } else {
+    //   if (
+    //     gtiData.playerInfo.length === 1 &&
+    //     userData.profitLoss < getBotProfitThreshold &&
+    //     !bannedUsersForBot.includes(userId.toString())
+    //   ) {
+    //     await scheduler.addJob.bot(
+    //       gtiData.tableId,
+    //       gtiData.currentRound,
+    //       BOT_CONFIG.BOT_WAITING_TIME_IN_MS,
+    //     );
+    //   }
+    // }
     return {
       signupResponse: {
         userId: userData.id,
@@ -230,10 +230,7 @@ export async function sitBotOnTable(tableId: string) {
     );
     if (!tableGameData)
       throw new Error(`TableGamePlay not found, ${tableId}`);
-    console.log(!tableConfigData.isMultiBotEnabled &&
-      (tableGameData.tableState !== TABLE_STATE.WAITING_FOR_PLAYERS ||
-        tableGameData.noOfPlayers !== NUMERICAL.ONE), "=---first==-")
-    console.log(tableGameData.tableState, "----", tableGameData.noOfPlayers, tableConfigData.isMultiBotEnabled)
+
     if (
       !tableConfigData.isMultiBotEnabled &&
       (tableGameData.tableState !== TABLE_STATE.WAITING_FOR_PLAYERS ||

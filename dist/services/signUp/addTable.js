@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -42,7 +19,6 @@ const tableConfiguration_1 = require("../../db/tableConfiguration");
 const userService_1 = require("../userService");
 const userService_2 = __importDefault(require("../../userService"));
 const tableOperation_1 = require("./tableOperation");
-const schedulerQueue_1 = require("../schedulerQueue");
 const utils_1 = require("../../utils");
 const userProfile_1 = require("../../db/userProfile");
 const redisWrapper_1 = require("../../db/redisWrapper");
@@ -52,7 +28,6 @@ const redlock_1 = require("../../utils/lock/redlock");
 const redlock_2 = require("redlock");
 const events_1 = require("../../state/events");
 const userService_3 = __importDefault(require("../../userService"));
-const console = __importStar(require("node:console"));
 function addTable(signUpData, socket, networkParams) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -117,27 +92,42 @@ function addTable(signUpData, socket, networkParams) {
             yield userProfile_1.userProfileService.setUserDetails(userId, userData);
             const getBotProfitThreshold = constants_1.BOT_CONFIG.GET_BOT_PROFIT_THRESHOLD;
             const bannedUsersForBot = constants_1.BOT_CONFIG.BANNED_USERS_FROM_BOTS.split(',');
-            if (tableConfigurationData.isMultiBotEnabled &&
-                tableConfigurationData.maximumSeat == 6 &&
-                (gtiData === null || gtiData === void 0 ? void 0 : gtiData.isNewTable) &&
-                userData.profitLoss < getBotProfitThreshold &&
-                !bannedUsersForBot.includes(userId.toString())) {
-                const botRange = constants_1.BOT_CONFIG.MULTI_BOT_RANGE.split(',');
-                let totalBot = Number(botRange[Math.floor(Math.random() * botRange.length)]);
-                const DELAY_MULTIPLIER = constants_1.BOT_CONFIG.DELAY_MULTIPLIER;
-                let waitTime = 1;
-                for (let i = 1; i <= totalBot; i++) {
-                    waitTime += Math.round(i * DELAY_MULTIPLIER);
-                    yield schedulerQueue_1.scheduler.addJob.bot(gtiData.tableId, gtiData.currentRound, waitTime * numerical_1.NUMERICAL.THOUSAND);
-                }
-            }
-            else {
-                if (gtiData.playerInfo.length === 1 &&
-                    userData.profitLoss < getBotProfitThreshold &&
-                    !bannedUsersForBot.includes(userId.toString())) {
-                    yield schedulerQueue_1.scheduler.addJob.bot(gtiData.tableId, gtiData.currentRound, constants_1.BOT_CONFIG.BOT_WAITING_TIME_IN_MS);
-                }
-            }
+            // if (
+            //   tableConfigurationData.isMultiBotEnabled &&
+            //   tableConfigurationData.maximumSeat == 6 &&
+            //   gtiData?.isNewTable &&
+            //   userData.profitLoss < getBotProfitThreshold &&
+            //   !bannedUsersForBot.includes(userId.toString())
+            // ) {
+            //   const botRange =
+            //     BOT_CONFIG.MULTI_BOT_RANGE.split(',');
+            //   let totalBot =
+            //     Number(botRange[Math.floor(Math.random() * botRange.length)])
+            //
+            //   const DELAY_MULTIPLIER = BOT_CONFIG.DELAY_MULTIPLIER
+            //
+            //   let waitTime = 1
+            //   for (let i = 1; i <= totalBot; i++) {
+            //     waitTime += Math.round(i * DELAY_MULTIPLIER)
+            //     await scheduler.addJob.bot(
+            //       gtiData.tableId,
+            //       gtiData.currentRound,
+            //       waitTime* NUMERICAL.THOUSAND,
+            //     );
+            //   }
+            // } else {
+            //   if (
+            //     gtiData.playerInfo.length === 1 &&
+            //     userData.profitLoss < getBotProfitThreshold &&
+            //     !bannedUsersForBot.includes(userId.toString())
+            //   ) {
+            //     await scheduler.addJob.bot(
+            //       gtiData.tableId,
+            //       gtiData.currentRound,
+            //       BOT_CONFIG.BOT_WAITING_TIME_IN_MS,
+            //     );
+            //   }
+            // }
             return {
                 signupResponse: {
                     userId: userData.id,
@@ -183,10 +173,6 @@ function sitBotOnTable(tableId) {
             const tableGameData = yield tableGameplay_1.tableGameplayService.getTableGameplay(tableId, 1, ['tableState', 'noOfPlayers']);
             if (!tableGameData)
                 throw new Error(`TableGamePlay not found, ${tableId}`);
-            console.log(!tableConfigData.isMultiBotEnabled &&
-                (tableGameData.tableState !== constants_1.TABLE_STATE.WAITING_FOR_PLAYERS ||
-                    tableGameData.noOfPlayers !== numerical_1.NUMERICAL.ONE), "=---first==-");
-            console.log(tableGameData.tableState, "----", tableGameData.noOfPlayers, tableConfigData.isMultiBotEnabled);
             if (!tableConfigData.isMultiBotEnabled &&
                 (tableGameData.tableState !== constants_1.TABLE_STATE.WAITING_FOR_PLAYERS ||
                     tableGameData.noOfPlayers !== numerical_1.NUMERICAL.ONE))
