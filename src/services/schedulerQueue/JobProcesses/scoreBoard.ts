@@ -14,7 +14,7 @@ export class ScoreBoard extends Initializer {
       (job) => this.scoreBoardProcess(job),
       {
         connection: this.Queue.opts.connection,
-        prefix: `{${this.Queue.name}}`,
+        prefix: (this.Queue as any).opts.prefix,
         ...this.workerOpts,
       }
     );

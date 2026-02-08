@@ -13,7 +13,7 @@ export class RoundTimerStart extends Initializer {
       (job) => this.roundTimerStartProcess(job),
       {
         connection: this.Queue.opts.connection,
-        prefix: `{${this.Queue.name}}`,
+        prefix: (this.Queue as any).opts.prefix,
         ...this.workerOpts,
       }
     );

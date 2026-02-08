@@ -60,7 +60,9 @@ class InitialTurnSetupTimer extends init_1.Initializer {
                 newLogger_1.Logger.error(`INTERNAL_SERVER_ERROR SchedulerError closeWorker `, [error]);
             }
         });
-        this.worker = (0, instrumentedWorker_1.createInstrumentedWorker)(this.Queue.name, (job) => this.initialTurnSetupTimerProcess(job), Object.assign({ connection: this.Queue.opts.connection, prefix: `{${this.Queue.name}}` }, this.workerOpts));
+        this.worker = (0, instrumentedWorker_1.createInstrumentedWorker)(this.Queue.name, (job) => this.initialTurnSetupTimerProcess(job), Object.assign({ connection: this.Queue.opts.connection, 
+            // Use the same prefix as the Queue to ensure workers see the jobs
+            prefix: this.Queue.opts.prefix }, this.workerOpts));
         this.worker.on('error', (err) => {
             newLogger_1.Logger.error(`INTERNAL_SERVER_ERROR SchedulerError on queue ${this.Queue.name}:`, [err]);
         });

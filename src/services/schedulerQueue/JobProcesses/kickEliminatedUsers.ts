@@ -14,7 +14,8 @@ export class KickEliminatedUsers extends Initializer {
       (job) => this.kickEliminatedUsersProcess(job),
       {
         connection: this.Queue.opts.connection,
-        prefix: `{${this.Queue.name}}`,
+        // Use the same prefix as the Queue to ensure workers see the jobs
+        prefix: (this.Queue as any).opts.prefix,
         ...this.workerOpts,
       }
     );
