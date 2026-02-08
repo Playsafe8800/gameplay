@@ -23,6 +23,10 @@ export abstract class Initializer {
       host: `${hostName}`,
       port: Number.parseInt(`${schedulerPort}`),
       ...(redisPassword ? { password: redisPassword } : {}),
+      // Required by BullMQ for blocking commands used by Workers
+      // See: https://docs.bullmq.io/guide/connections#ioredis
+      maxRetriesPerRequest: null,
+      enableReadyCheck: false,
     });
 
     const queueNameHash = `${QueueName}-${process.env.DEPLOYMENT_HASH}`;
