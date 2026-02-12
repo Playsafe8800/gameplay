@@ -23,10 +23,10 @@ export default class UserService {
   static WALLET_BALANCE = '/user/wallet';
   static AVAILABLE_BOT = '/internal/bot/available';
   static ADD_BOT = '/add/bots';
-  static GET_USER_PROFILE = '/internal/v2/?/profile';
-  static CREATE_BATTLE = '/v2/match/create';
-  static FINISH_BATTLE = '/v2/match/finish';
-  static CANCEL_MATCH = '/v2/match/cancel';
+  static GET_USER_PROFILE = '/internal/?/profile';
+  static CREATE_BATTLE = '/match/create';
+  static FINISH_BATTLE = '/match/finish';
+  static CANCEL_MATCH = '/match/cancel';
   static PICK = '/pick';
   static DROP = '/drop';
   static THROW = '/get_throw_multi_deck';
