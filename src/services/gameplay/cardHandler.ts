@@ -116,12 +116,14 @@ class CardHandler {
         currentCardsGroup,
         tableId,
         playerGameplayData.userStatus,
+        tableGameplayData.papluCard,
       ]);
 
       const { score, meld, meldLabel } = this.groupCardsOnMeld(
         currentCardsGroup,
         tableGameplayData.trumpCard,
         tableConfigData.maximumPoints,
+        tableGameplayData.papluCard,
       );
       if (playerGameplayData.userStatus === PLAYER_STATE.FINISH) {
         return {
