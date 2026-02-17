@@ -61,6 +61,7 @@ class WinnerPoints {
           'declarePlayer',
           'seats',
           'tableState',
+          'papluCard'
         ]),
         turnHistoryService.getTurnHistory(tableId, currentRound),
       ]);
@@ -85,7 +86,7 @@ class WinnerPoints {
             seat._id,
             tableId,
             currentRound,
-            ['userId', 'userStatus', 'points', 'winningCash'],
+            ['userId', 'userStatus', 'points', 'winningCash', 'cards'],
           ),
         ),
       );
@@ -100,9 +101,18 @@ class WinnerPoints {
           const playerData = player;
 
           if (playerData.userStatus === PLAYER_STATE.FINISH) {
-            const { points } = playerData;
+            let { points } = playerData;
             let pointsAsPerCF = currencyFactor * points;
             pointsAsPerCF = roundInt(pointsAsPerCF, 2);
+
+            if (points != 0){
+              console.log(playerData.cards, "---playerData.cards---", tableGameData.papluCard)
+              for (let i = 0; i < playerData.cards.length; i++) {
+                if (playerData.cards[i].includes(tableGameData.papluCard)) {
+                  points += 10;
+                }
+              }
+            }
 
             playerData.points = points;
             playerData.winningCash = -pointsAsPerCF;
@@ -419,6 +429,7 @@ class WinnerPoints {
         potValue: pointsAsPerCF,
         tableState: tableGameData.tableState,
         wildCard: tableGameData.trumpCard,
+        papluCard: tableGameData.papluCard,
         winnerUserId: winnerPgpData.userId,
         playerInfo: scoreBoardPlayerInfo,
       };

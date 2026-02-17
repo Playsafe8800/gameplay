@@ -9,6 +9,7 @@ declare class DefaultData {
         seats: never[];
         tableState: any;
         trumpCard: string;
+        papluCard: string;
         dealerPlayer: number;
         splitCount: number;
         pointsForRoundWinner: number;

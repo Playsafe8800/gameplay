@@ -382,7 +382,7 @@ class Round {
         allPlayerGamePlay,
       );
 
-      const { usersCards, wildCard, firstOpenCard, shuffledDeck } =
+      const { usersCards, wildCard, papluCard, firstOpenCard, shuffledDeck } =
         await this.distributeCards(
           tableConfigData,
           playersData,
@@ -390,6 +390,7 @@ class Round {
         );
 
       tableGameData.trumpCard = wildCard;
+      tableGameData.papluCard = papluCard;
       tableGameData.closedDeck = shuffledDeck;
       tableGameData.opendDeck = firstOpenCard;
       tableGameData.tableState = TABLE_STATE.ROUND_STARTED;
@@ -424,6 +425,7 @@ class Round {
           currentRound,
           wildCard,
           tableConfigData.maximumPoints,
+          papluCard,
         ),
         tableGameplayService.setTableGameplay(
           tableId,
@@ -466,6 +468,7 @@ class Round {
         tableId,
         dealer: dealerId,
         wildCard,
+        papluCard,
         firstOpenDeckCard: firstOpenCard[0],
         roundNumber: currentRound,
       };
@@ -489,6 +492,7 @@ class Round {
           groupingCards,
           tableGameData.trumpCard,
           tableConfigData.maximumPoints,
+          tableGameData.papluCard,
         );
         const formattedData = Object.assign(
           {
@@ -798,12 +802,20 @@ class Round {
     }
 
     const [wildCard] = shuffledDeck.splice(0, 1);
+    // compute Paplu: same suit, next rank (K->A wraps to 1)
+    const [wSuit, wRankStr] = wildCard.split('-');
+    const wRank = parseInt(wRankStr, 10);
+    const nextRank = wRank === 13 ? 1 : wRank + 1;
+    const papluCard = `${wSuit}-${nextRank}`; // suit-specific, deck-agnostic
+    console.log(papluCard, '---papluCard--')
+
     // selecting first face up card
     // const firstOpenCard = ['J-1-0'];
     const firstOpenCard = shuffledDeck.splice(0, 1); // ['J-1-0'];
     return {
       usersCards,
       wildCard,
+      papluCard,
       firstOpenCard,
       shuffledDeck,
     };

@@ -4,6 +4,7 @@ export interface GameTableInfo {
     availablePlayers: number;
     gameType: string;
     tableState: string;
+    papluCard?: string;
     wildCard: string;
     openDeck: Array<string>;
     currentTurn: number;

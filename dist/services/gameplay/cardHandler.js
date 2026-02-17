@@ -54,7 +54,7 @@ class CardHandler {
                     playerGameplay_1.playerGameplayService.getPlayerGameplay(userId, tableId, currentRound, ["userStatus",
                         "currentCards",
                         "groupingCards"]),
-                    tableGameplay_1.tableGameplayService.getTableGameplay(tableId, currentRound, ['trumpCard']),
+                    tableGameplay_1.tableGameplayService.getTableGameplay(tableId, currentRound, ['trumpCard', 'papluCard']),
                 ]);
                 if (!playerGameplayData || !tableGameplayData) {
                     throw new Error(`TGP or PGP not found table: ${tableId}-${currentRound}, userId: ${userId} from groupCards`);
@@ -176,7 +176,7 @@ class CardHandler {
         });
         return result;
     }
-    groupCardsOnMeld(cards, trumpCard, maximumPoints = poolTypes_1.POOL_TYPES.ONE_ZERO_ONE) {
+    groupCardsOnMeld(cards, trumpCard, maximumPoints = poolTypes_1.POOL_TYPES.ONE_ZERO_ONE, papluCard) {
         newLogger_1.Logger.info(`groupCardsOnMeld imputs >> `, [cards, trumpCard]);
         let meld = [];
         let score = 0;
@@ -190,9 +190,9 @@ class CardHandler {
             const splitArray = this.splitCardsArray(currentGroup);
             if (this.checkForPureSequence(splitArray))
                 return objectModels_1.MELD.PURE;
-            if (this.checkForImpureSequence(splitArray, trumpCard))
+            if (this.checkForImpureSequence(splitArray, trumpCard, papluCard))
                 return objectModels_1.MELD.SEQUENCE;
-            if (this.checkForSets(splitArray, trumpCard))
+            if (this.checkForSets(splitArray, trumpCard, papluCard))
                 return objectModels_1.MELD.SET;
             else {
                 return objectModels_1.MELD.DWD;
@@ -222,7 +222,7 @@ class CardHandler {
             if (meld[index] === objectModels_1.MELD.DWD ||
                 (meld[index] === objectModels_1.MELD.SET && !setValid) ||
                 (meld[index] === objectModels_1.MELD.SEQUENCE && !pureSeqAvailable)) {
-                lastScore += this.checkScore(cardsGroup, trumpCard);
+                lastScore += this.checkScore(cardsGroup, trumpCard, papluCard);
             }
             return lastScore;
         }, 0);
@@ -242,35 +242,46 @@ class CardHandler {
         cards.push(...filteredCards);
         return { meld, score, meldLabel };
     }
-    checkScore(cards, trumpCard) {
+    checkScore(cards, trumpCard, papluCard) {
         let score = 0;
         const trumpSplit = trumpCard.split('-');
         if (trumpSplit.length < 3)
             throw new Error(`Invalid trump card at checkScore`);
         const trumpCardNumber = Number(trumpSplit[1]);
+        const papluSplit = papluCard ? papluCard.split('-') : null;
+        const papluSuit = papluSplit ? papluSplit[0] : undefined;
+        const papluRank = papluSplit ? Number(papluSplit[1]) : undefined;
         cards.forEach((card) => {
-            score += this.checkCardScore(card, trumpCardNumber);
+            score += this.checkCardScore(card, trumpCardNumber, papluSuit, papluRank);
         });
         return score;
     }
-    checkCardScore(card, trumpCard) {
+    checkCardScore(card, trumpRank, papluSuit, papluRank) {
         const splitCard = card.split('-');
         if (splitCard.length < 3)
             throw new Error(`Invalid card card at checkCardScore`);
-        if (splitCard[0] === 'J' || trumpCard === Number(splitCard[1]))
-            return 0; // Joker or wild card
-        if (Number(splitCard[1]) > 10 || Number(splitCard[1]) === 1)
+        const suit = splitCard[0];
+        const rankNum = Number(splitCard[1]);
+        // Joker, wild (by rank), or paplu (same suit and next-rank card)
+        if (suit === 'J' ||
+            trumpRank === rankNum ||
+            (papluSuit && papluRank && suit === papluSuit && rankNum === papluRank))
+            return 0; // Joker or wild card (including paplu)
+        if (rankNum > 10 || rankNum === 1)
             return 10;
-        return Number(splitCard[1]);
+        return rankNum;
     }
-    checkForSets(splitArray, trumpCard) {
+    checkForSets(splitArray, trumpCard, papluCard) {
         const totalCount = splitArray.length;
         if (totalCount > 4 || totalCount < 3) {
             return false;
         }
         const trump = trumpCard.split('-');
         const trumpRank = Number(trump[1]);
-        const cardsWithoutJoWiC = splitArray.filter((card) => !(card.suit === 'J' || card.rank === trumpRank));
+        const pSplit = papluCard ? papluCard.split('-') : null;
+        const pSuit = pSplit ? pSplit[0] : undefined;
+        const pRank = pSplit ? Number(pSplit[1]) : undefined;
+        const cardsWithoutJoWiC = splitArray.filter((card) => !(card.suit === 'J' || card.rank === trumpRank || (pSuit && pRank && card.suit === pSuit && card.rank === pRank)));
         const suitList = cardsWithoutJoWiC.map((card) => card.suit);
         // should not have cards of same suit/ no duplicates in cards
         if (new Set(suitList).size === suitList.length) {
@@ -299,16 +310,20 @@ class CardHandler {
             return false;
         return this.checkSequentialForPureSequence(split.map((card) => card.rank));
     }
-    checkForImpureSequence(splitArray, trumpCard) {
+    checkForImpureSequence(splitArray, trumpCard, papluCard) {
         const trumSplit = trumpCard.split('-');
         if (trumSplit.length < 3)
             throw new Error('Invalid trump card!');
         const trumpCardRank = Number(trumpCard.split('-')[1]);
+        const papluSplit = papluCard ? papluCard.split('-') : null;
+        const papluSuit = papluSplit ? papluSplit[0] : undefined;
+        const papluRank = papluSplit ? Number(papluSplit[1]) : undefined;
         const cardList = splitArray.map((indC) => {
+            const isPaplu = papluSuit && papluRank && indC.suit === papluSuit && indC.rank === papluRank;
             return {
                 rank: indC.rank,
                 suit: indC.suit,
-                wildorNot: indC.rank === trumpCardRank,
+                wildorNot: indC.rank === trumpCardRank || !!isPaplu,
             };
         });
         let check = false;

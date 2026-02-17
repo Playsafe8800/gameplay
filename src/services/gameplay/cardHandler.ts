@@ -91,7 +91,7 @@ class CardHandler {
           tableGameplayService.getTableGameplay(
             tableId,
             currentRound,
-            ['trumpCard']
+            ['trumpCard', 'papluCard']
           ),
         ]);
 
@@ -234,6 +234,7 @@ class CardHandler {
     cards: Array<Array<string>>,
     trumpCard: string,
     maximumPoints = POOL_TYPES.ONE_ZERO_ONE,
+    papluCard?: string,
   ) {
     Logger.info(`groupCardsOnMeld imputs >> `, [cards, trumpCard]);
     let meld: Array<MELD> = [];
@@ -247,9 +248,9 @@ class CardHandler {
       }
       const splitArray = this.splitCardsArray(currentGroup);
       if (this.checkForPureSequence(splitArray)) return MELD.PURE;
-      if (this.checkForImpureSequence(splitArray, trumpCard))
+      if (this.checkForImpureSequence(splitArray, trumpCard, papluCard))
         return MELD.SEQUENCE;
-      if (this.checkForSets(splitArray, trumpCard)) return MELD.SET;
+      if (this.checkForSets(splitArray, trumpCard, papluCard)) return MELD.SET;
       else {
         return MELD.DWD;
       }
@@ -281,7 +282,7 @@ class CardHandler {
         (meld[index] === MELD.SET && !setValid) ||
         (meld[index] === MELD.SEQUENCE && !pureSeqAvailable)
       ) {
-        lastScore += this.checkScore(cardsGroup, trumpCard);
+        lastScore += this.checkScore(cardsGroup, trumpCard, papluCard);
       }
       return lastScore;
     }, 0);
@@ -302,41 +303,55 @@ class CardHandler {
     return { meld, score, meldLabel };
   }
 
-  checkScore(cards: Array<string>, trumpCard: string) {
+  checkScore(cards: Array<string>, trumpCard: string, papluCard?: string) {
     let score = 0;
     const trumpSplit = trumpCard.split('-');
     if (trumpSplit.length < 3)
       throw new Error(`Invalid trump card at checkScore`);
     const trumpCardNumber = Number(trumpSplit[1]);
+    const papluSplit = papluCard ? papluCard.split('-') : null;
+    const papluSuit = papluSplit ? papluSplit[0] : undefined;
+    const papluRank = papluSplit ? Number(papluSplit[1]) : undefined;
     cards.forEach((card) => {
-      score += this.checkCardScore(card, trumpCardNumber);
+      score += this.checkCardScore(card, trumpCardNumber, papluSuit, papluRank);
     });
     return score;
   }
 
-  checkCardScore(card: string, trumpCard: number) {
+  checkCardScore(card: string, trumpRank: number, papluSuit?: string, papluRank?: number) {
     const splitCard = card.split('-');
     if (splitCard.length < 3)
       throw new Error(`Invalid card card at checkCardScore`);
 
-    if (splitCard[0] === 'J' || trumpCard === Number(splitCard[1]))
-      return 0; // Joker or wild card
+    const suit = splitCard[0];
+    const rankNum = Number(splitCard[1]);
 
-    if (Number(splitCard[1]) > 10 || Number(splitCard[1]) === 1)
+    // Joker, wild (by rank), or paplu (same suit and next-rank card)
+    if (
+      suit === 'J' ||
+      trumpRank === rankNum ||
+      (papluSuit && papluRank && suit === papluSuit && rankNum === papluRank)
+    )
+      return 0; // Joker or wild card (including paplu)
+
+    if (rankNum > 10 || rankNum === 1)
       return 10;
 
-    return Number(splitCard[1]);
+    return rankNum;
   }
 
-  checkForSets(splitArray: Array<cardSplitView>, trumpCard: string) {
+  checkForSets(splitArray: Array<cardSplitView>, trumpCard: string, papluCard?: string) {
     const totalCount = splitArray.length;
     if (totalCount > 4 || totalCount < 3) {
       return false;
     }
     const trump = trumpCard.split('-');
     const trumpRank = Number(trump[1]);
+    const pSplit = papluCard ? papluCard.split('-') : null;
+    const pSuit = pSplit ? pSplit[0] : undefined;
+    const pRank = pSplit ? Number(pSplit[1]) : undefined;
     const cardsWithoutJoWiC = splitArray.filter(
-      (card) => !(card.suit === 'J' || card.rank === trumpRank),
+      (card) => !(card.suit === 'J' || card.rank === trumpRank || (pSuit && pRank && card.suit === pSuit && card.rank === pRank)),
     );
     const suitList = cardsWithoutJoWiC.map((card) => card.suit);
     // should not have cards of same suit/ no duplicates in cards
@@ -374,15 +389,20 @@ class CardHandler {
   checkForImpureSequence(
     splitArray: Array<cardSplitView>,
     trumpCard: string,
+    papluCard?: string,
   ): boolean {
     const trumSplit = trumpCard.split('-');
     if (trumSplit.length < 3) throw new Error('Invalid trump card!');
     const trumpCardRank = Number(trumpCard.split('-')[1]);
+    const papluSplit = papluCard ? papluCard.split('-') : null;
+    const papluSuit = papluSplit ? papluSplit[0] : undefined;
+    const papluRank = papluSplit ? Number(papluSplit[1]) : undefined;
     const cardList = splitArray.map((indC) => {
+      const isPaplu = papluSuit && papluRank && indC.suit === papluSuit && indC.rank === papluRank;
       return {
         rank: indC.rank,
         suit: indC.suit,
-        wildorNot: indC.rank === trumpCardRank,
+        wildorNot: indC.rank === trumpCardRank || !!isPaplu,
       };
     });
 

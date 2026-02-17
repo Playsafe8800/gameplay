@@ -253,8 +253,9 @@ class Round {
                 if (!dealerObj || typeof dealerIndex === 'undefined')
                     throw new Error(`Dealer didn't get set ${tableId}`);
                 const nextTurn = this.getNextPlayer(dealerObj.id, allPlayerGamePlay);
-                const { usersCards, wildCard, firstOpenCard, shuffledDeck } = yield this.distributeCards(tableConfigData, playersData, tableConfigData.currencyType === constants_1.CURRENCY_TYPE.COINS);
+                const { usersCards, wildCard, papluCard, firstOpenCard, shuffledDeck } = yield this.distributeCards(tableConfigData, playersData, tableConfigData.currencyType === constants_1.CURRENCY_TYPE.COINS);
                 tableGameData.trumpCard = wildCard;
+                tableGameData.papluCard = papluCard;
                 tableGameData.closedDeck = shuffledDeck;
                 tableGameData.opendDeck = firstOpenCard;
                 tableGameData.tableState = constants_1.TABLE_STATE.ROUND_STARTED;
@@ -272,7 +273,7 @@ class Round {
                 // RETURNS ARRAY containing playerGamePlay data
                 // SAVING USER CARDS IN DB
                 const [playerGamePlayData] = yield Promise.all([
-                    playerGameplay_1.playerGameplayService.updateCardsByRoundId(playingSeats, usersCards, tableId, currentRound, wildCard, tableConfigData.maximumPoints),
+                    playerGameplay_1.playerGameplayService.updateCardsByRoundId(playingSeats, usersCards, tableId, currentRound, wildCard, tableConfigData.maximumPoints, papluCard),
                     tableGameplay_1.tableGameplayService.setTableGameplay(tableId, tableConfigData.currentRound, tableGameData),
                     events_1.eventStateManager.fireEvent(tableId, events_2.STATE_EVENTS.LOCK_IN_PERIOD_TIMER),
                 ]);
@@ -297,6 +298,7 @@ class Round {
                     tableId,
                     dealer: dealerId,
                     wildCard,
+                    papluCard,
                     firstOpenDeckCard: firstOpenCard[0],
                     roundNumber: currentRound,
                 };
@@ -309,7 +311,7 @@ class Round {
                 playerGamePlayData.forEach((updatedPGP, index) => __awaiter(this, void 0, void 0, function* () {
                     eventData.seatIndex = index;
                     const { userId, currentCards, groupingCards = [], } = updatedPGP || {};
-                    const { score, meldLabel } = cardHandler_1.cardHandler.groupCardsOnMeld(groupingCards, tableGameData.trumpCard, tableConfigData.maximumPoints);
+                    const { score, meldLabel } = cardHandler_1.cardHandler.groupCardsOnMeld(groupingCards, tableGameData.trumpCard, tableConfigData.maximumPoints, tableGameData.papluCard);
                     const formattedData = Object.assign({
                         cards: currentCards,
                         group: groupingCards,
@@ -536,12 +538,19 @@ class Round {
                 shuffledDeck.splice(0, 1);
             }
             const [wildCard] = shuffledDeck.splice(0, 1);
+            // compute Paplu: same suit, next rank (K->A wraps to 1)
+            const [wSuit, wRankStr] = wildCard.split('-');
+            const wRank = parseInt(wRankStr, 10);
+            const nextRank = wRank === 13 ? 1 : wRank + 1;
+            const papluCard = `${wSuit}-${nextRank}`; // suit-specific, deck-agnostic
+            console.log(papluCard, '---papluCard--');
             // selecting first face up card
             // const firstOpenCard = ['J-1-0'];
             const firstOpenCard = shuffledDeck.splice(0, 1); // ['J-1-0'];
             return {
                 usersCards,
                 wildCard,
+                papluCard,
                 firstOpenCard,
                 shuffledDeck,
             };

@@ -102,6 +102,7 @@ class GameTableInfo {
       wildCard: tableGamePlayData.trumpCard
         ? tableGamePlayData.trumpCard
         : '',
+      papluCard: tableGamePlayData.papluCard,
       openDeck: tableGamePlayData.opendDeck,
       totalRounds: tableConfigData.dealsCount,
       currentTurn: tableGamePlayData.currentTurn,

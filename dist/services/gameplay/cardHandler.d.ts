@@ -6,16 +6,16 @@ declare class CardHandler {
         meld: Array<Meld>;
         cardsGroup: Array<Array<string>>;
     }): MeldLabel[];
-    groupCardsOnMeld(cards: Array<Array<string>>, trumpCard: string, maximumPoints?: number): {
+    groupCardsOnMeld(cards: Array<Array<string>>, trumpCard: string, maximumPoints?: number, papluCard?: string): {
         meld: MELD[];
         score: number;
         meldLabel: MeldLabel[];
     };
-    checkScore(cards: Array<string>, trumpCard: string): number;
-    checkCardScore(card: string, trumpCard: number): number;
-    checkForSets(splitArray: Array<cardSplitView>, trumpCard: string): boolean;
+    checkScore(cards: Array<string>, trumpCard: string, papluCard?: string): number;
+    checkCardScore(card: string, trumpRank: number, papluSuit?: string, papluRank?: number): number;
+    checkForSets(splitArray: Array<cardSplitView>, trumpCard: string, papluCard?: string): boolean;
     checkForPureSequence(split: Array<cardSplitView>): boolean;
-    checkForImpureSequence(splitArray: Array<cardSplitView>, trumpCard: string): boolean;
+    checkForImpureSequence(splitArray: Array<cardSplitView>, trumpCard: string, papluCard?: string): boolean;
     private checkSeqImpure;
     splitCardsArray(cards: Array<string>): Array<cardSplitView>;
     checkSequentialForPureSequence(nums: Array<number>): boolean;

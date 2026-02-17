@@ -9,6 +9,7 @@ export interface TableGameplay {
     seats: Array<SeatSchema>;
     tableState: string;
     trumpCard: string;
+    papluCard?: string;
     dealerPlayer: number;
     finishPlayer: Array<number>;
     splitCount: number;

@@ -115,6 +115,7 @@ function onTurnExpire(turndata) {
                     'opendDeck',
                     'closedDeck',
                     'trumpCard',
+                    'papluCard',
                     'currentTurn',
                 ]),
                 playerGameplay_1.playerGameplayService.getPlayerGameplay(userId, tableId, currentRound, [
@@ -178,7 +179,7 @@ function onTurnExpire(turndata) {
                     });
                 }
             }
-            const { score, meld, meldLabel } = cardHandler_1.cardHandler.groupCardsOnMeld(groupCards, tableGameData.trumpCard, tableConfig.maximumPoints);
+            const { score, meld, meldLabel } = cardHandler_1.cardHandler.groupCardsOnMeld(groupCards, tableGameData.trumpCard, tableConfig.maximumPoints, tableGameData.papluCard);
             playerGamePlay.groupingCards = groupCards;
             playerGamePlay.meld = meld;
             playerGamePlay.timeoutCount += 1;

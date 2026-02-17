@@ -76,6 +76,7 @@ class WinnerPoints {
                         'declarePlayer',
                         'seats',
                         'tableState',
+                        'papluCard'
                     ]),
                     index_1.turnHistoryService.getTurnHistory(tableId, currentRound),
                 ]);
@@ -90,7 +91,7 @@ class WinnerPoints {
                     ]);
                     return;
                 }
-                const playersGameData = yield Promise.all(tableGameData.seats.map((seat) => playerGameplay_1.playerGameplayService.getPlayerGameplay(seat._id, tableId, currentRound, ['userId', 'userStatus', 'points', 'winningCash'])));
+                const playersGameData = yield Promise.all(tableGameData.seats.map((seat) => playerGameplay_1.playerGameplayService.getPlayerGameplay(seat._id, tableId, currentRound, ['userId', 'userStatus', 'points', 'winningCash', 'cards'])));
                 newLogger_1.Logger.info(`declareWinner: playersGameData ${tableId} `, [
                     playersGameData,
                 ]);
@@ -100,9 +101,17 @@ class WinnerPoints {
                     if (declarePlayer !== player.userId) {
                         const playerData = player;
                         if (playerData.userStatus === constants_1.PLAYER_STATE.FINISH) {
-                            const { points } = playerData;
+                            let { points } = playerData;
                             let pointsAsPerCF = currencyFactor * points;
                             pointsAsPerCF = (0, utils_1.roundInt)(pointsAsPerCF, 2);
+                            if (points != 0) {
+                                console.log(playerData.cards, "---playerData.cards---", tableGameData.papluCard);
+                                for (let i = 0; i < playerData.cards.length; i++) {
+                                    if (playerData.cards[i].includes(tableGameData.papluCard)) {
+                                        points += 10;
+                                    }
+                                }
+                            }
                             playerData.points = points;
                             playerData.winningCash = -pointsAsPerCF;
                             tableGameData.potValue += pointsAsPerCF;
@@ -289,6 +298,7 @@ class WinnerPoints {
                     potValue: pointsAsPerCF,
                     tableState: tableGameData.tableState,
                     wildCard: tableGameData.trumpCard,
+                    papluCard: tableGameData.papluCard,
                     winnerUserId: winnerPgpData.userId,
                     playerInfo: scoreBoardPlayerInfo,
                 };
