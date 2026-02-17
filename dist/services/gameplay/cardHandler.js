@@ -177,7 +177,7 @@ class CardHandler {
         return result;
     }
     groupCardsOnMeld(cards, trumpCard, maximumPoints = poolTypes_1.POOL_TYPES.ONE_ZERO_ONE, papluCard) {
-        newLogger_1.Logger.info(`groupCardsOnMeld imputs >> `, [cards, trumpCard]);
+        newLogger_1.Logger.info(`groupCardsOnMeld imputs >> `, [cards, trumpCard, papluCard]);
         let meld = [];
         let score = 0;
         let setValid = false;

@@ -721,7 +721,7 @@ class FinishGame {
           tableGameplayService.getTableGameplay(
             tableId,
             currentRound,
-            ['trumpCard'],
+            ['trumpCard', 'papluCard'],
           ),
           playerGameplayService.getPlayerGameplay(
             userId,
@@ -752,6 +752,7 @@ class FinishGame {
         group,
         tableGameplayData.trumpCard,
         tableConfig.maximumPoints,
+        tableGameplayData.papluCard
       );
 
       if (tableConfig.gameType === RUMMY_TYPES.DEALS) {

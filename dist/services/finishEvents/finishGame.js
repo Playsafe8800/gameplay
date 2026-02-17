@@ -450,7 +450,7 @@ class FinishGame {
                 const tableConfig = yield tableConfiguration_1.tableConfigurationService.getTableConfiguration(tableId, ['currentRound', 'maximumPoints', 'gameType']);
                 const { currentRound } = tableConfig;
                 const [tableGameplayData, playerGameplayData] = yield Promise.all([
-                    tableGameplay_1.tableGameplayService.getTableGameplay(tableId, currentRound, ['trumpCard']),
+                    tableGameplay_1.tableGameplayService.getTableGameplay(tableId, currentRound, ['trumpCard', 'papluCard']),
                     playerGameplay_1.playerGameplayService.getPlayerGameplay(userId, tableId, currentRound, ['currentCards', 'groupingCards']),
                 ]);
                 if (!tableGameplayData || !playerGameplayData) {
@@ -462,7 +462,7 @@ class FinishGame {
                 }
                 if (!tableGameplayData)
                     throw new Error(`Gameplay data not set finish Round`);
-                const { meld, score, meldLabel } = cardHandler_1.cardHandler.groupCardsOnMeld(group, tableGameplayData.trumpCard, tableConfig.maximumPoints);
+                const { meld, score, meldLabel } = cardHandler_1.cardHandler.groupCardsOnMeld(group, tableGameplayData.trumpCard, tableConfig.maximumPoints, tableGameplayData.papluCard);
                 if (tableConfig.gameType === constants_1.RUMMY_TYPES.DEALS) {
                     yield finishGame_1.finishGameDeals.finishGame(meld, tableId, userId, group, networkParams);
                 }

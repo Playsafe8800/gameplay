@@ -236,7 +236,7 @@ class CardHandler {
     maximumPoints = POOL_TYPES.ONE_ZERO_ONE,
     papluCard?: string,
   ) {
-    Logger.info(`groupCardsOnMeld imputs >> `, [cards, trumpCard]);
+    Logger.info(`groupCardsOnMeld imputs >> `, [cards, trumpCard, papluCard]);
     let meld: Array<MELD> = [];
     let score = 0;
     let setValid = false;
