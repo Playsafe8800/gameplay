@@ -41,6 +41,7 @@ import { round } from '../gameplay/round';
 import { leaveDisconnectedUsers } from '../leaveTable/leaveDisconnectedUsers';
 import { scheduler } from '../schedulerQueue/index';
 import { winner } from './winner';
+import * as console from 'node:console';
 
 class WinnerPoints {
   async declareWinner(tableId: string) {
@@ -86,7 +87,7 @@ class WinnerPoints {
             seat._id,
             tableId,
             currentRound,
-            ['userId', 'userStatus', 'points', 'winningCash', 'cards'],
+            ['userId', 'userStatus', 'points', 'winningCash', 'currentCards'],
           ),
         ),
       );
@@ -105,10 +106,12 @@ class WinnerPoints {
             let pointsAsPerCF = currencyFactor * points;
             pointsAsPerCF = roundInt(pointsAsPerCF, 2);
 
-            if (points != 0){
-              console.log(playerData.cards, "---playerData.cards---", tableGameData.papluCard)
-              for (let i = 0; i < playerData.cards.length; i++) {
-                if (playerData.cards[i].includes(tableGameData.papluCard)) {
+            if (points != 0 && points != 80){
+              console.log(playerData.currentCards, "---playerData.cards---", tableGameData.papluCard)
+              let pplu = tableGameData.papluCard.split("-")[0]+"-"+tableGameData.papluCard.split("-")[1]
+              console.log(pplu, "--pplu--")
+              for (let i = 0; i < playerData.currentCards.length; i++) {
+                if (playerData.currentCards[i].includes(pplu)) {
                   points += 10;
                 }
               }
