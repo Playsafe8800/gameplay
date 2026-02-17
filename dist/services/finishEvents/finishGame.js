@@ -62,11 +62,12 @@ class FinishGame {
                     'declarePlayer',
                     'opendDeck',
                     'trumpCard',
+                    'papluCard'
                 ]);
                 if (!tableGameplayData) {
                     throw Error(`TGP not found for table ${tableId} for finishGame`);
                 }
-                const { seats, trumpCard, declarePlayer } = tableGameplayData;
+                const { seats, trumpCard, declarePlayer, papluCard } = tableGameplayData;
                 const pgps = yield Promise.all(seats.map((seat) => playerGameplay_1.playerGameplayService.getPlayerGameplay(seat._id, tableId, currentRound, [
                     'userId',
                     'userStatus',
@@ -91,7 +92,7 @@ class FinishGame {
                 if (finishPlayerGameData.userStatus === constants_1.PLAYER_STATE.DECLARED ||
                     finishPlayerGameData.userStatus === constants_1.PLAYER_STATE.PLAYING) {
                     // Calculate card points
-                    const { score: points } = cardHandler_1.cardHandler.groupCardsOnMeld(group, trumpCard, tableConfigData.maximumPoints);
+                    const { score: points } = cardHandler_1.cardHandler.groupCardsOnMeld(group, trumpCard, tableConfigData.maximumPoints, papluCard);
                     const isValidSequence = cards_1.cardUtils.areSequencesValid(meld);
                     /**
                      * if user has declared in his first turn
