@@ -36,6 +36,7 @@ import { initializeGame } from '../gameplay/initialiseGame';
 import { scheduler } from '../schedulerQueue';
 import gameTableInfo from './gameTableInfo';
 import { cancelBattle } from '../gameplay/cancelBattle';
+import * as console from 'node:console';
 
 class TableOperation {
   async addInTable(
@@ -116,6 +117,7 @@ class TableOperation {
             maximumSeat,
             gameType,
           );
+          console.log(tableId, "--tableId--")
           if (!tableId) {
             ifTableExist = false;
             tableId = await this.createTable(tableConfigurationData);
@@ -397,6 +399,7 @@ class TableOperation {
               : NUMERICAL.ONE,
             ['seats', "tableState"]
           );
+          console.log(tableGameData, "-tableGameData--")
 
           if (tableGameData.seats.length !== maximumSeat) {
             tableGameData = tableGameData || defaultTableGame;
