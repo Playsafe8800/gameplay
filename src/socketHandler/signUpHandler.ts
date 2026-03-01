@@ -46,8 +46,8 @@ export async function signUpHandler(
       );
 
     if (signUpData.connectionType === CONNECTION_TYPE.ADD_TABLE) {
-      const { lobbyId } = signUpData;
-      if (!lobbyId) throw new Error('lobbyId required for addTable');
+      const { lobbyId, inviteCode } = signUpData;
+      if (!lobbyId && !inviteCode) throw new Error('lobbyId required for addTable');
 
       response = await addTable(signUpData, socket, networkParams);
     } else {

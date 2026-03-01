@@ -39,8 +39,8 @@ function signUpHandler(signUpData, socket, networkParams) {
             newLogger_1.Logger.info(`Lock acquired, in signupHandler resource:, ${lock.resource}`);
             const userProfile = yield userProfile_1.userProfileService.getOrCreateUserDetailsById(socket.userId, socket.id, Object.assign(Object.assign({}, (_a = socket.handshake) === null || _a === void 0 ? void 0 : _a.headers), { token: socket.data.token }), '', socket.data.AppType);
             if (signUpData.connectionType === constants_1.CONNECTION_TYPE.ADD_TABLE) {
-                const { lobbyId } = signUpData;
-                if (!lobbyId)
+                const { lobbyId, inviteCode } = signUpData;
+                if (!lobbyId && !inviteCode)
                     throw new Error('lobbyId required for addTable');
                 response = yield (0, addTable_1.addTable)(signUpData, socket, networkParams);
             }
