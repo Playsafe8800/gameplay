@@ -1,7 +1,7 @@
 import { TableStartData, UserProfile } from '../../objectModels';
 import { networkParams } from '../../objectModels/playerGameplay';
 declare class TableOperation {
-    addInTable(socket: any, tableConfigurationData: any, userData: UserProfile, retries?: number, networkParams?: networkParams, tableSessionId?: string, fromSQS?: boolean): any;
+    addInTable(socket: any, tableConfigurationData: any, userData: UserProfile, retries?: number, networkParams?: networkParams, tableSessionId?: string, providedTableId?: string, fromSQS?: boolean): any;
     private checkBeforeStartRound;
     createTable(tableConfigData: any): Promise<string>;
     getAvailableTable(key: string, userData: UserProfile, maximumSeat: number, gameType: string): Promise<string>;

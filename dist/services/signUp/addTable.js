@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -28,18 +51,28 @@ const redlock_1 = require("../../utils/lock/redlock");
 const redlock_2 = require("redlock");
 const events_1 = require("../../state/events");
 const userService_3 = __importDefault(require("../../userService"));
+const console = __importStar(require("node:console"));
+const getRandomUUID_1 = require("../../utils/getRandomUUID");
+const os_1 = __importDefault(require("os"));
 function addTable(signUpData, socket, networkParams) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { lobbyId, unitySessionId, tableSessionId } = signUpData;
-            if (!lobbyId)
-                throw new Error('lobbyId required for addTable');
+            const { lobbyId, unitySessionId, tableSessionId, inviteCode } = signUpData;
+            if (!inviteCode)
+                throw new Error('inviteCode required for addTable');
             newLogger_1.Logger.info(`Add table started for lobby Id ${lobbyId}, socketId: ${socket.id}, user: ${socket.userId}`);
             const { userId } = socket;
+            console.log(socket.data, "--socket.data--");
             // Get lobby config
-            const lobbyInfo = yield userService_2.default.getLobby(lobbyId);
-            const { EntryFee, MaxPoints, RummyTips, ShowEmoji, GameFormat, MaxPlayers, MinPlayers, HideProfile, ManualSplit, RoundShuffle, SocketTimeout, UserTurnTimer, GameStartTimer, MaxPingCounter, ShowLeaderboard, UserFinishTimer, Max_player_count, Min_player_count, NetworkIndicator, PileDiscardCheck, FestivalUIEnabled, RequestRetryCount, RequestRetryDelay, SocketErrorTimeout, GameId, MaxBonusPercentage, isNewUI, LobbyId, CurrencyId, isMultiBotEnabled, } = lobbyInfo;
+            const lobbyInfo = yield userService_2.default.getPrivateLobby(inviteCode, socket.data.token);
+            const { EntryFee, MaxPoints, RummyTips, ShowEmoji, GameFormat, MaxPlayers, MinPlayers, HideProfile, ManualSplit, RoundShuffle, SocketTimeout, UserTurnTimer, GameStartTimer, MaxPingCounter, ShowLeaderboard, UserFinishTimer, Max_player_count, Min_player_count, NetworkIndicator, PileDiscardCheck, FestivalUIEnabled, RequestRetryCount, RequestRetryDelay, SocketErrorTimeout, GameId, MaxBonusPercentage, isNewUI, LobbyId, CurrencyId, isMultiBotEnabled, hostIp } = lobbyInfo;
+            let matchId = lobbyInfo.matchId;
+            if (!matchId) {
+                matchId = (0, getRandomUUID_1.getRandomUUID)();
+                let currentHostIp = os_1.default.hostname();
+                yield userService_2.default.updatePrivateLobbySession(LobbyId, currentHostIp, matchId, socket.data.token);
+            }
             const lobbyGameConfig = {
                 MP: 2,
                 SP: '',
@@ -81,11 +114,15 @@ function addTable(signUpData, socket, networkParams) {
                 CurrencyFactor: EntryFee,
                 CurrencyId,
                 isMultiBotEnabled,
+                inviteCode,
+                matchId,
+                hostIp
             };
             const tableConfigurationData = tableConfiguration_1.tableConfigurationService.getDefaultTableConfigRedisObject(lobbyGameConfig);
+            console.log(tableConfigurationData, "--tableConfigurationData--");
             // Create or find user
             const userData = yield userService_1.userService.findOrCreateUser(userId, socket.id, (_a = socket.handshake) === null || _a === void 0 ? void 0 : _a.headers, socket.data.AppType, unitySessionId);
-            const gtiData = yield tableOperation_1.tableOperation.addInTable(socket, tableConfigurationData, userData, numerical_1.NUMERICAL.ONE, networkParams, tableSessionId);
+            const gtiData = yield tableOperation_1.tableOperation.addInTable(socket, tableConfigurationData, userData, numerical_1.NUMERICAL.ONE, networkParams, tableSessionId, matchId);
             newLogger_1.Logger.info('ADD TABLE', [gtiData]);
             const profile = yield userService_3.default.getUserProfile(userId);
             userData.profitLoss = profile.profitLosss || 0;

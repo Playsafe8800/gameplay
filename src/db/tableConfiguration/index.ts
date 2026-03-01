@@ -112,7 +112,9 @@ class TableConfiguration {
       cgsClusterName,
       CurrencyFactor = EntryFee,
       CurrencyId,
-      isMultiBotEnabled
+      isMultiBotEnabled,
+      inviteCode,
+      hostIp,
     } = LobbyTableConfig;
     return {
       _id: tableId || getRandomTableId(),
@@ -142,7 +144,9 @@ class TableConfiguration {
       cgsClusterName: cgsClusterName
         ? cgsClusterName
         : CONFIG.CGS_NAME,
-      isMultiBotEnabled
+      isMultiBotEnabled,
+      inviteCode,
+      hostIp,
     };
   }
 }

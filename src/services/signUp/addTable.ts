@@ -17,6 +17,8 @@ import { Lock } from 'redlock';
 import { eventStateManager } from '../../state/events';
 import userServiceExt from '../../userService';
 import * as console from 'node:console';
+import { getRandomUUID } from '../../utils/getRandomUUID';
+import os from 'os';
 
 export async function addTable(
   signUpData: SignUpInterface,
@@ -24,17 +26,17 @@ export async function addTable(
   networkParams?: networkParams,
 ) {
   try {
-    const { lobbyId, unitySessionId, tableSessionId } = signUpData;
+    const { lobbyId, unitySessionId, tableSessionId, inviteCode } = signUpData;
 
-    if (!lobbyId) throw new Error('lobbyId required for addTable');
+    if (!inviteCode) throw new Error('inviteCode required for addTable');
 
     Logger.info(
       `Add table started for lobby Id ${lobbyId}, socketId: ${socket.id}, user: ${socket.userId}`,
     );
     const { userId } = socket;
-
+    console.log(socket.data, "--socket.data--")
     // Get lobby config
-    const lobbyInfo: any = await UserServiceExt.getLobby(lobbyId);
+    const lobbyInfo: any = await UserServiceExt.getPrivateLobby(inviteCode, socket.data.token);
     const {
       EntryFee,
       MaxPoints,
@@ -66,7 +68,14 @@ export async function addTable(
       LobbyId,
       CurrencyId,
       isMultiBotEnabled,
+      hostIp
     } = lobbyInfo;
+    let matchId = lobbyInfo.matchId;
+    if (!matchId){
+      matchId = getRandomUUID()
+      let currentHostIp = os.hostname()
+      await UserServiceExt.updatePrivateLobbySession(LobbyId,currentHostIp,matchId, socket.data.token)
+    }
 
     const lobbyGameConfig = {
       MP: 2,
@@ -109,12 +118,15 @@ export async function addTable(
       CurrencyFactor: EntryFee,
       CurrencyId,
       isMultiBotEnabled,
+      inviteCode,
+      matchId,
+      hostIp
     };
     const tableConfigurationData =
       tableConfigurationService.getDefaultTableConfigRedisObject(
         lobbyGameConfig,
       );
-
+    console.log(tableConfigurationData, "--tableConfigurationData--")
     // Create or find user
     const userData = await userService.findOrCreateUser(
       userId,
@@ -131,6 +143,7 @@ export async function addTable(
       NUMERICAL.ONE,
       networkParams,
       tableSessionId,
+      matchId,
     );
     Logger.info('ADD TABLE', [gtiData]);
 

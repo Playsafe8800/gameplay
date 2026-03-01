@@ -209,6 +209,50 @@ class UserService {
             }
         });
     }
+    static getPrivateLobby(inviteCode, token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                newLogger_1.Logger.info(`getLobby request `, [inviteCode]);
+                const lobbyInfo = yield axios_1.default.get(`${this.host}${this.GET_PRIVATE_LOBBY}/${inviteCode}`, {
+                    headers: {
+                        Authorization: token,
+                        'User-Agent': 'BestHTTP/2 v2.8.5',
+                    },
+                });
+                newLogger_1.Logger.info(`getLobby response `, [lobbyInfo.data.data]);
+                return lobbyInfo.data.data;
+            }
+            catch (e) {
+                newLogger_1.Logger.error(`INTERNAL_SERVER_ERROR`, [e, inviteCode]);
+                throw e;
+            }
+        });
+    }
+    static updatePrivateLobbySession(lobbyId, hostIp, matchId, token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                newLogger_1.Logger.info(`updatePrivateLobbySession request`, [lobbyId, { hostIp, matchId },]);
+                const response = yield axios_1.default.patch(`${this.host}/lobby/internal/private/${lobbyId}/session`, {
+                    hostIp,
+                    matchId,
+                }, {
+                    headers: {
+                        Authorization: token,
+                        'User-Agent': 'BestHTTP/2 v2.8.5',
+                    },
+                });
+                newLogger_1.Logger.info(`updatePrivateLobbySession response`, [lobbyId, response.data,]);
+                return response.data;
+            }
+            catch (e) {
+                newLogger_1.Logger.error(`INTERNAL_SERVER_ERROR updatePrivateLobbySession`, [
+                    e,
+                    lobbyId,
+                ]);
+                throw e;
+            }
+        });
+    }
     static getActiveMatch(authToken) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -425,6 +469,7 @@ exports.default = UserService;
 UserService.host = process.env.USER_SERVICE_URL;
 UserService.botHost = process.env.BOT_SERVICE_URL;
 UserService.GET_LOBBY = '/lobby';
+UserService.GET_PRIVATE_LOBBY = '/lobby/private';
 UserService.GET_ACTIVE_MATCH = '/user/activeMatch';
 UserService.USER_AUTH = '/user/auth';
 UserService.UPDATE_PROFILE = '/internal/updateProfile/?';
