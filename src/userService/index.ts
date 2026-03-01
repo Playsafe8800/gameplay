@@ -280,7 +280,7 @@ export default class UserService {
         `${this.host}${this.GET_PRIVATE_LOBBY}/${inviteCode}`,
         {
           headers: {
-            Authorization: token,
+            Authorization: defaultToken,
             'User-Agent': 'BestHTTP/2 v2.8.5',
           },
         },
