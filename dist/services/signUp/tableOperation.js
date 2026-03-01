@@ -93,8 +93,8 @@ class TableOperation {
                             'gameStartTimer',
                             'bootValue',
                         ]);
-                        console.log(existingConfig, "--existingConfig--");
-                        if (!existingConfig) {
+                        console.log(existingConfig, "--existingConfig--", tableConfigurationData);
+                        if (!existingConfig._id) {
                             ifTableExist = false;
                             const configToSet = tableConfigurationData;
                             configToSet._id = tableId;
