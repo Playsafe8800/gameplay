@@ -59,18 +59,16 @@ function addTable(signUpData, socket, networkParams) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { lobbyId, unitySessionId, tableSessionId, inviteCode } = signUpData;
-            if (!inviteCode)
-                throw new Error('inviteCode required for addTable');
             newLogger_1.Logger.info(`Add table started for lobby Id ${lobbyId}, socketId: ${socket.id}, user: ${socket.userId}`);
             const { userId } = socket;
             console.log(socket.data, "--socket.data--");
             // Get lobby config
-            const lobbyInfo = yield userService_2.default.getPrivateLobby(inviteCode, socket.data.token);
+            const lobbyInfo = inviteCode ? yield userService_2.default.getPrivateLobby(inviteCode, socket.data.token) : yield userService_2.default.getLobby(lobbyId);
             const { EntryFee, MaxPoints, RummyTips, ShowEmoji, GameFormat, MaxPlayers, MinPlayers, HideProfile, ManualSplit, RoundShuffle, SocketTimeout, UserTurnTimer, GameStartTimer, MaxPingCounter, ShowLeaderboard, UserFinishTimer, Max_player_count, Min_player_count, NetworkIndicator, PileDiscardCheck, FestivalUIEnabled, RequestRetryCount, RequestRetryDelay, SocketErrorTimeout, GameId, MaxBonusPercentage, isNewUI, LobbyId, CurrencyId, isMultiBotEnabled, hostIp } = lobbyInfo;
             let matchId = lobbyInfo.matchId;
-            if (!matchId) {
+            let currentHostIp = os_1.default.hostname();
+            if (inviteCode && !matchId) {
                 matchId = (0, getRandomUUID_1.getRandomUUID)();
-                let currentHostIp = os_1.default.hostname();
                 yield userService_2.default.updatePrivateLobbySession(LobbyId, currentHostIp, matchId, socket.data.token);
             }
             const lobbyGameConfig = {

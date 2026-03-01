@@ -5,7 +5,7 @@ export interface SignUpInterface {
     tableSessionId?: string;
     unitySessionId?: string;
     gpsLocation?: any;
-    inviteCode: number;
+    inviteCode?: number;
 }
 export interface PickCardInterface {
     tableId: string;

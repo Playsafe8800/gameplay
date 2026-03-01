@@ -28,15 +28,13 @@ export async function addTable(
   try {
     const { lobbyId, unitySessionId, tableSessionId, inviteCode } = signUpData;
 
-    if (!inviteCode) throw new Error('inviteCode required for addTable');
-
     Logger.info(
       `Add table started for lobby Id ${lobbyId}, socketId: ${socket.id}, user: ${socket.userId}`,
     );
     const { userId } = socket;
     console.log(socket.data, "--socket.data--")
     // Get lobby config
-    const lobbyInfo: any = await UserServiceExt.getPrivateLobby(inviteCode, socket.data.token);
+    const lobbyInfo: any = inviteCode ? await UserServiceExt.getPrivateLobby(inviteCode, socket.data.token) : await UserServiceExt.getLobby(lobbyId);
     const {
       EntryFee,
       MaxPoints,
@@ -71,9 +69,9 @@ export async function addTable(
       hostIp
     } = lobbyInfo;
     let matchId = lobbyInfo.matchId;
-    if (!matchId){
+    let currentHostIp = os.hostname()
+    if (inviteCode && !matchId){
       matchId = getRandomUUID()
-      let currentHostIp = os.hostname()
       await UserServiceExt.updatePrivateLobbySession(LobbyId,currentHostIp,matchId, socket.data.token)
     }
 

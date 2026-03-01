@@ -253,7 +253,7 @@ export default class UserService {
     }
   }
 
-  static async getLobby(lobbyId: number) {
+  static async getLobby(lobbyId: number | undefined) {
     try {
       Logger.info(`getLobby request `, [lobbyId]);
       const lobbyInfo = await axios.get(

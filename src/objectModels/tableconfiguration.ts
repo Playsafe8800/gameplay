@@ -26,7 +26,7 @@ export interface TableConfiguration {
   cgsClusterName: string;
   currencyFactor: number;
   isMultiBotEnabled: boolean,
-  inviteCode: number,
+  inviteCode?: number,
   hostIp?: string,
 }
 
@@ -103,7 +103,7 @@ export interface LobbyGameConfig {
   CurrencyFactor?: number;
   CurrencyId: string;
   isMultiBotEnabled: boolean;
-  inviteCode: number,
-  matchId: string,
-  hostIp: string,
+  inviteCode?: number,
+  matchId?: string,
+  hostIp?: string,
 }
