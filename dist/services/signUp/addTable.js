@@ -52,7 +52,6 @@ const redlock_2 = require("redlock");
 const events_1 = require("../../state/events");
 const userService_3 = __importDefault(require("../../userService"));
 const console = __importStar(require("node:console"));
-const getRandomUUID_1 = require("../../utils/getRandomUUID");
 const os_1 = __importDefault(require("os"));
 function addTable(signUpData, socket, networkParams) {
     var _a;
@@ -68,7 +67,7 @@ function addTable(signUpData, socket, networkParams) {
             let matchId = lobbyInfo.matchId;
             let currentHostIp = os_1.default.hostname();
             if (inviteCode && !matchId) {
-                matchId = (0, getRandomUUID_1.getRandomUUID)();
+                matchId = `xxxxxxxxxxxx-${new Date().getTime()}`;
                 yield userService_2.default.updatePrivateLobbySession(LobbyId, currentHostIp, matchId, socket.data.token);
             }
             const lobbyGameConfig = {

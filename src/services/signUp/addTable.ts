@@ -7,7 +7,7 @@ import { userService } from '../userService';
 import UserServiceExt from '../../userService';
 import { tableOperation } from './tableOperation';
 import { scheduler } from '../schedulerQueue';
-import { getBot } from '../../utils';
+import { getBot, getIdPrefix } from '../../utils';
 import { userProfileService } from '../../db/userProfile';
 import { setValueInKeyWithExpiry } from '../../db/redisWrapper';
 import { tableGameplayService } from '../../db/tableGameplay';
@@ -71,7 +71,7 @@ export async function addTable(
     let matchId = lobbyInfo.matchId;
     let currentHostIp = os.hostname()
     if (inviteCode && !matchId){
-      matchId = getRandomUUID()
+      matchId = `xxxxxxxxxxxx-${new Date().getTime()}`
       await UserServiceExt.updatePrivateLobbySession(LobbyId, currentHostIp, matchId, socket.data.token)
     }
 
