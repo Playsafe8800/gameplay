@@ -93,6 +93,7 @@ class TableOperation {
                             'gameStartTimer',
                             'bootValue',
                         ]);
+                        console.log(existingConfig, "--existingConfig--");
                         if (!existingConfig) {
                             ifTableExist = false;
                             const configToSet = tableConfigurationData;
@@ -105,7 +106,8 @@ class TableOperation {
                         else {
                             tableConfigurationData = existingConfig;
                         }
-                        yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
+                        const a = yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
+                        console.log(isNewTable, "--isNewTable--", tableConfigurationData);
                     }
                     else {
                         tableId = yield this.getAvailableTable(key, userData, maximumSeat, gameType);

@@ -89,6 +89,7 @@ class TableOperation {
               'bootValue',
             ],
           );
+          console.log(existingConfig, "--existingConfig--")
           if (!existingConfig) {
             ifTableExist = false;
             const configToSet = tableConfigurationData
@@ -104,12 +105,13 @@ class TableOperation {
           } else {
             tableConfigurationData = existingConfig;
           }
-          await this.setupRound(
+          const a = await this.setupRound(
             tableId,
             roundNum,
             tableConfigurationData,
             null,
           );
+          console.log(isNewTable, "--isNewTable--", tableConfigurationData)
         } else {
           tableId = await this.getAvailableTable(
             key,
