@@ -72,7 +72,7 @@ export async function addTable(
     let currentHostIp = os.hostname()
     if (inviteCode && !matchId){
       matchId = getRandomUUID()
-      await UserServiceExt.updatePrivateLobbySession(LobbyId,currentHostIp,matchId, socket.data.token)
+      await UserServiceExt.updatePrivateLobbySession(LobbyId, currentHostIp, matchId, socket.data.token)
     }
 
     const lobbyGameConfig = {

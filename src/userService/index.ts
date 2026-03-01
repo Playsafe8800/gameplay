@@ -300,7 +300,7 @@ export default class UserService {
     token: string,
   ) {
     try {
-      Logger.info(`updatePrivateLobbySession request`, [lobbyId, { hostIp, matchId },]);
+      Logger.info(`updatePrivateLobbySession request`, [lobbyId, { hostIp, matchId, token},]);
       const response = await axios.patch(
         `${this.host}/lobby/internal/private/${lobbyId}/session`,
         {

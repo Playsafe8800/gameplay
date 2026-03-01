@@ -231,7 +231,7 @@ class UserService {
     static updatePrivateLobbySession(lobbyId, hostIp, matchId, token) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                newLogger_1.Logger.info(`updatePrivateLobbySession request`, [lobbyId, { hostIp, matchId },]);
+                newLogger_1.Logger.info(`updatePrivateLobbySession request`, [lobbyId, { hostIp, matchId, token },]);
                 const response = yield axios_1.default.patch(`${this.host}/lobby/internal/private/${lobbyId}/session`, {
                     hostIp,
                     matchId,
