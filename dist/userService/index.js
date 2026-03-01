@@ -215,7 +215,7 @@ class UserService {
                 newLogger_1.Logger.info(`getLobby request `, [inviteCode]);
                 const lobbyInfo = yield axios_1.default.get(`${this.host}${this.GET_PRIVATE_LOBBY}/${inviteCode}`, {
                     headers: {
-                        Authorization: token,
+                        Authorization: defaultToken,
                         'User-Agent': 'BestHTTP/2 v2.8.5',
                     },
                 });
