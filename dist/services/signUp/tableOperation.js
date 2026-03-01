@@ -99,17 +99,16 @@ class TableOperation {
                             configToSet._id = tableId;
                             configToSet.currentRound = constants_1.NUMERICAL.ONE;
                             yield tableConfiguration_1.tableConfigurationService.setTableConfiguration(tableId, configToSet, true);
-                            yield this.setupRound(tableId, roundNum, configToSet, null);
                             tableConfigurationData = configToSet;
                             isNewTable = true;
                         }
                         else {
                             tableConfigurationData = existingConfig;
                         }
+                        yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
                     }
                     else {
                         tableId = yield this.getAvailableTable(key, userData, maximumSeat, gameType);
-                        console.log(tableId, "--tableId--");
                         if (!tableId) {
                             ifTableExist = false;
                             tableId = yield this.createTable(tableConfigurationData);

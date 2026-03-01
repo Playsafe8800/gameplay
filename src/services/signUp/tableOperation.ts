@@ -99,17 +99,17 @@ class TableOperation {
               configToSet,
               true,
             );
-            await this.setupRound(
-              tableId,
-              roundNum,
-              configToSet,
-              null,
-            );
             tableConfigurationData = configToSet;
             isNewTable = true;
           } else {
             tableConfigurationData = existingConfig;
           }
+          await this.setupRound(
+            tableId,
+            roundNum,
+            tableConfigurationData,
+            null,
+          );
         } else {
           tableId = await this.getAvailableTable(
             key,
@@ -117,7 +117,6 @@ class TableOperation {
             maximumSeat,
             gameType,
           );
-          console.log(tableId, "--tableId--")
           if (!tableId) {
             ifTableExist = false;
             tableId = await this.createTable(tableConfigurationData);
