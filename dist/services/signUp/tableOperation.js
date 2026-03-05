@@ -101,13 +101,12 @@ class TableOperation {
                             configToSet.currentRound = constants_1.NUMERICAL.ONE;
                             yield tableConfiguration_1.tableConfigurationService.setTableConfiguration(tableId, configToSet, true);
                             tableConfigurationData = configToSet;
+                            yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
                             isNewTable = true;
                         }
                         else {
                             tableConfigurationData = existingConfig;
                         }
-                        const a = yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
-                        console.log(isNewTable, "--isNewTable--", tableConfigurationData);
                     }
                     else {
                         tableId = yield this.getAvailableTable(key, userData, maximumSeat, gameType);

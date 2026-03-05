@@ -101,17 +101,16 @@ class TableOperation {
               true,
             );
             tableConfigurationData = configToSet;
+            await this.setupRound(
+              tableId,
+              roundNum,
+              tableConfigurationData,
+              null,
+            );
             isNewTable = true;
           } else {
             tableConfigurationData = existingConfig;
           }
-          const a = await this.setupRound(
-            tableId,
-            roundNum,
-            tableConfigurationData,
-            null,
-          );
-          console.log(isNewTable, "--isNewTable--", tableConfigurationData)
         } else {
           tableId = await this.getAvailableTable(
             key,
