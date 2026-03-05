@@ -67,7 +67,7 @@ function addTable(signUpData, socket, networkParams) {
             let matchId = lobbyInfo.matchId;
             let currentHostIp = os_1.default.hostname();
             if (inviteCode && !matchId) {
-                matchId = `xxxxxxxxxxxx-${new Date().getTime()}`;
+                matchId = `${userId}-${new Date().getTime()}`;
                 yield userService_2.default.updatePrivateLobbySession(LobbyId, currentHostIp, matchId, socket.data.token);
             }
             const lobbyGameConfig = {

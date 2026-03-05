@@ -115,9 +115,10 @@ class TableConfiguration {
       isMultiBotEnabled,
       inviteCode,
       hostIp,
+      matchId
     } = LobbyTableConfig;
     return {
-      _id: tableId || getRandomTableId(),
+      _id: matchId || tableId || getRandomTableId(),
       bootValue: getBootValue(EntryFee, getCurrencyType(EntryFee)),
       currencyFactor: CurrencyFactor,
       gameId: GameId,

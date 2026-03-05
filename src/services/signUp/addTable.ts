@@ -71,7 +71,7 @@ export async function addTable(
     let matchId = lobbyInfo.matchId;
     let currentHostIp = os.hostname()
     if (inviteCode && !matchId){
-      matchId = `xxxxxxxxxxxx-${new Date().getTime()}`
+      matchId = `${userId}-${new Date().getTime()}`
       await UserServiceExt.updatePrivateLobbySession(LobbyId, currentHostIp, matchId, socket.data.token)
     }
 

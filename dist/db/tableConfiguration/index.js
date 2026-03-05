@@ -80,9 +80,9 @@ class TableConfiguration {
      *
      */
     getDefaultTableConfigRedisObject(LobbyTableConfig, tableId) {
-        const { EntryFee, GameId, GameStartTimer, UserFinishTimer, LobbyId, ManualSplit, MaxPoints, MaxPlayers, MinPlayers, RoundShuffle, UserTurnTimer, Rake, Round_count = 2, PileDiscardCheck, isNewUI, globalMatchMaking, mmAlgo, GameFormat, cgsClusterName, CurrencyFactor = EntryFee, CurrencyId, isMultiBotEnabled, inviteCode, hostIp, } = LobbyTableConfig;
+        const { EntryFee, GameId, GameStartTimer, UserFinishTimer, LobbyId, ManualSplit, MaxPoints, MaxPlayers, MinPlayers, RoundShuffle, UserTurnTimer, Rake, Round_count = 2, PileDiscardCheck, isNewUI, globalMatchMaking, mmAlgo, GameFormat, cgsClusterName, CurrencyFactor = EntryFee, CurrencyId, isMultiBotEnabled, inviteCode, hostIp, matchId } = LobbyTableConfig;
         return {
-            _id: tableId || (0, utils_1.getRandomTableId)(),
+            _id: matchId || tableId || (0, utils_1.getRandomTableId)(),
             bootValue: (0, index_1.getBootValue)(EntryFee, getCurrencyType(EntryFee)),
             currencyFactor: CurrencyFactor,
             gameId: GameId,
