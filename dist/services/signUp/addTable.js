@@ -19,6 +19,7 @@ const tableConfiguration_1 = require("../../db/tableConfiguration");
 const userService_1 = require("../userService");
 const userService_2 = __importDefault(require("../../userService"));
 const tableOperation_1 = require("./tableOperation");
+const schedulerQueue_1 = require("../schedulerQueue");
 const utils_1 = require("../../utils");
 const userProfile_1 = require("../../db/userProfile");
 const redisWrapper_1 = require("../../db/redisWrapper");
@@ -92,42 +93,27 @@ function addTable(signUpData, socket, networkParams) {
             yield userProfile_1.userProfileService.setUserDetails(userId, userData);
             const getBotProfitThreshold = constants_1.BOT_CONFIG.GET_BOT_PROFIT_THRESHOLD;
             const bannedUsersForBot = constants_1.BOT_CONFIG.BANNED_USERS_FROM_BOTS.split(',');
-            // if (
-            //   tableConfigurationData.isMultiBotEnabled &&
-            //   tableConfigurationData.maximumSeat == 6 &&
-            //   gtiData?.isNewTable &&
-            //   userData.profitLoss < getBotProfitThreshold &&
-            //   !bannedUsersForBot.includes(userId.toString())
-            // ) {
-            //   const botRange =
-            //     BOT_CONFIG.MULTI_BOT_RANGE.split(',');
-            //   let totalBot =
-            //     Number(botRange[Math.floor(Math.random() * botRange.length)])
-            //
-            //   const DELAY_MULTIPLIER = BOT_CONFIG.DELAY_MULTIPLIER
-            //
-            //   let waitTime = 1
-            //   for (let i = 1; i <= totalBot; i++) {
-            //     waitTime += Math.round(i * DELAY_MULTIPLIER)
-            //     await scheduler.addJob.bot(
-            //       gtiData.tableId,
-            //       gtiData.currentRound,
-            //       waitTime* NUMERICAL.THOUSAND,
-            //     );
-            //   }
-            // } else {
-            //   if (
-            //     gtiData.playerInfo.length === 1 &&
-            //     userData.profitLoss < getBotProfitThreshold &&
-            //     !bannedUsersForBot.includes(userId.toString())
-            //   ) {
-            //     await scheduler.addJob.bot(
-            //       gtiData.tableId,
-            //       gtiData.currentRound,
-            //       BOT_CONFIG.BOT_WAITING_TIME_IN_MS,
-            //     );
-            //   }
-            // }
+            if (tableConfigurationData.isMultiBotEnabled &&
+                tableConfigurationData.maximumSeat == 6 &&
+                (gtiData === null || gtiData === void 0 ? void 0 : gtiData.isNewTable) &&
+                userData.profitLoss < getBotProfitThreshold &&
+                !bannedUsersForBot.includes(userId.toString())) {
+                const botRange = constants_1.BOT_CONFIG.MULTI_BOT_RANGE.split(',');
+                let totalBot = Number(botRange[Math.floor(Math.random() * botRange.length)]);
+                const DELAY_MULTIPLIER = constants_1.BOT_CONFIG.DELAY_MULTIPLIER;
+                let waitTime = 1;
+                for (let i = 1; i <= totalBot; i++) {
+                    waitTime += Math.round(i * DELAY_MULTIPLIER);
+                    yield schedulerQueue_1.scheduler.addJob.bot(gtiData.tableId, gtiData.currentRound, waitTime * numerical_1.NUMERICAL.THOUSAND);
+                }
+            }
+            else {
+                if (gtiData.playerInfo.length === 1 &&
+                    userData.profitLoss < getBotProfitThreshold &&
+                    !bannedUsersForBot.includes(userId.toString())) {
+                    yield schedulerQueue_1.scheduler.addJob.bot(gtiData.tableId, gtiData.currentRound, constants_1.BOT_CONFIG.BOT_WAITING_TIME_IN_MS);
+                }
+            }
             return {
                 signupResponse: {
                     userId: userData.id,
