@@ -45,7 +45,7 @@ const addTable_1 = require("../signUp/addTable");
 const insertPlayerInNewTable = (currentTableId, userId, socket, tableSessionId = '') => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const [tabledataInfo, userProfile] = yield Promise.all([
-            tableConfiguration_1.tableConfigurationService.getTableConfiguration(currentTableId, ['lobbyId']),
+            tableConfiguration_1.tableConfigurationService.getTableConfiguration(currentTableId, ['lobbyId', 'inviteCode']),
             userProfile_1.userProfileService.getUserDetailsById(userId),
         ]);
         newLogger_1.Logger.info(`== User ${userId} InsertPlayerInNewTable after leave table for switchTable call old table: ${currentTableId} ==> `, [userProfile]);
@@ -54,6 +54,7 @@ const insertPlayerInNewTable = (currentTableId, userId, socket, tableSessionId =
             connectionType: constants_1.CONNECTION_TYPE.ADD_TABLE,
             tableSessionId,
             unitySessionId: userProfile.unitySessionId,
+            inviteCode: tabledataInfo.inviteCode,
         }, socket);
         newLogger_1.Logger.info(`switchTable: after addTable: oldTableId: ${currentTableId}`, [gtiData]);
         const [response] = gtiData.gameTableInfoData;

@@ -6,7 +6,7 @@ declare class PlayerGameplay {
     getPlayerGameplay(userId: number, tableId: string, currentRound: number, args: string[]): Promise<any>;
     setPlayerGameplay(userId: number, tableId: string, currentRound: number, pgpData: any): Promise<void>;
     getDefaultPlayerGameplayData(userId: number, seatIndex: number, dealPoint: any, doesRebuy?: boolean, networkParams?: networkParams, tableSessionId?: string): PlayerGameplayInterface;
-    updateCardsByRoundId(seats: SeatSchema[], usersCards: string[][], tableId: string, currentRound: number, wildCard: string, maximumPoints: number): Promise<any>;
+    updateCardsByRoundId(seats: SeatSchema[], usersCards: string[][], tableId: string, currentRound: number, wildCard: string, maximumPoints: number, papluCard?: string): Promise<any>;
 }
 export declare const playerGameplayService: PlayerGameplay;
 export {};

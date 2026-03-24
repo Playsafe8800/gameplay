@@ -24,7 +24,7 @@ const insertPlayerInNewTable = async (
       await Promise.all([
         tableConfigurationService.getTableConfiguration(
           currentTableId,
-          ['lobbyId'],
+          ['lobbyId', 'inviteCode'],
         ),
         userProfileService.getUserDetailsById(userId),
       ]);
@@ -40,6 +40,7 @@ const insertPlayerInNewTable = async (
         connectionType: CONNECTION_TYPE.ADD_TABLE,
         tableSessionId,
         unitySessionId: userProfile.unitySessionId,
+        inviteCode: tabledataInfo.inviteCode,
       },
       socket,
     );

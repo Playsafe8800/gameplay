@@ -36,6 +36,7 @@ import { initializeGame } from '../gameplay/initialiseGame';
 import { scheduler } from '../schedulerQueue';
 import gameTableInfo from './gameTableInfo';
 import { cancelBattle } from '../gameplay/cancelBattle';
+import * as console from 'node:console';
 
 class TableOperation {
   async addInTable(
@@ -45,6 +46,7 @@ class TableOperation {
     retries: number = NUMERICAL.ONE,
     networkParams?: networkParams,
     tableSessionId?: string,
+    providedTableId?: string,
     fromSQS = false,
   ) {
     let isNewTable = false
@@ -68,40 +70,83 @@ class TableOperation {
       let ifTableExist = true;
 
       if (!fromSQS) {
-        tableId = await this.getAvailableTable(
-          key,
-          userData,
-          maximumSeat,
-          gameType,
-        );
-        if (!tableId) {
-          ifTableExist = false;
-          tableId = await this.createTable(tableConfigurationData);
-          await this.setupRound(
+        if (providedTableId) {
+          tableId = providedTableId;
+          // Try to get existing table configuration
+          let existingConfig = await tableConfigurationService.getTableConfiguration(
             tableId,
-            roundNum,
-            tableConfigurationData,
-            null,
+            [
+              '_id',
+              'currentRound',
+              'maximumSeat',
+              'maximumPoints',
+              'gameType',
+              'dealsCount',
+              'currencyType',
+              'lobbyId',
+              'minimumSeat',
+              'gameStartTimer',
+              'bootValue',
+            ],
           );
-          isNewTable = true
-        } else {
-          tableConfigurationData =
-            await tableConfigurationService.getTableConfiguration(
+          console.log(existingConfig, "--existingConfig--", tableConfigurationData)
+          if (!existingConfig._id) {
+            ifTableExist = false;
+            const configToSet = tableConfigurationData
+            configToSet._id = tableId;
+            configToSet.currentRound = NUMERICAL.ONE;
+            await tableConfigurationService.setTableConfiguration(
               tableId,
-              [
-                '_id',
-                'currentRound',
-                'maximumSeat',
-                'maximumPoints',
-                'gameType',
-                'dealsCount',
-                'currencyType',
-                'lobbyId',
-                'minimumSeat',
-                'gameStartTimer',
-                'bootValue',
-              ],
+              configToSet,
+              true,
             );
+            tableConfigurationData = configToSet;
+            await this.setupRound(
+              tableId,
+              roundNum,
+              tableConfigurationData,
+              null,
+            );
+            isNewTable = true;
+          } else {
+            tableConfigurationData = existingConfig;
+          }
+        } else {
+          tableId = await this.getAvailableTable(
+            key,
+            userData,
+            maximumSeat,
+            gameType,
+          );
+          if (!tableId) {
+            ifTableExist = false;
+            tableId = await this.createTable(tableConfigurationData);
+            await this.setupRound(
+              tableId,
+              roundNum,
+              tableConfigurationData,
+              null,
+            );
+            isNewTable = true
+          } else {
+            tableConfigurationData =
+              await tableConfigurationService.getTableConfiguration(
+                tableId,
+                [
+                  '_id',
+                  'currentRound',
+                  'maximumSeat',
+                  'maximumPoints',
+                  'gameType',
+                  'dealsCount',
+                  'currencyType',
+                  'lobbyId',
+                  'minimumSeat',
+                  'gameStartTimer',
+                  'bootValue',
+                ],
+              );
+          }
         }
       }
 
@@ -129,9 +174,23 @@ class TableOperation {
       Logger.info(`Retrieved table gameplay data:`, [tableGameData]);
 
       if (!tableGameData) {
-        throw new Error(
-          `Table game data is not set up while add table operation`,
+        Logger.warn(`Table gameplay missing for ${tableId}, initializing round ${roundNum}`);
+        await this.setupRound(
+          tableId,
+          roundNum,
+          tableConfigurationData,
+          null,
         );
+        tableGameData = await tableGameplayService.getTableGameplay(
+          tableId,
+          roundNum,
+          ['tableState', 'noOfPlayers'],
+        );
+        if (!tableGameData) {
+          throw new Error(
+            `Table game data is not set up while add table operation`,
+          );
+        }
       }
       if (tableGameData.noOfPlayers === maximumSeat) {
         return await this.addInTable(
@@ -141,6 +200,7 @@ class TableOperation {
           retries + 1,
           networkParams,
           tableSessionId,
+          providedTableId,
         );
       }
       if (
@@ -174,6 +234,7 @@ class TableOperation {
           retries + 1,
           networkParams,
           tableSessionId,
+          providedTableId,
         );
       }
 
@@ -338,6 +399,7 @@ class TableOperation {
               : NUMERICAL.ONE,
             ['seats', "tableState"]
           );
+          console.log(tableGameData, "-tableGameData--")
 
           if (tableGameData.seats.length !== maximumSeat) {
             tableGameData = tableGameData || defaultTableGame;

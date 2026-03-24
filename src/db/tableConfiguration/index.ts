@@ -112,10 +112,13 @@ class TableConfiguration {
       cgsClusterName,
       CurrencyFactor = EntryFee,
       CurrencyId,
-      isMultiBotEnabled
+      isMultiBotEnabled,
+      inviteCode,
+      hostIp,
+      matchId
     } = LobbyTableConfig;
     return {
-      _id: tableId || getRandomTableId(),
+      _id: matchId || tableId || getRandomTableId(),
       bootValue: getBootValue(EntryFee, getCurrencyType(EntryFee)),
       currencyFactor: CurrencyFactor,
       gameId: GameId,
@@ -142,7 +145,9 @@ class TableConfiguration {
       cgsClusterName: cgsClusterName
         ? cgsClusterName
         : CONFIG.CGS_NAME,
-      isMultiBotEnabled
+      isMultiBotEnabled,
+      inviteCode,
+      hostIp,
     };
   }
 }

@@ -15,6 +15,7 @@ class DefaultData {
             tableState: (oldTableGameplayData === null || oldTableGameplayData === void 0 ? void 0 : oldTableGameplayData.tableState) ||
                 tableState_1.TABLE_STATE.WAITING_FOR_PLAYERS,
             trumpCard: '',
+            papluCard: '',
             dealerPlayer: -1,
             splitCount: 0,
             pointsForRoundWinner: 0,

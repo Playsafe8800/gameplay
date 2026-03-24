@@ -17,6 +17,7 @@ export default class UserService {
   static botHost = process.env.BOT_SERVICE_URL;
 
   static GET_LOBBY = '/lobby';
+  static GET_PRIVATE_LOBBY = '/lobby/private';
   static GET_ACTIVE_MATCH = '/user/activeMatch';
   static USER_AUTH = '/user/auth';
   static UPDATE_PROFILE = '/internal/updateProfile/?';
@@ -252,7 +253,7 @@ export default class UserService {
     }
   }
 
-  static async getLobby(lobbyId: number) {
+  static async getLobby(lobbyId: number | undefined) {
     try {
       Logger.info(`getLobby request `, [lobbyId]);
       const lobbyInfo = await axios.get(
@@ -268,6 +269,58 @@ export default class UserService {
       return lobbyInfo.data.data;
     } catch (e) {
       Logger.error(`INTERNAL_SERVER_ERROR`, [e, lobbyId]);
+      throw e;
+    }
+  }
+
+  static async getPrivateLobby(inviteCode: number, token: string) {
+    try {
+      Logger.info(`getLobby request `, [inviteCode]);
+      const lobbyInfo = await axios.get(
+        `${this.host}${this.GET_PRIVATE_LOBBY}/${inviteCode}`,
+        {
+          headers: {
+            Authorization: defaultToken,
+            'User-Agent': 'BestHTTP/2 v2.8.5',
+          },
+        },
+      );
+      Logger.info(`getLobby response `, [lobbyInfo.data.data]);
+      return lobbyInfo.data.data;
+    } catch (e) {
+      Logger.error(`INTERNAL_SERVER_ERROR`, [e, inviteCode]);
+      throw e;
+    }
+  }
+
+  static async updatePrivateLobbySession(
+    lobbyId: number,
+    hostIp: string,
+    matchId: string,
+    token: string,
+  ) {
+    try {
+      Logger.info(`updatePrivateLobbySession request`, [lobbyId, { hostIp, matchId, token},]);
+      const response = await axios.patch(
+        `${this.host}/lobby/internal/private/${lobbyId}/session`,
+        {
+          hostIp,
+          matchId,
+        },
+        {
+          headers: {
+            Authorization: token,
+            'User-Agent': 'BestHTTP/2 v2.8.5',
+          },
+        },
+      );
+      Logger.info(`updatePrivateLobbySession response`, [lobbyId, response.data,]);
+      return response.data;
+    } catch (e) {
+      Logger.error(`INTERNAL_SERVER_ERROR updatePrivateLobbySession`, [
+        e,
+        lobbyId,
+      ]);
       throw e;
     }
   }

@@ -7,7 +7,7 @@ import { userService } from '../userService';
 import UserServiceExt from '../../userService';
 import { tableOperation } from './tableOperation';
 import { scheduler } from '../schedulerQueue';
-import { getBot } from '../../utils';
+import { getBot, getIdPrefix } from '../../utils';
 import { userProfileService } from '../../db/userProfile';
 import { setValueInKeyWithExpiry } from '../../db/redisWrapper';
 import { tableGameplayService } from '../../db/tableGameplay';
@@ -17,6 +17,8 @@ import { Lock } from 'redlock';
 import { eventStateManager } from '../../state/events';
 import userServiceExt from '../../userService';
 import * as console from 'node:console';
+import { getRandomUUID } from '../../utils/getRandomUUID';
+import os from 'os';
 
 export async function addTable(
   signUpData: SignUpInterface,
@@ -24,17 +26,15 @@ export async function addTable(
   networkParams?: networkParams,
 ) {
   try {
-    const { lobbyId, unitySessionId, tableSessionId } = signUpData;
-
-    if (!lobbyId) throw new Error('lobbyId required for addTable');
+    const { lobbyId, unitySessionId, tableSessionId, inviteCode } = signUpData;
 
     Logger.info(
       `Add table started for lobby Id ${lobbyId}, socketId: ${socket.id}, user: ${socket.userId}`,
     );
     const { userId } = socket;
-
+    console.log(socket.data, "--socket.data--")
     // Get lobby config
-    const lobbyInfo: any = await UserServiceExt.getLobby(lobbyId);
+    const lobbyInfo: any = inviteCode ? await UserServiceExt.getPrivateLobby(inviteCode, socket.data.token) : await UserServiceExt.getLobby(lobbyId);
     const {
       EntryFee,
       MaxPoints,
@@ -66,7 +66,14 @@ export async function addTable(
       LobbyId,
       CurrencyId,
       isMultiBotEnabled,
+      hostIp
     } = lobbyInfo;
+    let matchId = lobbyInfo.matchId;
+    let currentHostIp = os.hostname()
+    if (inviteCode && !matchId){
+      matchId = `${userId}-${new Date().getTime()}`
+      await UserServiceExt.updatePrivateLobbySession(LobbyId, currentHostIp, matchId, socket.data.token)
+    }
 
     const lobbyGameConfig = {
       MP: 2,
@@ -109,12 +116,15 @@ export async function addTable(
       CurrencyFactor: EntryFee,
       CurrencyId,
       isMultiBotEnabled,
+      inviteCode,
+      matchId,
+      hostIp
     };
     const tableConfigurationData =
       tableConfigurationService.getDefaultTableConfigRedisObject(
         lobbyGameConfig,
       );
-
+    console.log(tableConfigurationData, "--tableConfigurationData--")
     // Create or find user
     const userData = await userService.findOrCreateUser(
       userId,
@@ -131,6 +141,7 @@ export async function addTable(
       NUMERICAL.ONE,
       networkParams,
       tableSessionId,
+      matchId,
     );
     Logger.info('ADD TABLE', [gtiData]);
 

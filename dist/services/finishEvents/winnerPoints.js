@@ -62,6 +62,7 @@ const round_1 = require("../gameplay/round");
 const leaveDisconnectedUsers_1 = require("../leaveTable/leaveDisconnectedUsers");
 const index_2 = require("../schedulerQueue/index");
 const winner_1 = require("./winner");
+const console = __importStar(require("node:console"));
 class WinnerPoints {
     declareWinner(tableId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -76,6 +77,7 @@ class WinnerPoints {
                         'declarePlayer',
                         'seats',
                         'tableState',
+                        'papluCard'
                     ]),
                     index_1.turnHistoryService.getTurnHistory(tableId, currentRound),
                 ]);
@@ -90,7 +92,7 @@ class WinnerPoints {
                     ]);
                     return;
                 }
-                const playersGameData = yield Promise.all(tableGameData.seats.map((seat) => playerGameplay_1.playerGameplayService.getPlayerGameplay(seat._id, tableId, currentRound, ['userId', 'userStatus', 'points', 'winningCash'])));
+                const playersGameData = yield Promise.all(tableGameData.seats.map((seat) => playerGameplay_1.playerGameplayService.getPlayerGameplay(seat._id, tableId, currentRound, ['userId', 'userStatus', 'points', 'winningCash', 'currentCards'])));
                 newLogger_1.Logger.info(`declareWinner: playersGameData ${tableId} `, [
                     playersGameData,
                 ]);
@@ -100,9 +102,19 @@ class WinnerPoints {
                     if (declarePlayer !== player.userId) {
                         const playerData = player;
                         if (playerData.userStatus === constants_1.PLAYER_STATE.FINISH) {
-                            const { points } = playerData;
+                            let { points } = playerData;
                             let pointsAsPerCF = currencyFactor * points;
                             pointsAsPerCF = (0, utils_1.roundInt)(pointsAsPerCF, 2);
+                            if (points != 0 && points != 80) {
+                                console.log(playerData.currentCards, "---playerData.cards---", tableGameData.papluCard);
+                                let pplu = tableGameData.papluCard.split("-")[0] + "-" + tableGameData.papluCard.split("-")[1];
+                                console.log(pplu, "--pplu--");
+                                for (let i = 0; i < playerData.currentCards.length; i++) {
+                                    if (playerData.currentCards[i].includes(pplu)) {
+                                        points += 10;
+                                    }
+                                }
+                            }
                             playerData.points = points;
                             playerData.winningCash = -pointsAsPerCF;
                             tableGameData.potValue += pointsAsPerCF;
@@ -289,6 +301,7 @@ class WinnerPoints {
                     potValue: pointsAsPerCF,
                     tableState: tableGameData.tableState,
                     wildCard: tableGameData.trumpCard,
+                    papluCard: tableGameData.papluCard,
                     winnerUserId: winnerPgpData.userId,
                     playerInfo: scoreBoardPlayerInfo,
                 };
