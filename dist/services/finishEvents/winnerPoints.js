@@ -62,7 +62,6 @@ const round_1 = require("../gameplay/round");
 const leaveDisconnectedUsers_1 = require("../leaveTable/leaveDisconnectedUsers");
 const index_2 = require("../schedulerQueue/index");
 const winner_1 = require("./winner");
-const console = __importStar(require("node:console"));
 class WinnerPoints {
     declareWinner(tableId) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -105,16 +104,6 @@ class WinnerPoints {
                             let { points } = playerData;
                             let pointsAsPerCF = currencyFactor * points;
                             pointsAsPerCF = (0, utils_1.roundInt)(pointsAsPerCF, 2);
-                            if (points != 0 && points != 80) {
-                                console.log(playerData.currentCards, "---playerData.cards---", tableGameData.papluCard);
-                                let pplu = tableGameData.papluCard.split("-")[0] + "-" + tableGameData.papluCard.split("-")[1];
-                                console.log(pplu, "--pplu--");
-                                for (let i = 0; i < playerData.currentCards.length; i++) {
-                                    if (playerData.currentCards[i].includes(pplu)) {
-                                        points += 10;
-                                    }
-                                }
-                            }
                             playerData.points = points;
                             playerData.winningCash = -pointsAsPerCF;
                             tableGameData.potValue += pointsAsPerCF;

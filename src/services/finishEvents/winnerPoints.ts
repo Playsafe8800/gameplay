@@ -105,18 +105,6 @@ class WinnerPoints {
             let { points } = playerData;
             let pointsAsPerCF = currencyFactor * points;
             pointsAsPerCF = roundInt(pointsAsPerCF, 2);
-
-            if (points != 0 && points != 80){
-              console.log(playerData.currentCards, "---playerData.cards---", tableGameData.papluCard)
-              let pplu = tableGameData.papluCard.split("-")[0]+"-"+tableGameData.papluCard.split("-")[1]
-              console.log(pplu, "--pplu--")
-              for (let i = 0; i < playerData.currentCards.length; i++) {
-                if (playerData.currentCards[i].includes(pplu)) {
-                  points += 10;
-                }
-              }
-            }
-
             playerData.points = points;
             playerData.winningCash = -pointsAsPerCF;
             tableGameData.potValue += pointsAsPerCF;
