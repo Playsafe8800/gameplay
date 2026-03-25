@@ -391,6 +391,7 @@ class Winner {
                 tableState: tableGameData.tableState,
                 split: Boolean(isSplitable && isSplitable.splitType),
                 wildCard: tableGameData.trumpCard,
+                papluCard: tableGameData.papluCard,
                 winnerUserId: tableData.gameType === constants_1.RUMMY_TYPES.DEALS
                     ? winnerUserId
                     : minPointPlayerGameData.userId,

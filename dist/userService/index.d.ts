@@ -2,6 +2,7 @@ export default class UserService {
     static host: string | undefined;
     static botHost: string | undefined;
     static GET_LOBBY: string;
+    static GET_PRIVATE_LOBBY: string;
     static GET_ACTIVE_MATCH: string;
     static USER_AUTH: string;
     static UPDATE_PROFILE: string;
@@ -26,7 +27,9 @@ export default class UserService {
         isRummy: any;
         groupCards: any;
     }>;
-    static getLobby(lobbyId: number): Promise<any>;
+    static getLobby(lobbyId: number | undefined): Promise<any>;
+    static getPrivateLobby(inviteCode: number, token: string): Promise<any>;
+    static updatePrivateLobbySession(lobbyId: number, hostIp: string, matchId: string, token: string): Promise<any>;
     static getActiveMatch(authToken: string): Promise<any>;
     static getUserWallet(authToken: string): Promise<any>;
     static getUserProfile(userId: number): Promise<any>;

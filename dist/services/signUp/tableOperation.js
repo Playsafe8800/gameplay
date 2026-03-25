@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -34,8 +57,9 @@ const initialiseGame_1 = require("../gameplay/initialiseGame");
 const schedulerQueue_1 = require("../schedulerQueue");
 const gameTableInfo_1 = __importDefault(require("./gameTableInfo"));
 const cancelBattle_1 = require("../gameplay/cancelBattle");
+const console = __importStar(require("node:console"));
 class TableOperation {
-    addInTable(socket, tableConfigurationData, userData, retries = constants_1.NUMERICAL.ONE, networkParams, tableSessionId, fromSQS = false) {
+    addInTable(socket, tableConfigurationData, userData, retries = constants_1.NUMERICAL.ONE, networkParams, tableSessionId, providedTableId, fromSQS = false) {
         return __awaiter(this, void 0, void 0, function* () {
             let isNewTable = false;
             if (retries > constants_1.NUMERICAL.THREE) {
@@ -53,28 +77,61 @@ class TableOperation {
                 const { mmAlgo } = tableConfigurationData;
                 let ifTableExist = true;
                 if (!fromSQS) {
-                    tableId = yield this.getAvailableTable(key, userData, maximumSeat, gameType);
-                    if (!tableId) {
-                        ifTableExist = false;
-                        tableId = yield this.createTable(tableConfigurationData);
-                        yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
-                        isNewTable = true;
+                    if (providedTableId) {
+                        tableId = providedTableId;
+                        // Try to get existing table configuration
+                        let existingConfig = yield tableConfiguration_1.tableConfigurationService.getTableConfiguration(tableId, [
+                            '_id',
+                            'currentRound',
+                            'maximumSeat',
+                            'maximumPoints',
+                            'gameType',
+                            'dealsCount',
+                            'currencyType',
+                            'lobbyId',
+                            'minimumSeat',
+                            'gameStartTimer',
+                            'bootValue',
+                        ]);
+                        console.log(existingConfig, "--existingConfig--", tableConfigurationData);
+                        if (!existingConfig._id) {
+                            ifTableExist = false;
+                            const configToSet = tableConfigurationData;
+                            configToSet._id = tableId;
+                            configToSet.currentRound = constants_1.NUMERICAL.ONE;
+                            yield tableConfiguration_1.tableConfigurationService.setTableConfiguration(tableId, configToSet, true);
+                            tableConfigurationData = configToSet;
+                            yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
+                            isNewTable = true;
+                        }
+                        else {
+                            tableConfigurationData = existingConfig;
+                        }
                     }
                     else {
-                        tableConfigurationData =
-                            yield tableConfiguration_1.tableConfigurationService.getTableConfiguration(tableId, [
-                                '_id',
-                                'currentRound',
-                                'maximumSeat',
-                                'maximumPoints',
-                                'gameType',
-                                'dealsCount',
-                                'currencyType',
-                                'lobbyId',
-                                'minimumSeat',
-                                'gameStartTimer',
-                                'bootValue',
-                            ]);
+                        tableId = yield this.getAvailableTable(key, userData, maximumSeat, gameType);
+                        if (!tableId) {
+                            ifTableExist = false;
+                            tableId = yield this.createTable(tableConfigurationData);
+                            yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
+                            isNewTable = true;
+                        }
+                        else {
+                            tableConfigurationData =
+                                yield tableConfiguration_1.tableConfigurationService.getTableConfiguration(tableId, [
+                                    '_id',
+                                    'currentRound',
+                                    'maximumSeat',
+                                    'maximumPoints',
+                                    'gameType',
+                                    'dealsCount',
+                                    'currencyType',
+                                    'lobbyId',
+                                    'minimumSeat',
+                                    'gameStartTimer',
+                                    'bootValue',
+                                ]);
+                        }
                     }
                 }
                 newLogger_1.Logger.info(`addInTable found or created tableId: ${tableId} for user: ${userId}`, [tableConfigurationData]);
@@ -87,10 +144,15 @@ class TableOperation {
                 tableGameData = yield tableGameplay_1.tableGameplayService.getTableGameplay(tableId, roundNum, ['tableState', 'noOfPlayers']);
                 newLogger_1.Logger.info(`Retrieved table gameplay data:`, [tableGameData]);
                 if (!tableGameData) {
-                    throw new Error(`Table game data is not set up while add table operation`);
+                    newLogger_1.Logger.warn(`Table gameplay missing for ${tableId}, initializing round ${roundNum}`);
+                    yield this.setupRound(tableId, roundNum, tableConfigurationData, null);
+                    tableGameData = yield tableGameplay_1.tableGameplayService.getTableGameplay(tableId, roundNum, ['tableState', 'noOfPlayers']);
+                    if (!tableGameData) {
+                        throw new Error(`Table game data is not set up while add table operation`);
+                    }
                 }
                 if (tableGameData.noOfPlayers === maximumSeat) {
-                    return yield this.addInTable(socket, tableConfigurationData, userData, retries + 1, networkParams, tableSessionId);
+                    return yield this.addInTable(socket, tableConfigurationData, userData, retries + 1, networkParams, tableSessionId, providedTableId);
                 }
                 if (!(tableGameData.tableState ===
                     constants_1.TABLE_STATE.ROUND_TIMER_STARTED ||
@@ -105,7 +167,7 @@ class TableOperation {
                     catch (err) {
                         newLogger_1.Logger.error(`INTERNAL_SERVER_ERROR Error While releasing lock on addInTable: ${err}`, [err]);
                     }
-                    return yield this.addInTable(socket, tableConfigurationData, userData, retries + 1, networkParams, tableSessionId);
+                    return yield this.addInTable(socket, tableConfigurationData, userData, retries + 1, networkParams, tableSessionId, providedTableId);
                 }
                 const gtiData = yield this.insertNewPlayer(socket, userData, tableConfigurationData, true, networkParams, tableSessionId);
                 gtiData.isNewTable = isNewTable;
@@ -211,6 +273,7 @@ class TableOperation {
                         tableGameData = yield tableGameplay_1.tableGameplayService.getTableGameplay(tableId, (0, utils_1.isPointsRummyFormat)(gameType)
                             ? tableConfigData.currentRound
                             : constants_1.NUMERICAL.ONE, ['seats', "tableState"]);
+                        console.log(tableGameData, "-tableGameData--");
                         if (tableGameData.seats.length !== maximumSeat) {
                             tableGameData = tableGameData || defaultTableGame;
                             seats = tableGameData.seats.filter((ele) => ele._id);

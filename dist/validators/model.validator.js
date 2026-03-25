@@ -62,6 +62,10 @@ function tableGameplayValidator(tableGameplayData) {
                 .description('wild card')
                 .valid(...doubleDeck_1.DOUBLE_DECK)
                 .required(),
+            papluCard: joi_1.default.string()
+                .allow(null, '')
+                .description('paplu card (same suit, next rank of wild)')
+                .optional(),
             dealerPlayer: joi_1.default.number()
                 .allow(null)
                 .description('dealer player, refrence taken from userProfile playerId field ')

@@ -41,6 +41,7 @@ import { round } from '../gameplay/round';
 import { leaveDisconnectedUsers } from '../leaveTable/leaveDisconnectedUsers';
 import { scheduler } from '../schedulerQueue/index';
 import { winner } from './winner';
+import * as console from 'node:console';
 
 class WinnerPoints {
   async declareWinner(tableId: string) {
@@ -61,6 +62,7 @@ class WinnerPoints {
           'declarePlayer',
           'seats',
           'tableState',
+          'papluCard'
         ]),
         turnHistoryService.getTurnHistory(tableId, currentRound),
       ]);
@@ -85,7 +87,7 @@ class WinnerPoints {
             seat._id,
             tableId,
             currentRound,
-            ['userId', 'userStatus', 'points', 'winningCash'],
+            ['userId', 'userStatus', 'points', 'winningCash', 'currentCards'],
           ),
         ),
       );
@@ -100,10 +102,9 @@ class WinnerPoints {
           const playerData = player;
 
           if (playerData.userStatus === PLAYER_STATE.FINISH) {
-            const { points } = playerData;
+            let { points } = playerData;
             let pointsAsPerCF = currencyFactor * points;
             pointsAsPerCF = roundInt(pointsAsPerCF, 2);
-
             playerData.points = points;
             playerData.winningCash = -pointsAsPerCF;
             tableGameData.potValue += pointsAsPerCF;
@@ -419,6 +420,7 @@ class WinnerPoints {
         potValue: pointsAsPerCF,
         tableState: tableGameData.tableState,
         wildCard: tableGameData.trumpCard,
+        papluCard: tableGameData.papluCard,
         winnerUserId: winnerPgpData.userId,
         playerInfo: scoreBoardPlayerInfo,
       };

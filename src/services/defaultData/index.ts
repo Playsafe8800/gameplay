@@ -18,6 +18,7 @@ class DefaultData {
         oldTableGameplayData?.tableState ||
         TABLE_STATE.WAITING_FOR_PLAYERS,
       trumpCard: '',
+      papluCard: '',
       dealerPlayer: -1,
       splitCount: 0,
       pointsForRoundWinner: 0,

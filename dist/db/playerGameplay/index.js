@@ -74,7 +74,7 @@ class PlayerGameplay {
             pickedCards: [],
         };
     }
-    updateCardsByRoundId(seats, usersCards, tableId, currentRound, wildCard, maximumPoints) {
+    updateCardsByRoundId(seats, usersCards, tableId, currentRound, wildCard, maximumPoints, papluCard) {
         return __awaiter(this, void 0, void 0, function* () {
             const playersGamePromise = seats.map((seat) => this.getPlayerGameplay(seat._id, tableId, currentRound, [
                 'userId',
@@ -85,7 +85,7 @@ class PlayerGameplay {
             const updatedPGPs = playersGameData.map((playerGameData, i) => {
                 if (playerGameData) {
                     const grouping = cardHandler_1.cardHandler.initialCardsGrouping(usersCards[i]);
-                    const { meld } = cardHandler_1.cardHandler.groupCardsOnMeld(grouping, wildCard, maximumPoints);
+                    const { meld } = cardHandler_1.cardHandler.groupCardsOnMeld(grouping, wildCard, maximumPoints, papluCard);
                     return Object.assign(Object.assign({}, playerGameData), { currentCards: usersCards[i], groupingCards: grouping, meld });
                 }
                 else {

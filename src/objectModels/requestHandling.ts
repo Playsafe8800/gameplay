@@ -6,6 +6,7 @@ export interface SignUpInterface {
   tableSessionId?: string;
   unitySessionId?: string;
   gpsLocation?: any;
+  inviteCode?: number;
 }
 
 export interface PickCardInterface {
