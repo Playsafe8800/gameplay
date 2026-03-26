@@ -183,7 +183,6 @@ function rejoinUser(socket, tableId, userData, playerGameplayData) {
                 'finishPlayer',
                 'tableCurrentTimer',
                 'seats',
-                'papluCard'
             ]);
             let turnObject;
             const currentRoundHistory = yield turnHistory_1.turnHistoryService.getTurnHistory(tableId, currentRound);

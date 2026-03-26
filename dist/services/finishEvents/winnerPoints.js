@@ -75,8 +75,7 @@ class WinnerPoints {
                         'potValue',
                         'declarePlayer',
                         'seats',
-                        'tableState',
-                        'papluCard'
+                        'tableState'
                     ]),
                     index_1.turnHistoryService.getTurnHistory(tableId, currentRound),
                 ]);
@@ -290,7 +289,6 @@ class WinnerPoints {
                     potValue: pointsAsPerCF,
                     tableState: tableGameData.tableState,
                     wildCard: tableGameData.trumpCard,
-                    papluCard: tableGameData.papluCard,
                     winnerUserId: winnerPgpData.userId,
                     playerInfo: scoreBoardPlayerInfo,
                 };

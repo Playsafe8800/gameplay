@@ -61,13 +61,12 @@ class FinishGame {
                     'finishPlayer',
                     'declarePlayer',
                     'opendDeck',
-                    'trumpCard',
-                    'papluCard'
+                    'trumpCard'
                 ]);
                 if (!tableGameplayData) {
                     throw Error(`TGP not found for table ${tableId} for finishGame`);
                 }
-                const { seats, trumpCard, declarePlayer, papluCard } = tableGameplayData;
+                const { seats, trumpCard, declarePlayer } = tableGameplayData;
                 const pgps = yield Promise.all(seats.map((seat) => playerGameplay_1.playerGameplayService.getPlayerGameplay(seat._id, tableId, currentRound, [
                     'userId',
                     'userStatus',
@@ -92,7 +91,7 @@ class FinishGame {
                 if (finishPlayerGameData.userStatus === constants_1.PLAYER_STATE.DECLARED ||
                     finishPlayerGameData.userStatus === constants_1.PLAYER_STATE.PLAYING) {
                     // Calculate card points
-                    const { score: points } = cardHandler_1.cardHandler.groupCardsOnMeld(group, trumpCard, tableConfigData.maximumPoints, papluCard);
+                    const { score: points } = cardHandler_1.cardHandler.groupCardsOnMeld(group, trumpCard, tableConfigData.maximumPoints);
                     const isValidSequence = cards_1.cardUtils.areSequencesValid(meld);
                     /**
                      * if user has declared in his first turn
@@ -451,7 +450,7 @@ class FinishGame {
                 const tableConfig = yield tableConfiguration_1.tableConfigurationService.getTableConfiguration(tableId, ['currentRound', 'maximumPoints', 'gameType']);
                 const { currentRound } = tableConfig;
                 const [tableGameplayData, playerGameplayData] = yield Promise.all([
-                    tableGameplay_1.tableGameplayService.getTableGameplay(tableId, currentRound, ['trumpCard', 'papluCard']),
+                    tableGameplay_1.tableGameplayService.getTableGameplay(tableId, currentRound, ['trumpCard']),
                     playerGameplay_1.playerGameplayService.getPlayerGameplay(userId, tableId, currentRound, ['currentCards', 'groupingCards']),
                 ]);
                 if (!tableGameplayData || !playerGameplayData) {
@@ -463,7 +462,7 @@ class FinishGame {
                 }
                 if (!tableGameplayData)
                     throw new Error(`Gameplay data not set finish Round`);
-                const { meld, score, meldLabel } = cardHandler_1.cardHandler.groupCardsOnMeld(group, tableGameplayData.trumpCard, tableConfig.maximumPoints, tableGameplayData.papluCard);
+                const { meld, score, meldLabel } = cardHandler_1.cardHandler.groupCardsOnMeld(group, tableGameplayData.trumpCard, tableConfig.maximumPoints);
                 if (tableConfig.gameType === constants_1.RUMMY_TYPES.DEALS) {
                     yield finishGame_1.finishGameDeals.finishGame(meld, tableId, userId, group, networkParams);
                 }

@@ -501,7 +501,6 @@ class Winner {
       tableState: tableGameData.tableState,
       split: Boolean(isSplitable && isSplitable.splitType),
       wildCard: tableGameData.trumpCard,
-      papluCard: tableGameData.papluCard,
       winnerUserId:
         tableData.gameType === RUMMY_TYPES.DEALS
           ? winnerUserId

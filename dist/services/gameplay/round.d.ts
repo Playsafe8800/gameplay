@@ -23,7 +23,6 @@ declare class Round {
     distributeCards(tableConfigData: any, playersData: Array<UserProfile>, isFree: boolean): Promise<{
         usersCards: any;
         wildCard: string;
-        papluCard: string;
         firstOpenCard: string[];
         shuffledDeck: string[];
     }>;

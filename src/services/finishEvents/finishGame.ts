@@ -77,8 +77,7 @@ class FinishGame {
             'finishPlayer',
             'declarePlayer',
             'opendDeck',
-            'trumpCard',
-            'papluCard'
+            'trumpCard'
           ],
         );
       if (!tableGameplayData) {
@@ -87,7 +86,7 @@ class FinishGame {
         );
       }
 
-      const { seats, trumpCard, declarePlayer, papluCard } = tableGameplayData;
+      const { seats, trumpCard, declarePlayer } = tableGameplayData;
       const pgps = await Promise.all(
         seats.map((seat) =>
           playerGameplayService.getPlayerGameplay(
@@ -131,8 +130,7 @@ class FinishGame {
         const { score: points } = cardHandler.groupCardsOnMeld(
           group,
           trumpCard,
-          tableConfigData.maximumPoints,
-          papluCard
+          tableConfigData.maximumPoints
         );
         const isValidSequence = cardUtils.areSequencesValid(meld);
 
@@ -723,7 +721,7 @@ class FinishGame {
           tableGameplayService.getTableGameplay(
             tableId,
             currentRound,
-            ['trumpCard', 'papluCard'],
+            ['trumpCard'],
           ),
           playerGameplayService.getPlayerGameplay(
             userId,
@@ -753,8 +751,7 @@ class FinishGame {
       const { meld, score, meldLabel } = cardHandler.groupCardsOnMeld(
         group,
         tableGameplayData.trumpCard,
-        tableConfig.maximumPoints,
-        tableGameplayData.papluCard
+        tableConfig.maximumPoints
       );
 
       if (tableConfig.gameType === RUMMY_TYPES.DEALS) {

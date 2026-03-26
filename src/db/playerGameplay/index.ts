@@ -119,7 +119,6 @@ class PlayerGameplay {
     currentRound: number,
     wildCard: string,
     maximumPoints: number,
-    papluCard?: string,
   ): Promise<any> {
     const playersGamePromise = seats.map((seat) =>
       this.getPlayerGameplay(seat._id, tableId, currentRound, [
@@ -139,7 +138,6 @@ class PlayerGameplay {
           grouping,
           wildCard,
           maximumPoints,
-          papluCard,
         );
         return {
           ...playerGameData,

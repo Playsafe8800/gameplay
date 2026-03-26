@@ -239,7 +239,6 @@ async function rejoinUser(
           'finishPlayer',
           'tableCurrentTimer',
           'seats',
-          'papluCard'
         ],
       );
 

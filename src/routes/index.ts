@@ -30,7 +30,7 @@ class RouterClass {
 
   private HealthCheck = async (req: Request, res: Response) => {
     try {
-      const apiResponse = await axios.get('http://127.0.0.1:3001/healthcheck');
+      const apiResponse = await axios.get('http://tutor:3001/healthcheck');
       if (apiResponse.status === 200) {
         const response = {
           message: 'OK',

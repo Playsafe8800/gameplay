@@ -8,7 +8,6 @@ export interface GameTableInfo {
   // rake: number;
   gameType: string;
   tableState: string;
-  papluCard?: string,
   // roundState: string;
   wildCard: string;
   openDeck: Array<string>;

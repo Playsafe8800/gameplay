@@ -22,7 +22,7 @@ class RouterClass {
     constructor() {
         this.HealthCheck = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const apiResponse = yield axios_1.default.get('http://127.0.0.1:3001/healthcheck');
+                const apiResponse = yield axios_1.default.get('http://tutor:3001/healthcheck');
                 if (apiResponse.status === 200) {
                     const response = {
                         message: 'OK',

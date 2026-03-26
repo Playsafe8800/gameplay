@@ -158,7 +158,6 @@ export async function onTurnExpire(turndata: PlayerTurnTimerData) {
         'opendDeck',
         'closedDeck',
         'trumpCard',
-        'papluCard',
         'currentTurn',
       ]),
       playerGameplayService.getPlayerGameplay(
@@ -268,8 +267,7 @@ export async function onTurnExpire(turndata: PlayerTurnTimerData) {
     const { score, meld, meldLabel } = cardHandler.groupCardsOnMeld(
       groupCards,
       tableGameData.trumpCard,
-      tableConfig.maximumPoints,
-      tableGameData.papluCard,
+      tableConfig.maximumPoints
     );
     playerGamePlay.groupingCards = groupCards;
     playerGamePlay.meld = meld;

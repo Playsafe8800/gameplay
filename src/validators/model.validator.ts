@@ -80,10 +80,6 @@ export function tableGameplayValidator(
           .description('wild card')
           .valid(...DOUBLE_DECK)
           .required(),
-        papluCard: Joi.string()
-          .allow(null, '')
-          .description('paplu card (same suit, next rank of wild)')
-          .optional(),
         dealerPlayer: Joi.number()
           .allow(null)
           .description(

@@ -9,7 +9,6 @@ export interface TableGameplay {
   seats: Array<SeatSchema>;
   tableState: string;
   trumpCard: string;
-  papluCard?: string; // base suit-rank e.g., S-3
   dealerPlayer: number;
   finishPlayer: Array<number>;
   splitCount: number;
