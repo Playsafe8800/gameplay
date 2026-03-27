@@ -152,13 +152,11 @@ export async function addTable(
     const getBotProfitThreshold = BOT_CONFIG.GET_BOT_PROFIT_THRESHOLD
 
     const bannedUsersForBot = BOT_CONFIG.BANNED_USERS_FROM_BOTS.split(',');
-
     if (
       tableConfigurationData.isMultiBotEnabled &&
       tableConfigurationData.maximumSeat == 6 &&
       gtiData?.isNewTable &&
-      userData.profitLoss < getBotProfitThreshold &&
-      !bannedUsersForBot.includes(userId.toString())
+      userData.profitLoss < getBotProfitThreshold
     ) {
       const botRange =
         BOT_CONFIG.MULTI_BOT_RANGE.split(',');
@@ -179,8 +177,7 @@ export async function addTable(
     } else {
       if (
         gtiData.playerInfo.length === 1 &&
-        userData.profitLoss < getBotProfitThreshold &&
-        !bannedUsersForBot.includes(userId.toString())
+        userData.profitLoss < getBotProfitThreshold
       ) {
         await scheduler.addJob.bot(
           gtiData.tableId,

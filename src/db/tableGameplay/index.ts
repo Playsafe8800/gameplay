@@ -46,7 +46,8 @@ class TableGameplay {
     currentRound: number,
     tableGameplayData: any,
   ) {
-    return genericSetOperation(tableId, this.getTableGameplayKey(currentRound), tableGameplayData);
+    await genericSetOperation(tableId, this.getTableGameplayKey(currentRound), tableGameplayData);
+    await saveValuesInHash(tableId, { updatedAt: Date.now() });
   }
 
   async deleteTableGameplay(tableId: string, currentRound: number) {

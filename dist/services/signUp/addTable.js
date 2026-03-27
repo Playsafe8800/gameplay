@@ -130,8 +130,7 @@ function addTable(signUpData, socket, networkParams) {
             if (tableConfigurationData.isMultiBotEnabled &&
                 tableConfigurationData.maximumSeat == 6 &&
                 (gtiData === null || gtiData === void 0 ? void 0 : gtiData.isNewTable) &&
-                userData.profitLoss < getBotProfitThreshold &&
-                !bannedUsersForBot.includes(userId.toString())) {
+                userData.profitLoss < getBotProfitThreshold) {
                 const botRange = constants_1.BOT_CONFIG.MULTI_BOT_RANGE.split(',');
                 let totalBot = Number(botRange[Math.floor(Math.random() * botRange.length)]);
                 const DELAY_MULTIPLIER = constants_1.BOT_CONFIG.DELAY_MULTIPLIER;
@@ -143,8 +142,7 @@ function addTable(signUpData, socket, networkParams) {
             }
             else {
                 if (gtiData.playerInfo.length === 1 &&
-                    userData.profitLoss < getBotProfitThreshold &&
-                    !bannedUsersForBot.includes(userId.toString())) {
+                    userData.profitLoss < getBotProfitThreshold) {
                     yield schedulerQueue_1.scheduler.addJob.bot(gtiData.tableId, gtiData.currentRound, constants_1.BOT_CONFIG.BOT_WAITING_TIME_IN_MS);
                 }
             }
