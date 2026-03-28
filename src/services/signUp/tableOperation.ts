@@ -89,7 +89,6 @@ class TableOperation {
               'bootValue',
             ],
           );
-          console.log(existingConfig, "--existingConfig--", tableConfigurationData)
           if (!existingConfig._id) {
             ifTableExist = false;
             const configToSet = tableConfigurationData
@@ -399,7 +398,6 @@ class TableOperation {
               : NUMERICAL.ONE,
             ['seats', "tableState"]
           );
-          console.log(tableGameData, "-tableGameData--")
 
           if (tableGameData.seats.length !== maximumSeat) {
             tableGameData = tableGameData || defaultTableGame;

@@ -58,6 +58,7 @@ export interface RoundScoreBoardDataAckInterface {
   split?: boolean;
   wildCard: string;
   winnerUserId: number;
+  papluCard?: string;
   playerInfo: Array<ScoreBoardPlayerInfoData>;
   rebuyable?: boolean;
   round?: number;

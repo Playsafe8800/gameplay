@@ -343,6 +343,7 @@ export function getFormatV2(gameFormat: string) {
     case 1:
       return RUMMY_TYPES.POOL;
     case 2:
+    case 4:
       return RUMMY_TYPES.POINTS;
     case 3:
       return RUMMY_TYPES.DEALS;

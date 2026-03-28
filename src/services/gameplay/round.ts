@@ -807,7 +807,6 @@ class Round {
     const wRank = parseInt(wRankStr, 10);
     const nextRank = wRank === 13 ? 1 : wRank + 1;
     const papluCard = `${wSuit}-${nextRank}-0`; // suit-specific, deck-agnostic
-    console.log(papluCard, '---papluCard--')
 
     // selecting first face up card
     // const firstOpenCard = ['J-1-0'];

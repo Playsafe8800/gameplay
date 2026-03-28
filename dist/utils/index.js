@@ -293,6 +293,7 @@ function getFormatV2(gameFormat) {
         case 1:
             return constants_1.RUMMY_TYPES.POOL;
         case 2:
+        case 4:
             return constants_1.RUMMY_TYPES.POINTS;
         case 3:
             return constants_1.RUMMY_TYPES.DEALS;

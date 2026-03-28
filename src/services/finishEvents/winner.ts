@@ -482,6 +482,7 @@ class Winner {
             tableData.currencyType,
             grpcPlayerData?.cashWinnings?.amount || 0,
           ),
+          papluCard: tableGameData.papluCard,
           tenant: playerData.tenant,
         });
       }
@@ -948,7 +949,6 @@ class Winner {
         tableId,
         currentRound,
       );
-
     winnerData!.playerInfo =
       await mutantService.addTenantToPlayerInfo(
         winnerData!.playerInfo,

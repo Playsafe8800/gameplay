@@ -180,7 +180,8 @@ class WinnerPoints {
           'opendDeck',
           'seats',
           'potValue',
-          'closedDeck'
+          'closedDeck',
+          'papluCard',
         ]),
         playerGameplayService.getPlayerGameplay(
           declarePlayer,
@@ -436,7 +437,6 @@ class WinnerPoints {
         winnerUserId: winnerPgpData.userId,
         playerInfo: scoreBoardPlayerInfo,
       };
-
       await roundScoreBoardService.setRoundScoreBoard(
         tableId,
         currentRound,

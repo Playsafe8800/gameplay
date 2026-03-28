@@ -74,6 +74,7 @@ export interface ScoreBoardPlayerInfoData {
   rank?: number;
   winAmount?: number;
   tenant: string;
+  papluCard?: string;
   canPlayAgain?: boolean;
 }
 

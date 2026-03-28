@@ -32,7 +32,6 @@ export async function addTable(
       `Add table started for lobby Id ${lobbyId}, socketId: ${socket.id}, user: ${socket.userId}`,
     );
     const { userId } = socket;
-    console.log(socket.data, "--socket.data--")
     // Get lobby config
     const lobbyInfo: any = inviteCode ? await UserServiceExt.getPrivateLobby(inviteCode, socket.data.token) : await UserServiceExt.getLobby(lobbyId);
     const {
@@ -124,7 +123,6 @@ export async function addTable(
       tableConfigurationService.getDefaultTableConfigRedisObject(
         lobbyGameConfig,
       );
-    console.log(tableConfigurationData, "--tableConfigurationData--")
     // Create or find user
     const userData = await userService.findOrCreateUser(
       userId,

@@ -374,6 +374,7 @@ class Winner {
                         canPlayAgain: grpcPlayerData === null || grpcPlayerData === void 0 ? void 0 : grpcPlayerData.isPlayAgain,
                         rank: (grpcPlayerData === null || grpcPlayerData === void 0 ? void 0 : grpcPlayerData.rank) || 0,
                         winAmount: (0, utils_1.getWinnings)(tableData.bootValue, (grpcPlayerData === null || grpcPlayerData === void 0 ? void 0 : grpcPlayerData.rank) || 0, scoreboardData.length, tableData.currencyType, ((_d = grpcPlayerData === null || grpcPlayerData === void 0 ? void 0 : grpcPlayerData.cashWinnings) === null || _d === void 0 ? void 0 : _d.amount) || 0),
+                        papluCard: tableGameData.papluCard,
                         tenant: playerData.tenant,
                     });
                 }

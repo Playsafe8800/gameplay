@@ -18,7 +18,7 @@ export const sendDropMixpanel = (
   let gameTitle = '';
   if (gameId === 1) {
     gameTitle = `${maximumPoints} POOL`;
-  } else if (gameId === 2) {
+  } else if (gameId === 2 || gameId === 4) {
     gameTitle = isFree ? `POINTS` : `${bootValue} /POINT`;
   } else {
     gameTitle = isFree ? `DEALS` : `2 DEALS`;

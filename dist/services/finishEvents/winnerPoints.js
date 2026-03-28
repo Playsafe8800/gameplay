@@ -158,7 +158,8 @@ class WinnerPoints {
                         'opendDeck',
                         'seats',
                         'potValue',
-                        'closedDeck'
+                        'closedDeck',
+                        'papluCard',
                     ]),
                     playerGameplay_1.playerGameplayService.getPlayerGameplay(declarePlayer, tableId, currentRound, [
                         'userId',
