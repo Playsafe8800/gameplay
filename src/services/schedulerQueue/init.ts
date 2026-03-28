@@ -35,7 +35,7 @@ export abstract class Initializer {
     });
 
     this.options = {
-      attempts: 50,
+      attempts: 5,
       backoff: {
         type: 'fixed',
         delay: 500,

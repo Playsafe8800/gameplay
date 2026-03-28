@@ -32,7 +32,8 @@ class TableGameplay {
     }
     setTableGameplay(tableId, currentRound, tableGameplayData) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (0, __1.genericSetOperation)(tableId, this.getTableGameplayKey(currentRound), tableGameplayData);
+            yield (0, __1.genericSetOperation)(tableId, this.getTableGameplayKey(currentRound), tableGameplayData);
+            yield (0, index_2.saveValuesInHash)(tableId, { updatedAt: Date.now() });
         });
     }
     deleteTableGameplay(tableId, currentRound) {
