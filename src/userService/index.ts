@@ -8,7 +8,6 @@ import {
   throwInputFormator,
   throwOutPutFormator
 } from "./helper";
-
 axios.defaults.timeout = 10000;
 const defaultToken = process.env.DEFAULT_USER_SERVICE_TOKEN;
 

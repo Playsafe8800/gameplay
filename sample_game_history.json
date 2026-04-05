@@ -1,0 +1,1016 @@
+{
+  "_id": "game_12345",
+  "cd": "2026-04-04T19:44:49.949Z",
+  "tbid": "table_67890",
+  "rummyType": "POINTS_RUMMY",
+  "lobbyId": 10,
+  "startingUsersCount": 3,
+  "gameDetails": [
+    {
+      "roundNo": 1,
+      "roundId": "round_1",
+      "winnerId": 101,
+      "createdOn": "2026-04-04T19:44:49.951Z",
+      "modifiedOn": "2026-04-04T19:44:49.951Z",
+      "extra_info": "H-5-1",
+      "turnsDetails": [
+        {
+          "turnNo": 1,
+          "userId": 101,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 75,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 2,
+          "userId": 102,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 70,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 3,
+          "userId": 103,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 65,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 4,
+          "userId": 101,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 60,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 5,
+          "userId": 102,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 55,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 6,
+          "userId": 103,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 50,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        }
+      ],
+      "userFinalStateTurnDetails": []
+    },
+    {
+      "roundNo": 2,
+      "roundId": "round_2",
+      "winnerId": 102,
+      "createdOn": "2026-04-04T19:44:49.951Z",
+      "modifiedOn": "2026-04-04T19:44:49.951Z",
+      "extra_info": "H-5-1",
+      "turnsDetails": [
+        {
+          "turnNo": 1,
+          "userId": 101,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 75,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 2,
+          "userId": 102,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 70,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 3,
+          "userId": 103,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 65,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 4,
+          "userId": 101,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 60,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 5,
+          "userId": 102,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 55,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        },
+        {
+          "turnNo": 6,
+          "userId": 103,
+          "turnStatus": "COMPLETED",
+          "startState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedStartState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "cardPicked": "S-10-1",
+          "cardPickSource": "CLOSED",
+          "cardDiscarded": "D-10-1",
+          "endState": "S-2-1,S-3-1,S-4-1,H-10-1,H-11-1,H-12-1,D-2-1,D-2-2,D-3-1,C-5-1,C-6-1,C-7-1,S-5-1",
+          "sortedEndState": {
+            "pure": [
+              [
+                "S-2-1",
+                "S-3-1",
+                "S-4-1"
+              ]
+            ],
+            "seq": [
+              [
+                "H-10-1",
+                "H-11-1",
+                "H-12-1"
+              ]
+            ],
+            "set": [
+              [
+                "D-2-1",
+                "D-2-2"
+              ]
+            ],
+            "dwd": [
+              [
+                "D-3-1",
+                "C-5-1",
+                "C-6-1",
+                "C-7-1",
+                "S-5-1"
+              ]
+            ]
+          },
+          "points": 50,
+          "createdOn": "2026-04-04T19:44:49.951Z",
+          "isBot": false,
+          "wildCard": "H-5-1",
+          "closedDeck": [
+            "S-6-1",
+            "S-7-1",
+            "S-8-1"
+          ],
+          "openedDeckTop": "D-10-1"
+        }
+      ],
+      "userFinalStateTurnDetails": []
+    }
+  ]
+}
