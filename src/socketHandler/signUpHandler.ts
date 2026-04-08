@@ -1,7 +1,7 @@
 import { Logger } from '../newLogger';
 import { Lock } from 'redlock';
 import { zk } from '../connections';
-import { CONNECTION_TYPE } from '../constants';
+import { CONNECTION_TYPE, POPUP_TITLES } from '../constants';
 import { ERROR_CODE } from '../constants/errors';
 import { userProfileService } from '../db/userProfile';
 import { SignUpInterface } from '../objectModels';
@@ -11,10 +11,19 @@ import { reconnectTable } from '../services/signUp/reconnectTable';
 import {
   InsufficientFundError,
   UnauthorizedError,
+  FraudError,
 } from '../utils/errors';
 import { redlock } from '../utils/lock/redlock';
 import { validateSignUp } from '../validators/request.validator';
 import { MultiAccountError } from '../utils/errors/index';
+import { alertPopup } from '../centralLibrary';
+import {
+  AlertType,
+  ButtonAction,
+  Color,
+  ColorHexCode,
+  GAME_SERVER_ERROR_REASONS,
+} from '../enums';
 
 export async function signUpHandler(
   signUpData: SignUpInterface,
@@ -85,6 +94,35 @@ export async function signUpHandler(
       errorObj = {
         errorMessage: zk.getConfig().IMWPM,
         errorCode: ERROR_CODE.INSUFFICIENT_FUND,
+      };
+    } else if (error instanceof FraudError) {
+      const fraudMessage = error.message || zk.getConfig().FRAUD_USER_TEXT;
+      alertPopup.CustomCommonPopup(
+        socket,
+        {
+          content: fraudMessage,
+          title: POPUP_TITLES.FAIRPLAY_VIOLATION,
+          textColor: ColorHexCode.WHITE,
+        },
+        {
+          apkVersion: 0,
+          tableId: '',
+          userId: `${socket.userId}`,
+          error: AlertType.GAME_SERVER_ERROR,
+          reason: GAME_SERVER_ERROR_REASONS.FRAUD_DETECTED_GSE,
+        },
+        [
+          {
+            text: 'EXIT',
+            action: ButtonAction.GOTOLOBBY,
+            color_hex: ColorHexCode.RED,
+            color: Color.RED,
+          },
+        ],
+      );
+      errorObj = {
+        errorMessage: fraudMessage,
+        errorCode: ERROR_CODE.MULTI_ACCOUNT_FRAUD_DETECTED,
       };
     }
     return { success: false, error: errorObj };

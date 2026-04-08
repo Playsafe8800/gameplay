@@ -53,6 +53,7 @@ declare class Zookeeper {
         REBUY_INVALID_POPUP: string;
         SEGMENT_BLOCKED_USER_TXT: string;
         MULTI_ACCOUNT_TEXT: string;
+        FRAUD_USER_TEXT: string;
     };
 }
 declare const zookeeperObj: Zookeeper;

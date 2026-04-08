@@ -17,4 +17,5 @@ exports.default = {
     REBUY_INVALID_POPUP: 'Table is not open, please join another table',
     SEGMENT_BLOCKED_USER_TXT: 'You can’t play game with this user',
     MULTI_ACCOUNT_TEXT: 'you are not allowed to play in higher lobbies.',
+    FRAUD_USER_TEXT: 'You have been found violating fairplay policies and have been banned from MPL.',
 };

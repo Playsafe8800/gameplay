@@ -22,6 +22,8 @@ const errors_2 = require("../utils/errors");
 const redlock_2 = require("../utils/lock/redlock");
 const request_validator_1 = require("../validators/request.validator");
 const index_1 = require("../utils/errors/index");
+const centralLibrary_1 = require("../centralLibrary");
+const enums_1 = require("../enums");
 function signUpHandler(signUpData, socket, networkParams) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -75,6 +77,31 @@ function signUpHandler(signUpData, socket, networkParams) {
                 errorObj = {
                     errorMessage: connections_1.zk.getConfig().IMWPM,
                     errorCode: errors_1.ERROR_CODE.INSUFFICIENT_FUND,
+                };
+            }
+            else if (error instanceof errors_2.FraudError) {
+                const fraudMessage = error.message || connections_1.zk.getConfig().FRAUD_USER_TEXT;
+                centralLibrary_1.alertPopup.CustomCommonPopup(socket, {
+                    content: fraudMessage,
+                    title: constants_1.POPUP_TITLES.FAIRPLAY_VIOLATION,
+                    textColor: enums_1.ColorHexCode.WHITE,
+                }, {
+                    apkVersion: 0,
+                    tableId: '',
+                    userId: `${socket.userId}`,
+                    error: enums_1.AlertType.GAME_SERVER_ERROR,
+                    reason: enums_1.GAME_SERVER_ERROR_REASONS.FRAUD_DETECTED_GSE,
+                }, [
+                    {
+                        text: 'EXIT',
+                        action: enums_1.ButtonAction.GOTOLOBBY,
+                        color_hex: enums_1.ColorHexCode.RED,
+                        color: enums_1.Color.RED,
+                    },
+                ]);
+                errorObj = {
+                    errorMessage: fraudMessage,
+                    errorCode: errors_1.ERROR_CODE.MULTI_ACCOUNT_FRAUD_DETECTED,
                 };
             }
             return { success: false, error: errorObj };
